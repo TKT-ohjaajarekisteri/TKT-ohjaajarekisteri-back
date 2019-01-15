@@ -4,8 +4,7 @@
   "description": "Ohjaajarekisterin backend",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

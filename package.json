@@ -1,0 +1,20 @@
+{
+  "name": "tkt-ohjaajarekisteri-back",
+  "version": "1.0.0",
+  "description": "Ohjaajarekisterin backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back/issues"
+  },
+  "homepage": "https://github.com/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back#readme"
+}

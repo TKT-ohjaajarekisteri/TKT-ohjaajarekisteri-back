@@ -4,7 +4,6 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
-const sqlite3 = require('sqlite3').verbose();
 
 app.use(bodyParser.json())
 app.use(cors())

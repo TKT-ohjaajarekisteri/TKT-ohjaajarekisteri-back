@@ -4,7 +4,7 @@ Backend for University of Helsinki's teaching assistant registry.
 
 [![Build Status](https://travis-ci.org/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back.svg?branch=master)](https://travis-ci.org/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back)
 
-[Staging version in Heroku](https://tkt-ohjaajarekisteri.herokuapp.com/)
+[Staging version in Heroku](https://tkt-ohjaajarekisteri-back.herokuapp.com/)
 
 ## Technologies
 * Front: React

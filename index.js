@@ -9,25 +9,28 @@ app.use(bodyParser.json())
 app.use(cors())
 app.use(express.static('build'))
 
-app.use(morgan(':method :url :json :status :response-time ms'))
+app.use(morgan(':method :url :status :response-time ms'))
 
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: true,
   });
 
+app.get('/api/', async (request, response) => {
+    response.json(JSON.stringify('Hello World'));
+})
+
 app.get('/api/ohjaajat', async (request, response) => {
     client.connect()
-    let rivi
+    let rivit = ''
     await client.query('SELECT * FROM ohjaaja;', (err, res) => {
         if (err) throw err
         for (let row of res.rows) {
-            console.log(row)
-            rivi = row
+            rivit += row
         }
     })
   client.end()
-  response.json(rivi) 
+  response.json(JSON.stringify(rivit)) 
 
 })
 

@@ -26,7 +26,7 @@ app.get('/api/ohjaajat', async (request, response) => {
     }
   })
   client.end()
-  response.json('Hello world')
+  response.json(JSON.stringify(res.rows[0]))
 
 })
 

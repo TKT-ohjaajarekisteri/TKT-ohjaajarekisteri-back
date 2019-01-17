@@ -22,19 +22,18 @@ app.get('/api/', async (request, response) => {
 
 app.get('/api/ohjaajat', async (request, response) => {
     client.connect()
-    let rivit = ''
+    const results = [];
     await client.query('SELECT * FROM ohjaaja;', (err, res) => {
         if (err) {
             client.end()
             response.status(400).send({ error: err })
-            return
         }
         for (let row of res.rows) {
-            rivit += row
+            results.push(row);
         }
     })
   client.end()
-  response.json(rivit) 
+  response.json(results) 
 
 })
 

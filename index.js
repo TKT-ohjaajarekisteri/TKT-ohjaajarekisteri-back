@@ -26,6 +26,7 @@ app.get('/api/ohjaajat', (request, response) => {
     }
     client.end()
   })
+})
 
 
 const PORT = process.env.PORT || 3001

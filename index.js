@@ -18,12 +18,12 @@ const client = new Client({
 
 app.get('/api/ohjaajat', async (request, response) => {
     client.connect()
-    var rivi
+    let rivi
     await client.query('SELECT * FROM ohjaaja;', (err, res) => {
         if (err) throw err
-        rivi = res.rows[0]
         for (let row of res.rows) {
             console.log((JSON.stringify(row)))
+            rivi = row
         }
     })
   client.end()

@@ -12,16 +12,16 @@ app.use(express.static('build'))
 morgan.token('json', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :json :status :response-time ms'))
 
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
-  });
-
 app.get('/api/', async (request, response) => {
     response.json('Hello World');
 })
 
 app.get('/api/ohjaajat/', async (request, response) => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
+      });
+    
     await client.connect()
     const { rows } = await client.query('SELECT * FROM ohjaaja;') 
     await client.end()

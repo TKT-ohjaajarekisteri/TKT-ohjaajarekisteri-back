@@ -16,10 +16,10 @@ const client = new Client({
     ssl: true,
   });
 
-app.get('/api/ohjaajat', (request, response) => {
+app.get('/api/ohjaajat', async (request, response) => {
     client.connect()
 
-    client.query('SELECT * FROM ohjaaja;', (err, res) => {
+    await client.query('SELECT * FROM ohjaaja;', (err, res) => {
     if (err) throw err
     for (let row of res.rows) {
         console.log((JSON.stringify(row)))

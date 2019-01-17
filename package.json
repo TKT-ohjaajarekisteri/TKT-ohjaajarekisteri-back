@@ -28,5 +28,8 @@
     "testEnvironment": "node",
     "coverageDirectory": "./coverage/",
     "collectCoverage": true
+  },
+  "dependencies": {
+    "express": "^4.16.4"
   }
 }

@@ -2,11 +2,15 @@ const { Client } = require('pg');
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 const cors = require('cors')
 
 app.use(bodyParser.json())
 app.use(cors())
 app.use(express.static('build'))
+
+morgan.token('json', function (req, res) { return JSON.stringify(req.body) })
+app.use(morgan(':method :url :json :status :response-time ms'))
 
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
@@ -22,7 +26,6 @@ app.get('/api/ohjaajat', async (request, response) => {
     const results = [];
     await client.query('SELECT * FROM ohjaaja;', (err, res) => {
         if (err) {
-            client.end()
             response.status(400).send({ error: err })
         }
         for (let row of res.rows) {
@@ -30,7 +33,7 @@ app.get('/api/ohjaajat', async (request, response) => {
         }
     })
   client.end()
-  response.json(results) 
+  response.json(rivit) 
 
 })
 

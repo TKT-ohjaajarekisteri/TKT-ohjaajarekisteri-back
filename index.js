@@ -22,9 +22,7 @@ app.get('/api/', async (request, response) => {
 })
 
 app.get('/api/ohjaajat/', async (request, response) => {
-    client.connect()
-    const { rows } = await  client.query('SELECT * FROM ohjaaja;')
-    client.end()
+    const { rows } = await client.query('SELECT * FROM ohjaaja;')
     response.json(rows) 
 })
 

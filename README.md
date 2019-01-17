@@ -1,6 +1,6 @@
 # TKT-ohjaajarekisteri-backend
 
-Backend for University of Helsinki's teaching assistant registry.
+Backend for University of Helsinki's teaching assistant register.
 
 [Frontend README, main repository](https://github.com/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-front)
 

@@ -25,8 +25,9 @@ app.get('/api/ohjaajat', async (request, response) => {
     let rivit = ''
     await client.query('SELECT * FROM ohjaaja;', (err, res) => {
         if (err) {
-            console.log(err)
-            response.status(500).json({success: false, data: err})
+            client.end()
+            response.status(400).send({ error: err })
+            return
         }
         for (let row of res.rows) {
             rivit += row

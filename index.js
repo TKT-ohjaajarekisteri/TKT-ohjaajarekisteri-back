@@ -4,6 +4,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const sqlite3 = require('sqlite3').verbose();
 
 app.use(bodyParser.json())
 app.use(cors())
@@ -22,14 +23,16 @@ app.get('/api/ohjaajat', async (request, response) => {
     await client.query('SELECT * FROM ohjaaja;', (err, res) => {
         if (err) throw err
         for (let row of res.rows) {
-            console.log((JSON.stringify(row)))
+            console.log(row)
             rivi = row
         }
     })
   client.end()
-  response.json(JSON.stringify(rivi))  
+  response.json(rivi) 
 
 })
+
+
 
 
 const PORT = process.env.PORT || 3001

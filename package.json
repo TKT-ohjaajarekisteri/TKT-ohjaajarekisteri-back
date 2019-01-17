@@ -23,7 +23,8 @@
     "dotenv": "^6.2.0",
     "eslint": "^5.5.0",
     "jest": "^23.5.0",
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.4",
+    "sqlite3": "^4.0.6"
   },
   "jest": {
     "testEnvironment": "node",

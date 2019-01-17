@@ -20,13 +20,13 @@ app.get('/api/ohjaajat', async (request, response) => {
     client.connect()
 
     await client.query('SELECT * FROM ohjaaja;', (err, res) => {
-    if (err) throw err
-    for (let row of res.rows) {
-        console.log((JSON.stringify(row)))
-    }
-  })
+        if (err) throw err
+        for (let row of res.rows) {
+            console.log((JSON.stringify(row)))
+        }
+        response.json(JSON.stringify(res.rows[0]))  
+    })
   client.end()
-  response.json(JSON.stringify(res.rows[0]))
 
 })
 

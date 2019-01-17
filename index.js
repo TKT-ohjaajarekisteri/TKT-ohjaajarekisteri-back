@@ -21,20 +21,19 @@ app.get('/api/', async (request, response) => {
     response.json('Hello World');
 })
 
-app.get('/api/ohjaajat', async (request, response) => {
+app.get('/api/ohjaajat/', async (request, response) => {
     client.connect()
     const results = [];
     await client.query('SELECT * FROM ohjaaja;', (err, res) => {
         if (err) {
-            response.status(400).send({ error: err })
+            response.status(400).send({ error: 'error' })
         }
         for (let row of res.rows) {
             results.push(row);
         }
     })
   client.end()
-  response.json(rivit) 
-
+  response.json(results) 
 })
 
 const PORT = process.env.PORT || 3001

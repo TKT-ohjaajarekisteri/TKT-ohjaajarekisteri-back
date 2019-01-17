@@ -17,7 +17,7 @@ const client = new Client({
   });
 
 app.get('/api/', async (request, response) => {
-    response.json(JSON.stringify('Hello World'));
+    response.json('Hello World');
 })
 
 app.get('/api/ohjaajat', async (request, response) => {
@@ -30,7 +30,7 @@ app.get('/api/ohjaajat', async (request, response) => {
         }
     })
   client.end()
-  response.json(JSON.stringify(rivit)) 
+  response.json(rivit) 
 
 })
 

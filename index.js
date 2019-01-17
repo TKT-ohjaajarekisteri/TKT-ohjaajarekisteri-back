@@ -9,7 +9,7 @@ app.use(bodyParser.json())
 app.use(cors())
 app.use(express.static('build'))
 
-app.use(morgan(':method :url :status :response-time ms'))
+app.use(morgan(':method :url :json :status :response-time ms'))
 
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
@@ -33,9 +33,6 @@ app.get('/api/ohjaajat', async (request, response) => {
   response.json(rivit) 
 
 })
-
-
-
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {

@@ -21,10 +21,11 @@ app.get('/api/ohjaajat', (request, response) => {
 
     client.query('SELECT * FROM ohjaaja;', (err, res) => {
     if (err) throw err
-    response.json(res.rows.map(JSON.stringify(row)))
+    for (let row of res.rows) {
+        console.log((JSON.stringify(row)))
+    }
     client.end()
-    })
-})
+  })
 
 
 const PORT = process.env.PORT || 3001

@@ -1,35 +1,34 @@
-const { Client } = require('pg');
+const http = require('http')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const morgan = require('morgan')
 const cors = require('cors')
+//const studentRouter = require('./controllers/students')
+//const courseRouter = require('./controllers/courses')
+
 const config = require('./utils/config')
 
-app.use(bodyParser.json())
 app.use(cors())
+app.use(bodyParser.json())
 app.use(express.static('build'))
 
-morgan.token('json', function (req, res) { return JSON.stringify(req.body) })
-app.use(morgan(':method :url :json :status :response-time ms'))
-
-app.get('/api/', async (request, response) => {
-    response.json('Hello World');
+const client = new Client({
+  connectionString: config.databaseUrl,
+  ssl: true,
 })
 
-app.get('/api/ohjaajat/', async (request, response) => {
-    const client = new Client({
-        connectionString: config.databaseUrl,
-        ssl: true,
-      });
-    
-    await client.connect()
-    const { rows } = await client.query('SELECT * FROM ohjaaja;') 
-    await client.end()
-    response.json(rows) 
+const server = http.createServer(app)
+
+client.connect()
+
+server.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`)
 })
 
-const PORT = config.port
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+server.on('close', () => {
+  client.end()
 })
+
+module.exports = {
+  app, server
+}

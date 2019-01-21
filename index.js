@@ -4,6 +4,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const config = require('./utils/config')
 
 app.use(bodyParser.json())
 app.use(cors())
@@ -18,7 +19,7 @@ app.get('/api/', async (request, response) => {
 
 app.get('/api/ohjaajat/', async (request, response) => {
     const client = new Client({
-        connectionString: process.env.DATABASE_URL,
+        connectionString: config.databaseUrl,
         ssl: true,
       });
     
@@ -28,7 +29,7 @@ app.get('/api/ohjaajat/', async (request, response) => {
     response.json(rows) 
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = config.port
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

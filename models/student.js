@@ -20,16 +20,21 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false
     },
     phone: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true
     },
     email: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isEmail:true
+        }
     }   
   })
 
   Student.associate = (models) => {
     Student.hasMany(models.Course, {
+      through: 'student_course',
       foreignKey: 'course_id',
       as: 'Courses'
     })

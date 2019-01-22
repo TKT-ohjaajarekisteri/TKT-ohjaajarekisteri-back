@@ -4,6 +4,8 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const coursesRouter = require('./controllers/courses')
+const studentsRouter = require('./controllers/students')
 
 app.use(bodyParser.json())
 app.use(cors())
@@ -12,21 +14,10 @@ app.use(express.static('build'))
 morgan.token('json', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :json :status :response-time ms'))
 
-app.get('/api/', async (request, response) => {
-  response.json('Hello World')
-})
+const apiUrl = '/api'
+app.use('/api/courses', coursesRouter)
+app.use('/api/students', studentsRouter)
 
-app.get('/api/ohjaajat/', async (request, response) => {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
-  })
-
-  await client.connect()
-  const { rows } = await client.query('SELECT * FROM ohjaaja;')
-  await client.end()
-  response.json(rows)
-})
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {

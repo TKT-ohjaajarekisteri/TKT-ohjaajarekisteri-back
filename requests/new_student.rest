@@ -1,0 +1,11 @@
+POST http: //localhost:3003/api/students
+Content-Type: application/json
+
+{
+  'student_id': '012345678',
+  'first_name': 'Oiva',
+  'last_name': 'Opiskelija',
+  'nickname': 'Oivis',
+  'phone': '+35844556677',
+  'email': 'oivis@oiva.fi'    
+}

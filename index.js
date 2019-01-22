@@ -15,8 +15,8 @@ morgan.token('json', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :json :status :response-time ms'))
 
 const apiUrl = '/api'
-app.use('/api/courses', coursesRouter)
-app.use('/api/students', studentsRouter)
+app.use(`${apiUrl}/courses`, coursesRouter)
+app.use(`${apiUrl}/students`, studentsRouter)
 
 
 const PORT = process.env.PORT || 3001

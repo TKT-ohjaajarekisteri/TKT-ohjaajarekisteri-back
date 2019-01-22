@@ -9,7 +9,7 @@ coursesRouter.get('/', async (request, response) => {
 
 coursesRouter.post('/', async (request, response) => {
   try {
-    response.status(200)
+    response.status(201)
   } catch (exception) {
     console.log(exception)
     response.status(500).json({ error: 'something went wrong...' })

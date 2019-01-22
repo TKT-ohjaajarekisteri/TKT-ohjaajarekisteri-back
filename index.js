@@ -1,25 +1,37 @@
-const { Client } = require('pg')
+const http = require('http')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const morgan = require('morgan')
 const cors = require('cors')
 const coursesRouter = require('./controllers/courses')
 const studentsRouter = require('./controllers/students')
+const config = require('./utils/config')
 
-app.use(bodyParser.json())
 app.use(cors())
+app.use(bodyParser.json())
 app.use(express.static('build'))
 
-morgan.token('json', function (req, res) { return JSON.stringify(req.body) })
-app.use(morgan(':method :url :json :status :response-time ms'))
+const client = new Client({
+  connectionString: config.databaseUrl,
+  ssl: true,
+})
+
+const server = http.createServer(app)
+
+client.connect()
 
 const apiUrl = '/api'
 app.use(`${apiUrl}/courses`, coursesRouter)
 app.use(`${apiUrl}/students`, studentsRouter)
 
-
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+server.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`)
 })
+
+server.on('close', () => {
+  client.end()
+})
+
+module.exports = {
+  app, server
+}

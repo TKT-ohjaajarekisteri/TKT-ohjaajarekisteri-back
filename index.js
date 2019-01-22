@@ -3,33 +3,38 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const coursesRouter = require('./controllers/courses')
-const studentsRouter = require('./controllers/students')
 const config = require('./utils/config')
 
+// Middleware
 app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static('build'))
 
-const client = new Client({
-  connectionString: config.databaseUrl,
-  ssl: true,
-})
+// Routers
+const coursesRouter = require('./controllers/courses')
+const studentsRouter = require('./controllers/students')
 
-const server = http.createServer(app)
-
-client.connect()
 
 const apiUrl = '/api'
 app.use(`${apiUrl}/courses`, coursesRouter)
 app.use(`${apiUrl}/students`, studentsRouter)
 
-server.listen(config.port, () => {
+// Database connection
+const db = require('./models')
+db.connect()
+
+// Initialize server
+const PORT = config.port
+const server = http.createServer(app)
+server.listen(PORT, () => {
   console.log(`Server running on port ${config.port}`)
 })
 
+// Close database connection
 server.on('close', () => {
-  client.end()
+  db.sequelize.close()
+    .then(() => console.log('client has disconnected'))
+    .catch(err => console.log('error during disconnection', err.stack))
 })
 
 module.exports = {

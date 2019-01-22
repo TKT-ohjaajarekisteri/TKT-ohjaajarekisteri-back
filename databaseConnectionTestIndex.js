@@ -1,4 +1,4 @@
-const { Client } = require('pg');
+const { Client } = require('pg')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -14,19 +14,19 @@ morgan.token('json', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :json :status :response-time ms'))
 
 app.get('/api/', async (request, response) => {
-    response.json('Hello World');
+  response.json('Hello World')
 })
 
 app.get('/api/ohjaajat/', async (request, response) => {
-    const client = new Client({
-        connectionString: config.databaseUrl,
-        ssl: true,
-      });
-    
-    await client.connect()
-    const { rows } = await client.query('SELECT * FROM ohjaaja;') 
-    await client.end()
-    response.json(rows) 
+  const client = new Client({
+    connectionString: config.databaseUrl,
+    ssl: true,
+  })
+
+  await client.connect()
+  const { rows } = await client.query('SELECT * FROM ohjaaja;')
+  await client.end()
+  response.json(rows)
 })
 
 const PORT = config.port

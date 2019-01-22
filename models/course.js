@@ -13,15 +13,15 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     course_name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false
     },
     period: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+      type: Sequelize.INTEGER,
+      allowNull: false
     },
     year: {
-        type: Sequelize.INTEGER
+      type: Sequelize.INTEGER
     }
   })
 

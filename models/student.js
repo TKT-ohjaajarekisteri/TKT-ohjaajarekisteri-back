@@ -12,24 +12,24 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     last_name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false
     },
     nickname: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false
     },
     phone: {
-        type: Sequelize.STRING,
-        allowNull: true
+      type: Sequelize.STRING,
+      allowNull: true
     },
     email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-            isEmail:true
-        }
-    }   
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        isEmail: true
+      }
+    }
   })
 
   Student.associate = (models) => {

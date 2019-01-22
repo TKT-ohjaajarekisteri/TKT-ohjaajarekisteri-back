@@ -3,9 +3,8 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-//const studentRouter = require('./controllers/students')
-//const courseRouter = require('./controllers/courses')
-
+const coursesRouter = require('./controllers/courses')
+const studentsRouter = require('./controllers/students')
 const config = require('./utils/config')
 
 app.use(cors())
@@ -20,6 +19,10 @@ const client = new Client({
 const server = http.createServer(app)
 
 client.connect()
+
+const apiUrl = '/api'
+app.use(`${apiUrl}/courses`, coursesRouter)
+app.use(`${apiUrl}/students`, studentsRouter)
 
 server.listen(config.port, () => {
   console.log(`Server running on port ${config.port}`)

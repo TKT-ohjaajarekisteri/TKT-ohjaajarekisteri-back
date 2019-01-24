@@ -31,4 +31,15 @@ studentsRouter.get('/:id', async (request, response) => {
   response.status(200).json({ student })
 })
 
+studentsRouter.delete('/:id', async (request, response) => {
+  try {
+    await db.Student.destroy({ where: { student_id: request.params.id } })
+    response.status(204)
+
+  } catch (exception) {
+    console.log(exception)
+    response.status(500).json({ error: 'something went wrong...' })
+  }
+})
+
 module.exports = studentsRouter

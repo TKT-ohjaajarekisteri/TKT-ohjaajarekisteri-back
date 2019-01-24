@@ -20,7 +20,9 @@ coursesRouter.post('/', async (request, response) => {
 })
 
 coursesRouter.get('/:id', async (request, response) => {
-  response.status(200)
+  const course = await db.Course
+  .findByPk(request.params.id)
+  response.status(200).json({ course })
 })
 
 

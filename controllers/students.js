@@ -30,7 +30,9 @@ studentsRouter.post('/', async (request, response) => {
 })
 
 studentsRouter.get('/:id', async (request, response) => {
-  response.status(200)
+  const student = await db.Student
+  .findByPk(request.params.id)
+  response.status(200).json({student})
 })
 
 module.exports = studentsRouter

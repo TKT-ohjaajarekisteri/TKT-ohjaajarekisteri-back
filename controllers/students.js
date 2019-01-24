@@ -1,14 +1,28 @@
 const studentsRouter = require('express').Router()
-//const Course = require('../models/course')
-//const Student = require('../models/student')
+//const Course = require('../models/course') db:n kautta tämä?
+//const Student = require('../models/student') db:n kautta tämä?
+const db = require('../models/index')
+
 
 studentsRouter.get('/', async (request, response) => {
-  response.status(200)
+  const students = await db.Student
+    .findAll({})
+  response.status(200).json(students) // todo: formatointi
+  //response.status(200)
 })
 
 studentsRouter.post('/', async (request, response) => {
   try {
-    response.status(201)
+
+    const student = await db.Student.create({
+      student_id: request.body.student_id,
+      first_name: request.body.first_name,
+      last_name: request.body.last_name,
+      nickname: request.body.nickname,
+      phone: request.body.phone,
+      email: request.body.email
+    })
+    response.status(201).json({ student })
   } catch (exception) {
     console.log(exception)
     response.status(500).json({ error: 'something went wrong...' })

@@ -1,10 +1,13 @@
 const coursesRouter = require('express').Router()
-//const Course = require('../models/course')
-//const Student = require('../models/student')
-
+//const Course = require('../models/course')   // tuleeko nämä db:n kautta?
+//const Student = require('../models/student') // tuleeko nämä db:n kautta?
+const db = require('../models/index')
 
 coursesRouter.get('/', async (request, response) => {
-  response.status(200)
+  const courses = await db.Course
+    .findAll({})
+  response.status(200).json(courses) // todo: formatointi
+  //response.status(200)
 })
 
 coursesRouter.post('/', async (request, response) => {

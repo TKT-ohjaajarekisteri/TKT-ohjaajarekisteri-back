@@ -28,8 +28,27 @@ const initialStudents = [
     }
   ]
 
-  const initialCourses = [{
-
+  const initialCourses = [
+    {
+      course_id: "a5f63g",
+      learningopportunity_id: "ohtu2018",
+      course_name: "Ohjelmistotuotanto",
+      period: 3,
+      year: 2018
+    },
+    {
+      course_id: "a5f639",
+      learningopportunity_id: "ohtu2017",
+      course_name: "Ohjelmistotuotanto",
+      period: 3,
+      year: 2017
+    },
+    {
+      course_id: "a5f632",
+      learningopportunity_id: "tira2018",
+      course_name: "Tietorakenteet ja algoritmit",
+      period: 2,
+      year: 2018
     }
   ]
 
@@ -45,5 +64,5 @@ const coursesInDb = async () => {
 }
 
 module.exports = {
-  initialstudents, nonExistingId, studentsInDb, coursesInDb
+  initialStudents, initialCourses, studentsInDb, coursesInDb
 }

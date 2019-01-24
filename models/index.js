@@ -21,9 +21,6 @@ const sequelize = new Sequelize(config.databaseUrl, {
   }
 })
 
-let Student
-let Course
-
 db.connect = () => {
   setTimeout(function () {
     sequelize

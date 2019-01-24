@@ -9,11 +9,11 @@ module.exports = (sequelize, Sequelize) => {
       unique: true
     },
     learningopportunity_id: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(31),
       allowNull: false
     },
     course_name: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(63),
       allowNull: false
     },
     period: {

@@ -1,13 +1,10 @@
 const studentsRouter = require('express').Router()
-//const Course = require('../models/course') db:n kautta tämä?
-//const Student = require('../models/student') db:n kautta tämä?
 const db = require('../models/index')
 
 
 studentsRouter.get('/', async (request, response) => {
   const students = await db.Student.findAll({})
   response.status(200).json(students) // todo: formatointi
-  //response.status(200)
 })
 
 studentsRouter.post('/', async (request, response) => {
@@ -30,8 +27,8 @@ studentsRouter.post('/', async (request, response) => {
 
 studentsRouter.get('/:id', async (request, response) => {
   const student = await db.Student
-  .findByPk(request.params.id)
-  response.status(200).json({student})
+    .findByPk(request.params.id)
+  response.status(200).json({ student })
 })
 
 module.exports = studentsRouter

@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const config = require('./utils/config')
+const config = require('../utils/config')
 const StudentModel = require('./student')
 const CourseModel = require('./course')
 const db = {}
@@ -10,6 +10,10 @@ db.connect = () => {
       host: 'db',
       port: config.port,
       dialect: 'postgres',
+      "ssl": true,
+      "dialectOptions": {
+          "ssl": true
+      },
       operatorsAliases: false,
       pool: {
         max: 5,

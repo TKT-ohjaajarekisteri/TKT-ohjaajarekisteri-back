@@ -33,7 +33,7 @@ module.exports = (sequelize, Sequelize) => {
   })
 
   Student.associate = (models) => {
-    Student.hasMany(models.Course, {
+    Student.belongsToMany(models.Course, {
       through: 'student_course',
       foreignKey: 'course_id',
       as: 'Courses'

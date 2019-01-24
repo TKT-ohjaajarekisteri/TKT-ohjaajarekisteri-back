@@ -2,8 +2,7 @@ const coursesRouter = require('express').Router()
 const db = require('../models/index')
 
 coursesRouter.get('/', async (request, response) => {
-  const courses = await db.Course
-    .findAll({})
+  const courses = await db.Course.findAll({})
   response.status(200).json(courses) // todo: formatointi
 })
 
@@ -17,6 +16,7 @@ coursesRouter.post('/', async (request, response) => {
       year: request.body.year
     })
     response.status(201).json({ course })
+
   } catch (exception) {
     console.log(exception)
     response.status(500).json({ error: 'something went wrong...' })

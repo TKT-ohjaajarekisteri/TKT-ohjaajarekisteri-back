@@ -26,15 +26,15 @@ db.connect()
 // Initialize server
 const PORT = config.port
 const server = http.createServer(app)
-server.listen(PORT, () => {
-  console.log(`Server running on port ${config.port}`)
-})
+if (process.env.NODE_ENV !== 'test') {
+  {server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+  })}
+}
 
 // Close database connection
 server.on('close', () => {
-  db.sequelize.close()
-    .then(() => console.log('client has disconnected'))
-    .catch(err => console.log('error during disconnection', err.stack))
+  db.close()
 })
 
 module.exports = {

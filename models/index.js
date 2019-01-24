@@ -4,25 +4,28 @@ const StudentModel = require('./student')
 const CourseModel = require('./course')
 const db = {}
 
+const sequelize = new Sequelize(config.databaseUrl, {
+  host: 'db',
+  port: config.port,
+  dialect: 'postgres',
+  'ssl': true,
+  'dialectOptions': {
+    'ssl': true
+  },
+  operatorsAliases: false,
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 10000,
+    idle: 300000000
+  }
+})
+
+let Student
+let Course
+
 db.connect = () => {
   setTimeout(function () {
-    const sequelize = new Sequelize(config.databaseUrl, {
-      host: 'db',
-      port: config.port,
-      dialect: 'postgres',
-      "ssl": true,
-      "dialectOptions": {
-          "ssl": true
-      },
-      operatorsAliases: false,
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 10000,
-        idle: 300000000
-      }
-    })
-
     sequelize
       .authenticate()
       .then(() => {
@@ -41,6 +44,12 @@ db.connect = () => {
     db.Sequelize = Sequelize
     sequelize.sync()
   }, 9000)
+}
+
+db.close = () => {
+  sequelize.close()
+    .then(() => console.log('client has disconnected'))
+    .catch(err => console.log('error during disconnection', err.stack))
 }
 
 module.exports = db

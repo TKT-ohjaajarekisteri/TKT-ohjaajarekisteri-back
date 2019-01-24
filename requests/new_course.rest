@@ -1,0 +1,2 @@
+POST http: //localhost:3003/api/courses
+Content-Type: application/json

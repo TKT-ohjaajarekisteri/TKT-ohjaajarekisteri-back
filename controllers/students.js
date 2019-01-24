@@ -5,8 +5,7 @@ const db = require('../models/index')
 
 
 studentsRouter.get('/', async (request, response) => {
-  const students = await db.Student
-    .findAll({})
+  const students = await db.Student.findAll({})
   response.status(200).json(students) // todo: formatointi
   //response.status(200)
 })

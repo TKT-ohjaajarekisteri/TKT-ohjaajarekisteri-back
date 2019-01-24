@@ -1,6 +1,3 @@
-const Student = require('../models/student')
-const Course = require('../models/course')
-
 const initialStudents = [
     {
       student_id: "5a422a851b54a676234d17f7",
@@ -54,13 +51,13 @@ const initialStudents = [
 
 
 const studentsInDb = async () => {
-  const students = await student.find({})
-  return students.map(student.format)
+  const students = await student.findAll({})
+  return students
 }
 
 const coursesInDb = async () => {
-  const courses = await course.find({})
-  return courses.map(course.format)
+  const courses = await course.findAll({})
+  return courses
 }
 
 module.exports = {

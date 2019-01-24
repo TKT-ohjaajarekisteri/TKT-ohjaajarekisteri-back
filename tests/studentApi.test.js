@@ -2,8 +2,7 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Student = require('../models/student')
-const Course = require('../models/course')
-const { initialStudents, initialCourses, studentsInDb, coursesInDb } = require('./test_helper')
+const { initialStudents, studentsInDb } = require('./test_helper')
 
     describe('when there is initially some students saved', async () => {
         beforeAll(async () => {
@@ -200,10 +199,6 @@ const { initialStudents, initialCourses, studentsInDb, coursesInDb } = require('
 
       expect(contents).not.toContain(addedStudent.first_name)
       expect(studentsAfterOperation.length).toBe(studentsAtStart.length - 1)
-    })
-
-    afterAll(() => {
-      server.close()
     })
   })
 

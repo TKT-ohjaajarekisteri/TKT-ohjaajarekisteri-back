@@ -11,8 +11,7 @@ coursesRouter.post('/', async (request, response) => {
   try {
 
     const course = await db.Course.create({
-      course_id: request.body.course_id,
-      learningopportunity_id: request.body.course_id,
+      learningopportunity_id: request.body.learningopportunity_id,
       course_name: request.body.course_name,
       period: request.body.period,
       year: request.body.year
@@ -26,7 +25,7 @@ coursesRouter.post('/', async (request, response) => {
 
 coursesRouter.get('/:id', async (request, response) => {
   const course = await db.Course
-  .findByPk(request.params.id)
+    .findByPk(request.params.id)
   response.status(200).json({ course })
 })
 

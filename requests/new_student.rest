@@ -2,10 +2,14 @@ POST http://localhost:3003/api/students
 Content-Type: application/json
 
 {
-  "student_id": "012345678",
-  "first_name": "Oiva",
+  "student_id": "666645678",
+  "first_name": "Herkko",
   "last_name": "Opiskelija",
-  "nickname": "Oivis",
+  "nickname": "Herkkis",
   "phone": "+35844556677",
-  "email": "oivis@oiva.fi"    
+  "email": "arttis@ottis.fi",
+  "learningopportunity_id": "TKT30008",
+  "course_name": "Ohjelmistotuotanto 15",
+  "period": 2,
+  "year": 2019    
 }

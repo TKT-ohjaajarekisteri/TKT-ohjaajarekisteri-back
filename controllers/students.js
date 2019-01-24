@@ -1,6 +1,7 @@
 const studentsRouter = require('express').Router()
 const db = require('../models/index')
-
+// const Student = db.Student
+// const Course = db.Course
 
 studentsRouter.get('/', async (request, response) => {
   const students = await db.Student.findAll({})
@@ -8,16 +9,42 @@ studentsRouter.get('/', async (request, response) => {
 })
 
 studentsRouter.post('/', async (request, response) => {
+  const body = request.body
   try {
-
-    const student = await db.Student.create({
-      student_id: request.body.student_id,
-      first_name: request.body.first_name,
-      last_name: request.body.last_name,
-      nickname: request.body.nickname,
-      phone: request.body.phone,
-      email: request.body.email
+    // check if course exists in db
+    let course = await db.Course.findOne({
+      where: {
+        learningopportunity_id: body.learningopportunity_id
+      }
     })
+
+    if (!course) {
+      course = await db.Course.create({
+        learningopportunity_id: body.learningopportunity_id,
+        course_name: body.course_name,
+        period: body.period,
+        year: body.year
+      })
+    }
+
+    // check if user exists in db
+    let student = await db.Student
+      .findByPk(body.student_id)
+
+    if (!student) {
+      student = await db.Student.create({
+        student_id: body.student_id,
+        first_name: body.first_name,
+        last_name: body.last_name,
+        nickname: body.nickname,
+        phone: body.phone,
+        email: body.email
+      })
+      await student.addCourse(course)
+    } else {
+      await student.addCourse(course)
+    }
+
     response.status(201).json({ student })
   } catch (exception) {
     console.log(exception)

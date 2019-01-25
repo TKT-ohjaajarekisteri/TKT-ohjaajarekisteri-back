@@ -32,7 +32,6 @@ db.Sequelize = Sequelize
 
 db.connect = async () => {
   try {
-      
     await sequelize.authenticate()
     console.log('Connection has been established successfully.')
 
@@ -46,7 +45,6 @@ db.connect = async () => {
 
 db.close = async () => {
   try {
-
     await sequelize.close()
     console.log('client has disconnected')
 

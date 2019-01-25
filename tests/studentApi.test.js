@@ -34,12 +34,12 @@ describe('adding a new student', async () => {
     const studentsAtStart = await studentsInDb()
 
     const newStudent = {
-      student_id: 'a1504505',
+      student_id: 'a2352332',
       first_name: 'Pekka',
       last_name: 'Ranta',
       nickname: 'Pekka',
-      learningopportunity_id: "TKT56008",
-      course_name: "Ohjelmistotuotanto 1",
+      learningopportunity_id: 'TKT30508',
+      course_name: 'Ohjelmistotuotanto 9',
       phone: '0445634567',
       email: 'pekka.ranta@gmail.com',
       period: 3,
@@ -66,8 +66,8 @@ describe('adding a new student', async () => {
       first_name: 'Pekka',
       last_name: 'Ranta',
       nickname: 'Pekka',
-      learningopportunity_id: "TKT30008",
-      course_name: "Ohjelmistotuotanto 15",
+      learningopportunity_id: 'TKT31508',
+      course_name: 'Ohjelmistotuotanto 9',
       phone: '0445634567',
       email: 'pekka.ranta@gmail.com',
       period: 3,
@@ -79,7 +79,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(500)
+      .expect(400)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -89,11 +89,11 @@ describe('adding a new student', async () => {
   test('POST /api/students fails with proper statuscode if first name is missing', async () => {
 
     const newStudent = {
-      student_id: 'a1504505',
+      student_id: 'a1504525',
       last_name: 'Ranta',
       nickname: 'Pekka',
-      learningopportunity_id: "TKT30008",
-      course_name: "Ohjelmistotuotanto 15",
+      learningopportunity_id: 'TKT32508',
+      course_name: 'Ohjelmistotuotanto 9',
       phone: '0445634567',
       email: 'pekka.ranta@gmail.com',
       period: 3,
@@ -105,7 +105,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(500)
+      .expect(400)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -115,11 +115,11 @@ describe('adding a new student', async () => {
   test('POST /api/students fails with proper statuscode if last name is missing', async () => {
 
     const newStudent = {
-      student_id: 'a1504505',
+      student_id: 'a1504567',
       first_name: 'Pekka',
       nickname: 'Pekka',
-      learningopportunity_id: "TKT30008",
-      course_name: "Ohjelmistotuotanto 15",
+      learningopportunity_id: 'TKT30568',
+      course_name: 'Ohjelmistotuotanto 9',
       phone: '0445634567',
       email: 'pekka.ranta@gmail.com',
       period: 3,
@@ -131,7 +131,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(500)
+      .expect(400)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -141,11 +141,11 @@ describe('adding a new student', async () => {
   test('POST /api/students fails with proper statuscode if nickname is missing', async () => {
 
     const newStudent = {
-      student_id: 'a1504505',
+      student_id: 'a1500512',
       first_name: 'Pekka',
       last_name: 'Ranta',
-      learningopportunity_id: "TKT30008",
-      course_name: "Ohjelmistotuotanto 15",
+      learningopportunity_id: 'TKT30548',
+      course_name: 'Ohjelmistotuotanto 15',
       phone: '0445634567',
       email: 'pekka.ranta@gmail.com',
       period: 3,
@@ -157,7 +157,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(500)
+      .expect(400)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -167,11 +167,11 @@ describe('adding a new student', async () => {
   test('POST /api/students fails with proper statuscode if email is missing', async () => {
 
     const newStudent = {
-      student_id: 'a1504505',
+      student_id: 'a1504421',
       first_name: 'Pekka',
       last_name: 'Ranta',
-      learningopportunity_id: "TKT30508",
-      course_name: "Ohjelmistotuotanto 9",
+      learningopportunity_id: 'TKT30508',
+      course_name: 'Ohjelmistotuotanto 54',
       nickname: 'Pekka',
       phone: '0445634567',
       period: 3,
@@ -183,7 +183,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(500)
+      .expect(400)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -195,25 +195,16 @@ describe('adding a new student', async () => {
 describe('deleting a student', async () => {
 
   test('DELETE /api/students/:id succeeds with proper statuscode', async () => {
-    await db.Student.create({
+    const addedStudent = await db.Student.create({
       student_id: 'a1539505',
       first_name: 'Jouni',
       last_name: 'Ranta',
       nickname: 'Jouni',
-      learningopportunity_id: "TKT30508",
-      course_name: "Ohjelmistotuotanto 9",
       phone: '0445634767',
       email: 'jouni.ranta@gmail.com',
-      period: 3,
-      year: 2018
     })
 
     const studentsAtStart = await studentsInDb()
-    const addedStudent = await db.Student.findOne({
-      where: {
-        student_id: 'a1504505'
-      }
-    })
 
     await api
       .delete(`/api/students/${addedStudent.student_id}`)

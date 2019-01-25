@@ -68,7 +68,7 @@ describe.skip('adding a new course', async () => {
     await api
       .post('/api/courses')
       .send(newCourse)
-      .expect(500)
+      .expect(400)
 
     const coursesAfterOperation = await coursesInDb()
 
@@ -88,7 +88,7 @@ describe.skip('adding a new course', async () => {
     await api
       .post('/api/courses')
       .send(newCourse)
-      .expect(500)
+      .expect(400)
 
     const coursesAfterOperation = await coursesInDb()
 
@@ -108,7 +108,7 @@ describe.skip('adding a new course', async () => {
     await api
       .post('/api/courses')
       .send(newCourse)
-      .expect(500)
+      .expect(400)
 
     const coursesAfterOperation = await coursesInDb()
 
@@ -128,7 +128,7 @@ describe.skip('adding a new course', async () => {
     await api
       .post('/api/courses')
       .send(newCourse)
-      .expect(500)
+      .expect(400)
 
     const coursesAfterOperation = await coursesInDb()
 

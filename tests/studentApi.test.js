@@ -1,22 +1,19 @@
 const { app, server } = require('../index')
 const supertest = require('supertest')
 const api = supertest(app)
-const { db } = require('../models/index')
-const Student = db.Student
+const db = require('../models/index')
 const { initialStudents, studentsInDb } = require('./test_helper')
 
 describe('when there is initially some students saved', async () => {
   beforeAll(async () => {
-    await Student.destroy({
-      where: {},
-      truncate: true
+    await db.Student.destroy({
+      where: {}
     })
-    await Promise.all(initialStudents.map(n => Student.create({ n })))
+    await Promise.all(initialStudents.map(n => db.Student.create( n )))
   })
 
   test('all students are returned as json by GET /api/students', async () => {
     const studentsInDatabase = await studentsInDb()
-
     const response = await api
       .get('/api/students')
       .expect(200)
@@ -41,14 +38,18 @@ describe('adding a new student', async () => {
       first_name: 'Pekka',
       last_name: 'Ranta',
       nickname: 'Pekka',
+      learningopportunity_id: "TKT56008",
+      course_name: "Ohjelmistotuotanto 1",
       phone: '0445634567',
-      email: 'pekka.ranta@gmail.com'
+      email: 'pekka.ranta@gmail.com',
+      period: 3,
+      year: 2018
     }
 
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(200)
+      .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const studentsAfterOperation = await studentsInDb()
@@ -65,8 +66,12 @@ describe('adding a new student', async () => {
       first_name: 'Pekka',
       last_name: 'Ranta',
       nickname: 'Pekka',
+      learningopportunity_id: "TKT30008",
+      course_name: "Ohjelmistotuotanto 15",
       phone: '0445634567',
-      email: 'pekka.ranta@gmail.com'
+      email: 'pekka.ranta@gmail.com',
+      period: 3,
+      year: 2018
     }
 
     const studentsAtStart = await studentsInDb()
@@ -74,7 +79,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(400)
+      .expect(500)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -87,8 +92,12 @@ describe('adding a new student', async () => {
       student_id: 'a1504505',
       last_name: 'Ranta',
       nickname: 'Pekka',
+      learningopportunity_id: "TKT30008",
+      course_name: "Ohjelmistotuotanto 15",
       phone: '0445634567',
-      email: 'pekka.ranta@gmail.com'
+      email: 'pekka.ranta@gmail.com',
+      period: 3,
+      year: 2018
     }
 
     const studentsAtStart = await studentsInDb()
@@ -96,7 +105,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(400)
+      .expect(500)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -109,8 +118,12 @@ describe('adding a new student', async () => {
       student_id: 'a1504505',
       first_name: 'Pekka',
       nickname: 'Pekka',
+      learningopportunity_id: "TKT30008",
+      course_name: "Ohjelmistotuotanto 15",
       phone: '0445634567',
-      email: 'pekka.ranta@gmail.com'
+      email: 'pekka.ranta@gmail.com',
+      period: 3,
+      year: 2018
     }
 
     const studentsAtStart = await studentsInDb()
@@ -118,7 +131,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(400)
+      .expect(500)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -131,8 +144,12 @@ describe('adding a new student', async () => {
       student_id: 'a1504505',
       first_name: 'Pekka',
       last_name: 'Ranta',
+      learningopportunity_id: "TKT30008",
+      course_name: "Ohjelmistotuotanto 15",
       phone: '0445634567',
-      email: 'pekka.ranta@gmail.com'
+      email: 'pekka.ranta@gmail.com',
+      period: 3,
+      year: 2018
     }
 
     const studentsAtStart = await studentsInDb()
@@ -140,7 +157,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(400)
+      .expect(500)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -153,8 +170,12 @@ describe('adding a new student', async () => {
       student_id: 'a1504505',
       first_name: 'Pekka',
       last_name: 'Ranta',
+      learningopportunity_id: "TKT30508",
+      course_name: "Ohjelmistotuotanto 9",
       nickname: 'Pekka',
-      phone: '0445634567'
+      phone: '0445634567',
+      period: 3,
+      year: 2018
     }
 
     const studentsAtStart = await studentsInDb()
@@ -162,7 +183,7 @@ describe('adding a new student', async () => {
     await api
       .post('/api/students')
       .send(newStudent)
-      .expect(400)
+      .expect(500)
 
     const studentsAfterOperation = await studentsInDb()
 
@@ -173,23 +194,24 @@ describe('adding a new student', async () => {
 
 describe('deleting a student', async () => {
 
-  beforeAll(async () => {
-
-    await Student.Create({
-      student_id: 'a1504505',
+  test('DELETE /api/students/:id succeeds with proper statuscode', async () => {
+    await db.Student.create({
+      student_id: 'a1539505',
       first_name: 'Jouni',
       last_name: 'Ranta',
       nickname: 'Jouni',
+      learningopportunity_id: "TKT30508",
+      course_name: "Ohjelmistotuotanto 9",
       phone: '0445634767',
-      email: 'jouni.ranta@gmail.com'
+      email: 'jouni.ranta@gmail.com',
+      period: 3,
+      year: 2018
     })
-  })
 
-  test('DELETE /api/students/:id succeeds with proper statuscode', async () => {
     const studentsAtStart = await studentsInDb()
-    const addedStudent = await Student.findOne({
+    const addedStudent = await db.Student.findOne({
       where: {
-        learningopportunity_id: 'tito2016'
+        student_id: 'a1504505'
       }
     })
 

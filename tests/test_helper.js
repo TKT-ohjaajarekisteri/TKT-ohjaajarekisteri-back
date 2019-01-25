@@ -1,30 +1,40 @@
 const db = require('../models/index')
-const Student = db.Student
-const Course = db.Course
 const initialStudents = [
   {
-    student_id: '5a422a851b54a676234d17f7',
+    student_id: 'a1504546',
     first_name: 'Juhani',
     last_name: 'Pouta',
     nickname: 'Juhani',
+    learningopportunity_id: "TKT30008",
+    course_name: "Ohjelmistotuotanto 15",
     phone: '0401234567',
-    email: 'juhani.pouta@gmail.com'
+    email: 'juhani.pouta@gmail.com',
+    period: 3,
+    year: 2018
   },
   {
-    student_id: '5a422a851b54a676234d17f8',
+    student_id: 'a1504512',
     first_name: 'Aarlo',
     last_name: 'Kustaa',
     nickname: 'Arska',
+    learningopportunity_id: "TKT30378",
+    course_name: "Ohjelmistotuotanto 2",
     phone: '0401234598',
-    email: 'arska.kustaa@gmail.com'
+    email: 'arska.kustaa@gmail.com',
+    period: 3,
+    year: 2018
   },
   {
-    student_id: '5a422a851b54a676234d17f9',
+    student_id: 'a1504502',
     first_name: 'Tomi',
     last_name: 'Virtanen',
     nickname: 'Tomppa',
+    learningopportunity_id: "TKT30456",
+    course_name: "Ohjelmistotuotanto 3",
     phone: '0405674567',
-    email: 'tomi.virtanen@gmail.com'
+    email: 'tomi.virtanen@gmail.com',
+    period: 3,
+    year: 2018
   }
 ]
 
@@ -54,12 +64,12 @@ const initialCourses = [
 
 
 const studentsInDb = async () => {
-  const students = await Student.findAll({})
+  const students = await db.Student.findAll({})
   return students
 }
 
 const coursesInDb = async () => {
-  const courses = await Course.findAll({})
+  const courses = await db.Course.findAll({})
   return courses
 }
 

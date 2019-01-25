@@ -14,7 +14,8 @@ studentsRouter.post('/', async (request, response) => {
     // check if course exists in db
     let course = await db.Course.findOne({
       where: {
-        learningopportunity_id: body.learningopportunity_id
+        learningopportunity_id: body.learningopportunity_id,
+        period: body.period
       }
     })
 

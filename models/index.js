@@ -21,32 +21,38 @@ const sequelize = new Sequelize(config.databaseUrl, {
   }
 })
 
-db.connect = () => {
-  setTimeout(function () {
-    sequelize
-      .authenticate()
-      .then(() => {
-        console.log('Connection has been established successfully.')
-      })
-      .catch(err => {
-        console.error('Unable to connect to the database:', err)
-      })
+db.Student = StudentModel(sequelize, Sequelize)
+db.Course = CourseModel(sequelize, Sequelize)
 
-    db.Student = StudentModel(sequelize, Sequelize)
-    db.Course = CourseModel(sequelize, Sequelize)
+db.Student.associate(db)
+db.Course.associate(db)
 
-    db.Student.associate(db)
-    db.Course.associate(db)
+db.sequelize = sequelize
+db.Sequelize = Sequelize
 
-    db.Sequelize = Sequelize
-    sequelize.sync()
-  }, 9000)
+db.connect = async () => {
+  try {
+      
+    await sequelize.authenticate()
+    console.log('Connection has been established successfully.')
+
+  } catch(exception) {
+    console.error('Unable to connect to the database:', exception)
+  }
+  if (process.env.NODE_ENV !== 'test') {
+    await sequelize.sync()
+  }
 }
 
-db.close = () => {
-  sequelize.close()
-    .then(() => console.log('client has disconnected'))
-    .catch(err => console.log('error during disconnection', err.stack))
+db.close = async () => {
+  try {
+
+    await sequelize.close()
+    console.log('client has disconnected')
+
+  } catch(exception) {
+    console.log('error during disconnection', exception)
+  }
 }
 
 module.exports = db

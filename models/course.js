@@ -21,7 +21,8 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false
     },
     year: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      allowNull: false
     }
   })
 

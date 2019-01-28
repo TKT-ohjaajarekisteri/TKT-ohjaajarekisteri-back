@@ -47,7 +47,7 @@ studentsRouter.post('/', async (request, response) => {
       await student.addCourse(course)
     }
 
-    response.status(201).json({ student })
+    response.status(201).json(course)
   } catch (exception) {
     console.log(exception)
     response.status(400).json({ error: 'bad request' })
@@ -57,7 +57,7 @@ studentsRouter.post('/', async (request, response) => {
 studentsRouter.get('/:id', async (request, response) => {
   const student = await db.Student
     .findByPk(request.params.id)
-  response.status(200).json({ student })
+  response.status(200).json(student)
 })
 
 studentsRouter.delete('/:id', async (request, response) => {

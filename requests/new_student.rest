@@ -2,14 +2,14 @@ POST http://localhost:3004/api/students
 Content-Type: application/json
 
 {
-  "student_id": "aaaabbbss",
-  "first_name": "Jerkko",
+  "student_id": "aaavbbbss",
+  "first_name": "Xerkko",
   "last_name": "Opiskelija",
-  "nickname": "Jerkkis",
+  "nickname": "Xerkkis",
   "phone": "+35844556677",
   "email": "arttis@ottis.fi",
-  "learningopportunity_id": "TKT5-aa22",
-  "course_name": "Kauttojurjestelmut",
+  "learningopportunity_id": "TKT5-aa2233",
+  "course_name": "Kauttojurjestelmutuuuu 58",
   "period": 1,
-  "year": 2022    
+  "year": 2025    
 }

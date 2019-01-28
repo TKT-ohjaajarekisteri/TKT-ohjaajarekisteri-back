@@ -15,7 +15,7 @@ coursesRouter.post('/', async (request, response) => {
       period: request.body.period,
       year: request.body.year
     })
-    response.status(201).json({ course })
+    response.status(201).json(course)
 
   } catch (exception) {
     console.log(exception)
@@ -26,14 +26,14 @@ coursesRouter.post('/', async (request, response) => {
 coursesRouter.get('/:id', async (request, response) => {
   const course = await db.Course
     .findByPk(request.params.id)
-  response.status(200).json({ course })
+  response.status(200).json(course)
 })
 
 // doesn't work currently
 coursesRouter.get('/:id/students', async (request, response) => {
   const students = await db.Course
     .findByPk(request.params.id).students
-  response.status(200).json({ students })
+  response.status(200).json(students)
 })
 
 coursesRouter.delete('/:id', async (request, response) => {

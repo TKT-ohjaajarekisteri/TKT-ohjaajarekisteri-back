@@ -29,6 +29,13 @@ coursesRouter.get('/:id', async (request, response) => {
   response.status(200).json({ course })
 })
 
+// doesn't work currently
+coursesRouter.get('/:id/students', async (request, response) => {
+  const students = await db.Course
+    .findByPk(request.params.id).students
+  response.status(200).json({ students })
+})
+
 coursesRouter.delete('/:id', async (request, response) => {
   try {
     await db.Course.destroy({ where: { course_id: request.params.id } })

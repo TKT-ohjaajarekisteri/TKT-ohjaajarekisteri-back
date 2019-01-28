@@ -16,7 +16,7 @@ studentsRouter.post('/', async (request, response) => {
     let course = await db.Course.findOne({
       where: {
         learningopportunity_id: body.learningopportunity_id,
-        period: body.period
+        period: body.period.toString()
       }
     })
 

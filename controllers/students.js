@@ -72,7 +72,7 @@ studentsRouter.get('/:id', async (request, response) => {
 studentsRouter.delete('/:id', async (request, response) => {
   try {
     await db.Student.destroy({ where: { student_id: request.params.id } })
-    response.status(204)
+    response.status(204).end()
 
   } catch (exception) {
     console.log(exception)

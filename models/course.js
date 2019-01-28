@@ -1,6 +1,6 @@
 'use strict'
 module.exports = (sequelize, Sequelize) => {
-  const Course = sequelize.define('course', {
+  const Course = sequelize.define('Course', {
     course_id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
@@ -29,7 +29,7 @@ module.exports = (sequelize, Sequelize) => {
   Course.associate = (models) => {
     Course.belongsToMany(models.Student, {
       through: 'student_course',
-      foreignKey: 'student_id',
+      foreignKey: 'course_id',
       as: 'students'
     })
   }

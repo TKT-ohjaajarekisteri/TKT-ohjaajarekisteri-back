@@ -1,6 +1,6 @@
 'use strict'
 module.exports = (sequelize, Sequelize) => {
-  const Student = sequelize.define('student', {
+  const Student = sequelize.define('Student', {
     student_id: {
       type: Sequelize.STRING(16),
       primaryKey: true,
@@ -35,7 +35,7 @@ module.exports = (sequelize, Sequelize) => {
   Student.associate = (models) => {
     Student.belongsToMany(models.Course, {
       through: 'student_course',
-      foreignKey: 'course_id',
+      foreignKey: 'student_id',
       as: 'courses'
     })
   }

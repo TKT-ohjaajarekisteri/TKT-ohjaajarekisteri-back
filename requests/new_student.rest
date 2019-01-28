@@ -2,7 +2,7 @@ POST http://localhost:3004/api/students
 Content-Type: application/json
 
 {
-  "student_id": "aaavbbbss",
+  "student_id": "aaacddbss",
   "first_name": "Xerkko",
   "last_name": "Opiskelija",
   "nickname": "Xerkkis",

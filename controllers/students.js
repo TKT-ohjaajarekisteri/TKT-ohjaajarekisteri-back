@@ -1,8 +1,5 @@
 const studentsRouter = require('express').Router()
-const Sequelize = require('sequelize')
 const db = require('../models/index')
-// const Student = db.Student
-// const Course = db.Course
 
 studentsRouter.get('/', async (request, response) => {
   const students = await db.Student.findAll({})

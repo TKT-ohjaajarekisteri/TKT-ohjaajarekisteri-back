@@ -33,11 +33,6 @@ if (process.env.NODE_ENV !== 'test') {
   })}
 }
 
-// Close database connection
-server.on('close', () => {
-  db.close()
-})
-
 module.exports = {
   app, server
 }

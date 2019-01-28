@@ -43,14 +43,4 @@ db.connect = async () => {
   }
 }
 
-db.close = async () => {
-  try {
-    await sequelize.close()
-    console.log('client has disconnected')
-
-  } catch(exception) {
-    console.log('error during disconnection', exception)
-  }
-}
-
 module.exports = db

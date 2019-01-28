@@ -217,9 +217,5 @@ describe('deleting a student', async () => {
     expect(contents).not.toContain(addedStudent.first_name)
     expect(studentsAfterOperation.length).toBe(studentsAtStart.length - 1)
   })
-
-  afterAll(() => {
-    server.close()
-  })
 })
 

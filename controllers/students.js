@@ -26,10 +26,6 @@ studentsRouter.post('/', async (request, response) => {
         course_name: body.course_name,
         period: body.period,
         year: body.year
-      }).catch(new Sequelize.ValidationError, error => {
-        response.status(400).json(error)
-      }).catch(new Sequelize.DatabaseError, error => {
-        response.status(400).json(error)
       })
     }
 
@@ -45,12 +41,7 @@ studentsRouter.post('/', async (request, response) => {
         nickname: body.nickname,
         phone: body.phone,
         email: body.email
-      }).catch(new Sequelize.ValidationError, error => {
-        response.status(400).json(error)
-      }).catch(new Sequelize.DatabaseError, error => {
-        response.status(400).json(error)
       })
-
       await student.addCourse(course)
     } else {
       await student.addCourse(course)

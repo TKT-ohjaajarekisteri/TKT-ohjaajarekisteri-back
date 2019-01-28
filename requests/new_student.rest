@@ -1,15 +1,15 @@
-POST http://localhost:3003/api/students
+POST http://localhost:3004/api/students
 Content-Type: application/json
 
 {
-  "student_id": "678645678",
-  "first_name": "Herkko",
+  "student_id": "aaaabbbss",
+  "first_name": "Jerkko",
   "last_name": "Opiskelija",
-  "nickname": "Herkkis",
+  "nickname": "Jerkkis",
   "phone": "+35844556677",
   "email": "arttis@ottis.fi",
-  "learningopportunity_id": "TKT30008",
-  "course_name": "Ohjelmistotuotanto 15",
-  "period": 2,
-  "year": 2019    
+  "learningopportunity_id": "TKT5-aa22",
+  "course_name": "Kauttojurjestelmut",
+  "period": 1,
+  "year": 2022    
 }

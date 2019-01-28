@@ -31,8 +31,10 @@ coursesRouter.get('/:id', async (request, response) => {
 
 // doesn't work currently
 coursesRouter.get('/:id/students', async (request, response) => {
-  const students = await db.Course
-    .findByPk(request.params.id).students
+  const course = await db.Course
+    .findByPk(request.params.id)
+  const students = await course.getStudents()
+
   response.status(200).json(students)
 })
 

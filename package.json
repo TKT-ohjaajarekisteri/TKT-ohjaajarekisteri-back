@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "lint": "eslint .",
+    "test": "cross-env NODE_ENV=test jest --verbose",
+    "test-coverage": "CI=true jest --coverage",
     "watch": "nodemon index.js"
 
   },
@@ -20,7 +22,7 @@
   },
   "homepage": "https://github.com/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back#readme",
   "devDependencies": {
-    "codecov": "^3.0.4",
+    "codecov": "^3.1.0",
     "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "eslint": "^5.12.0",

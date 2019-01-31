@@ -5,18 +5,20 @@ const db = require('../models/index')
 const { initialStudents, studentsInDb, initialCourses, coursesInDb } = require('./test_helper')
 
 describe('student tests', () => {
-  beforeAll(async () => {
+  beforeAll(async (done) => {
     //await db.sequelize.sync({force:true})
     await db.Student.destroy({
       where: {}
     })
+    done()
   })
   describe('when there is initially some students saved', () => {
-    beforeAll(async () => {
+    beforeAll(async (done) => {
       await Promise.all(initialStudents.map(n => db.Student.create( n )))
+      done()
     })
 
-    test('all students are returned as json by GET /api/students', async () => {
+    test('all students are returned as json by GET /api/students', async (done) => {
       const studentsInDatabase = await studentsInDb()
 
       const response = await api
@@ -30,12 +32,13 @@ describe('student tests', () => {
       studentsInDatabase.forEach(student => {
         expect(returnedContents).toContain(student.first_name)
       })
+      done()
     })
   })
 
   describe('adding a new student', () => {
 
-    test('POST /api/students succeeds with valid data', async () => {
+    test('POST /api/students succeeds with valid data', async (done) => {
       const studentsAtStart = await studentsInDb()
 
       const newStudent = {
@@ -63,9 +66,10 @@ describe('student tests', () => {
 
       const contents = studentsAfterOperation.map(r => r.first_name)
       expect(contents).toContain('Pekka')
+      done()
     })
 
-    test('POST /api/students fails with proper statuscode if student number is missing', async () => {
+    test('POST /api/students fails with proper statuscode if student number is missing', async (done) => {
 
       const newStudent = {
         first_name: 'Pekka',
@@ -89,9 +93,10 @@ describe('student tests', () => {
       const studentsAfterOperation = await studentsInDb()
 
       expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
+      done()
     })
 
-    test('POST /api/students fails with proper statuscode if first name is missing', async () => {
+    test('POST /api/students fails with proper statuscode if first name is missing', async (done) => {
 
       const newStudent = {
         student_number: 'a1504525',
@@ -115,9 +120,10 @@ describe('student tests', () => {
       const studentsAfterOperation = await studentsInDb()
 
       expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
+      done()
     })
 
-    test('POST /api/students fails with proper statuscode if last name is missing', async () => {
+    test('POST /api/students fails with proper statuscode if last name is missing', async (done) => {
 
       const newStudent = {
         student_number: 'a1504567',
@@ -141,9 +147,10 @@ describe('student tests', () => {
       const studentsAfterOperation = await studentsInDb()
 
       expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
+      done()
     })
 
-    test('POST /api/students fails with proper statuscode if nickname is missing', async () => {
+    test('POST /api/students fails with proper statuscode if nickname is missing', async (done) => {
 
       const newStudent = {
         student_number: 'a1500512',
@@ -167,9 +174,10 @@ describe('student tests', () => {
       const studentsAfterOperation = await studentsInDb()
 
       expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
+      done()
     })
 
-    test('POST /api/students fails with proper statuscode if email is missing', async () => {
+    test('POST /api/students fails with proper statuscode if email is missing', async (done) => {
 
       const newStudent = {
         student_number: 'a1504421',
@@ -193,13 +201,13 @@ describe('student tests', () => {
       const studentsAfterOperation = await studentsInDb()
 
       expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
+      done()
     })
-
   })
 
-  describe('deleting a student', async () => {
+  describe('deleting a student', () => {
 
-    test('DELETE /api/students/:id succeeds with proper statuscode', async () => {
+    test('DELETE /api/students/:id succeeds with proper statuscode', async (done) => {
       const addedStudent = await db.Student.create({
         student_number: 'a1539505',
         first_name: 'Jouni',
@@ -221,22 +229,25 @@ describe('student tests', () => {
 
       expect(contents).not.toContain(addedStudent.first_name)
       expect(studentsAfterOperation.length).toBe(studentsAtStart.length - 1)
+      done()
     })
   })
 })
 
 describe('course tests', () => {
-  beforeAll(async () => {
+  beforeAll(async (done) => {
     await db.Course.destroy({
       where: {}
     })
+    done()
   })
   describe('when there is initially some courses saved', () => {
-    beforeAll(async () => {
+    beforeAll(async (done) => {
       await Promise.all(initialCourses.map(n => db.Course.create( n )))
+      done()
     })
 
-    test('all courses are returned as json by GET /api/courses', async () => {
+    test('all courses are returned as json by GET /api/courses', async (done) => {
       const coursesInDatabase = await coursesInDb()
 
       const response = await api
@@ -250,12 +261,13 @@ describe('course tests', () => {
       coursesInDatabase.forEach(course => {
         expect(returnedContents).toContain(course.course_name)
       })
+      done()
     })
   })
 
   describe('adding a new course', () => {
 
-    test('POST /api/courses succeeds with valid data', async () => {
+    test('POST /api/courses succeeds with valid data', async (done) => {
       const coursesAtStart = await coursesInDb()
 
       const newCourse = {
@@ -277,9 +289,10 @@ describe('course tests', () => {
 
       const contents = coursesAfterOperation.map(r => r.course_name)
       expect(contents).toContain('Tietokoneen toiminta')
+      done()
     })
 
-    test('POST /api/courses fails with proper statuscode if learning opportunity id is missing', async () => {
+    test('POST /api/courses fails with proper statuscode if learning opportunity id is missing', async (done) => {
 
       const newCourse = {
         course_name: 'Tietokoneen toiminta',
@@ -297,9 +310,10 @@ describe('course tests', () => {
       const coursesAfterOperation = await coursesInDb()
 
       expect(coursesAfterOperation.length).toBe(coursesAtStart.length)
+      done()
     })
 
-    test('POST /api/courses fails with proper statuscode if course name is missing', async () => {
+    test('POST /api/courses fails with proper statuscode if course name is missing', async (done) => {
 
       const newCourse = {
         learningopportunity_id: 'tito2016',
@@ -317,9 +331,10 @@ describe('course tests', () => {
       const coursesAfterOperation = await coursesInDb()
 
       expect(coursesAfterOperation.length).toBe(coursesAtStart.length)
+      done()
     })
 
-    test('POST /api/courses fails with proper statuscode if period is missing', async () => {
+    test('POST /api/courses fails with proper statuscode if period is missing', async (done) => {
 
       const newCourse = {
         learningopportunity_id: 'tito2016',
@@ -337,9 +352,10 @@ describe('course tests', () => {
       const coursesAfterOperation = await coursesInDb()
 
       expect(coursesAfterOperation.length).toBe(coursesAtStart.length)
+      done()
     })
 
-    test('POST /api/courses fails with proper statuscode if year is missing', async () => {
+    test('POST /api/courses fails with proper statuscode if year is missing', async (done) => {
 
       const newCourse = {
         learningopportunity_id: 'tito2016',
@@ -357,13 +373,14 @@ describe('course tests', () => {
       const coursesAfterOperation = await coursesInDb()
 
       expect(coursesAfterOperation.length).toBe(coursesAtStart.length)
+      done()
     })
 
   })
 
   describe('deleting a course', () => {
 
-    test('DELETE /api/courses/:id succeeds with proper statuscode', async () => {
+    test('DELETE /api/courses/:id succeeds with proper statuscode', async (done) => {
       const addedCourse = await db.Course.create({
         learningopportunity_id: 'tito2016',
         course_name: 'Käyttöjärjestelmät',
@@ -383,12 +400,8 @@ describe('course tests', () => {
 
       expect(contents).not.toContain(addedCourse.course_name)
       expect(coursesAfterOperation.length).toBe(coursesAtStart.length - 1)
+      done()
     })
-  })
-
-  afterAll(async (done) => {
-    db.sequelize.close()
-    done()
   })
 
 })

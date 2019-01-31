@@ -18,7 +18,7 @@ coursesRouter.post('/', async (request, response) => {
     response.status(201).json(course)
 
   } catch (exception) {
-    console.log(exception)
+    console.log(exception.message)
     response.status(400).json({ error: 'bad request' })
   }
 })
@@ -41,7 +41,7 @@ coursesRouter.get('/:id/students', async (request, response) => {
 coursesRouter.delete('/:id', async (request, response) => {
   try {
     await db.Course.destroy({ where: { course_id: request.params.id } })
-    response.status(204)
+    response.status(204).end()
 
   } catch (exception) {
     console.log(exception)

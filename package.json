@@ -7,7 +7,9 @@
     "lint": "eslint .",
     "start": "cross-env NODE_ENV=production node index.js",
     "watch": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "cross-env NODE_ENV=test jest --verbose"
+    "test": "cross-env NODE_ENV=test jest --verbose",
+    "test-coverage": "CI=true jest --coverage",
+    "codecov": "./node_modules/.bin/codecov"
   },
   "repository": {
     "type": "git",
@@ -20,7 +22,7 @@
   },
   "homepage": "https://github.com/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back#readme",
   "devDependencies": {
-    "codecov": "^3.0.4",
+    "codecov": "^3.1.0",
     "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "eslint": "^5.12.0",

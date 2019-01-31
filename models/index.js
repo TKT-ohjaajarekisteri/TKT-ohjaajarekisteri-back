@@ -15,7 +15,8 @@ const sequelize = new Sequelize(config.databaseUrl, {
   'dialectOptions': {
     'ssl': true
   },
-  //logging: false,
+  //Shows SQL queries from Sequelize
+  logging: false,
   operatorsAliases: false,
   pool: {
     max: 5,
@@ -53,6 +54,7 @@ db.connect = async () => {
     console.error('Unable to connect to the database:', exception)
   }
   await sequelize.sync()
+  //await sequelize.sync({ force:true })
   console.log('Tables have been created')
 }
 

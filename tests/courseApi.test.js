@@ -1,4 +1,4 @@
-const { app, server } = require('../index')
+const { app } = require('../index')
 const supertest = require('supertest')
 const api = supertest(app)
 const db = require('../models/index')
@@ -9,7 +9,7 @@ describe.skip('when there is initially some courses saved', async () => {
     await db.Course.destroy({
       where: {}
     })
-    await initialCourses.map(n => db.Course.create( n ))
+    await Promise.all(initialCourses.map(n => db.Student.create( n )))
   })
 
   test('all courses are returned as json by GET /api/courses', async () => {
@@ -140,19 +140,14 @@ describe.skip('adding a new course', async () => {
 describe.skip('deleting a course', async () => {
 
   test('DELETE /api/courses/:id succeeds with proper statuscode', async () => {
-    await db.Course.Create({
+    const addedCourse = await db.Course.create({
       learningopportunity_id: 'tito2016',
-      course_name: 'Tietokoneen toiminta',
+      course_name: 'Käyttöjärjestelmät',
       period: 2,
       year: 2016
     })
 
     const coursesAtStart = await coursesInDb()
-    const addedCourse = await db.Course.findOne({
-      where: {
-        learningopportunity_id: 'tito2016'
-      }
-    })
 
     await api
       .delete(`/api/courses/${addedCourse.course_id}`)
@@ -165,10 +160,5 @@ describe.skip('deleting a course', async () => {
     expect(contents).not.toContain(addedCourse.course_name)
     expect(coursesAfterOperation.length).toBe(coursesAtStart.length - 1)
   })
-
-  afterAll(() => {
-    server.close()
-  })
-
 })
 

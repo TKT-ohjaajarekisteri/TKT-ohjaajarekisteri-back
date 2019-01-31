@@ -1,7 +1,7 @@
 const db = require('../models/index')
 const initialStudents = [
   {
-    student_id: 'a1504546',
+    student_number: 'a1504546',
     first_name: 'Juhani',
     last_name: 'Pouta',
     nickname: 'Juhani',
@@ -9,7 +9,7 @@ const initialStudents = [
     email: 'juhani.pouta@gmail.com',
   },
   {
-    student_id: 'a1504512',
+    student_number: 'a1504512',
     first_name: 'Aarlo',
     last_name: 'Kustaa',
     nickname: 'Arska',
@@ -17,7 +17,7 @@ const initialStudents = [
     email: 'arska.kustaa@gmail.com',
   },
   {
-    student_id: 'a1504502',
+    student_number: 'a1504502',
     first_name: 'Tomi',
     last_name: 'Virtanen',
     nickname: 'Tomppa',

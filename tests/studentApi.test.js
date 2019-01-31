@@ -6,6 +6,7 @@ const { initialStudents, studentsInDb } = require('./test_helper')
 
 describe('when there is initially some students saved', async () => {
   beforeAll(async () => {
+    //await db.sequelize.sync({force:true})
     await db.Student.destroy({
       where: {}
     })
@@ -34,7 +35,7 @@ describe('adding a new student', async () => {
     const studentsAtStart = await studentsInDb()
 
     const newStudent = {
-      student_id: 'a2352332',
+      student_number: 'a2352332',
       first_name: 'Pekka',
       last_name: 'Ranta',
       nickname: 'Pekka',
@@ -60,7 +61,7 @@ describe('adding a new student', async () => {
     expect(contents).toContain('Pekka')
   })
 
-  test('POST /api/students fails with proper statuscode if student id is missing', async () => {
+  test('POST /api/students fails with proper statuscode if student number is missing', async () => {
 
     const newStudent = {
       first_name: 'Pekka',
@@ -89,7 +90,7 @@ describe('adding a new student', async () => {
   test('POST /api/students fails with proper statuscode if first name is missing', async () => {
 
     const newStudent = {
-      student_id: 'a1504525',
+      student_number: 'a1504525',
       last_name: 'Ranta',
       nickname: 'Pekka',
       learningopportunity_id: 'TKT32508',
@@ -115,7 +116,7 @@ describe('adding a new student', async () => {
   test('POST /api/students fails with proper statuscode if last name is missing', async () => {
 
     const newStudent = {
-      student_id: 'a1504567',
+      student_number: 'a1504567',
       first_name: 'Pekka',
       nickname: 'Pekka',
       learningopportunity_id: 'TKT30568',
@@ -141,7 +142,7 @@ describe('adding a new student', async () => {
   test('POST /api/students fails with proper statuscode if nickname is missing', async () => {
 
     const newStudent = {
-      student_id: 'a1500512',
+      student_number: 'a1500512',
       first_name: 'Pekka',
       last_name: 'Ranta',
       learningopportunity_id: 'TKT30548',
@@ -167,7 +168,7 @@ describe('adding a new student', async () => {
   test('POST /api/students fails with proper statuscode if email is missing', async () => {
 
     const newStudent = {
-      student_id: 'a1504421',
+      student_number: 'a1504421',
       first_name: 'Pekka',
       last_name: 'Ranta',
       learningopportunity_id: 'TKT30508',
@@ -196,7 +197,7 @@ describe('deleting a student', async () => {
 
   test('DELETE /api/students/:id succeeds with proper statuscode', async () => {
     const addedStudent = await db.Student.create({
-      student_id: 'a1539505',
+      student_number: 'a1539505',
       first_name: 'Jouni',
       last_name: 'Ranta',
       nickname: 'Jouni',

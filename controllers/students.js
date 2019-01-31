@@ -33,7 +33,7 @@ studentsRouter.post('/', async (request, response) => {
 
     if (!student) {
       student = await db.Student.create({
-        student_id: body.student_id,
+        student_number: body.student_number,
         first_name: body.first_name,
         last_name: body.last_name,
         nickname: body.nickname,
@@ -47,7 +47,7 @@ studentsRouter.post('/', async (request, response) => {
 
     response.status(201).json(course)
   } catch (exception) {
-    console.log(exception)
+    console.log(exception.message)
     response.status(400).json({ error: 'bad request' })
   }
 })

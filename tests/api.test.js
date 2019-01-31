@@ -4,14 +4,14 @@ const api = supertest(app)
 const db = require('../models/index')
 const { initialStudents, studentsInDb, initialCourses, coursesInDb } = require('./test_helper')
 
-describe('student tests', async () => {
+describe('student tests', () => {
   beforeAll(async () => {
     //await db.sequelize.sync({force:true})
     await db.Student.destroy({
       where: {}
     })
   })
-  describe('when there is initially some students saved', async () => {
+  describe('when there is initially some students saved', () => {
     beforeAll(async () => {
       await Promise.all(initialStudents.map(n => db.Student.create( n )))
     })
@@ -33,7 +33,7 @@ describe('student tests', async () => {
     })
   })
 
-  describe('adding a new student', async () => {
+  describe('adding a new student', () => {
 
     test('POST /api/students succeeds with valid data', async () => {
       const studentsAtStart = await studentsInDb()
@@ -225,13 +225,13 @@ describe('student tests', async () => {
   })
 })
 
-describe('course tests', async () => {
+describe('course tests', () => {
   beforeAll(async () => {
     await db.Course.destroy({
       where: {}
     })
   })
-  describe('when there is initially some courses saved', async () => {
+  describe('when there is initially some courses saved', () => {
     beforeAll(async () => {
       await Promise.all(initialCourses.map(n => db.Course.create( n )))
     })
@@ -253,7 +253,7 @@ describe('course tests', async () => {
     })
   })
 
-  describe('adding a new course', async () => {
+  describe('adding a new course', () => {
 
     test('POST /api/courses succeeds with valid data', async () => {
       const coursesAtStart = await coursesInDb()
@@ -361,7 +361,7 @@ describe('course tests', async () => {
 
   })
 
-  describe('deleting a course', async () => {
+  describe('deleting a course', () => {
 
     test('DELETE /api/courses/:id succeeds with proper statuscode', async () => {
       const addedCourse = await db.Course.create({
@@ -386,8 +386,9 @@ describe('course tests', async () => {
     })
   })
 
-  afterAll(async done => {
-    done();
-  });
+  afterAll(async (done) => {
+    db.sequelize.close()
+    done()
+  })
 
 })

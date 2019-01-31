@@ -404,4 +404,9 @@ describe('course tests', () => {
     })
   })
 
+  afterAll(async done => {
+    db.sequelize.close();
+    done();
+  });
+
 })

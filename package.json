@@ -8,6 +8,7 @@
     "lint": "eslint .",
     "test": "cross-env NODE_ENV=test jest --verbose",
     "test-coverage": "CI=true jest --coverage",
+    "codecov": "./node_modules/.bin/codecov",
     "watch": "nodemon index.js"
 
   },

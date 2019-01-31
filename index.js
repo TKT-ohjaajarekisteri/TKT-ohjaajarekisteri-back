@@ -1,34 +1,38 @@
-const { Client } = require('pg')
+const http = require('http')
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const morgan = require('morgan')
 const cors = require('cors')
+const config = require('./utils/config')
+const db = require('./models')
 
-app.use(bodyParser.json())
+// Middleware
 app.use(cors())
+app.use(bodyParser.json())
 app.use(express.static('build'))
 
-morgan.token('json', function (req, res) { return JSON.stringify(req.body) })
-app.use(morgan(':method :url :json :status :response-time ms'))
+// Routers
+const coursesRouter = require('./controllers/courses')
+const studentsRouter = require('./controllers/students')
 
-app.get('/api/', async (request, response) => {
-  response.json('Hello World')
-})
 
-app.get('/api/ohjaajat/', async (request, response) => {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
-  })
+const apiUrl = '/api'
+app.use(`${apiUrl}/courses`, coursesRouter)
+app.use(`${apiUrl}/students`, studentsRouter)
 
-  await client.connect()
-  const { rows } = await client.query('SELECT * FROM ohjaaja;')
-  await client.end()
-  response.json(rows)
-})
+// Initialize server
+const PORT = config.port
+const server = http.createServer(app)
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+if (process.env.NODE_ENV !== 'test') {
+// Database connection
+  db.connect()
+
+  {server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+  })}
+}
+
+module.exports = {
+  app, server
+}

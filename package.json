@@ -4,20 +4,19 @@
   "description": "Ohjaajarekisterin backend",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
     "lint": "eslint .",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "watch": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose",
-    "test-coverage": "CI=true jest --coverage",
-    "codecov": "./node_modules/.bin/codecov",
-    "watch": "nodemon index.js"
-
+    "test-coverage": "cross-env NODE_ENV=test jest --coverage --forceExit",
+    "codecov": "./node_modules/.bin/codecov"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back/issues"
   },
@@ -27,9 +26,9 @@
     "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "eslint": "^5.12.0",
-    "jest": "^23.5.0",
+    "jest": "^23.6.0",
     "nodemon": "^1.18.4",
-    "sqlite3": "^4.0.6"
+    "supertest": "^3.4.2"
   },
   "jest": {
     "testEnvironment": "node",
@@ -41,6 +40,7 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "morgan": "^1.9.1",
-    "pg": "^7.8.0"
+    "pg": "^7.8.0",
+    "sequelize": "^4.42.0"
   }
 }

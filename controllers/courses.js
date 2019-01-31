@@ -38,6 +38,10 @@ coursesRouter.get('/:id/students', async (request, response) => {
     .findByPk(request.params.id)
   const students = await course.getStudents()
 
+  // hide student numbers from JSON
+  students.forEach(student => {
+    student.student_number = ''
+  })
   response.status(200).json(students)
 })
 

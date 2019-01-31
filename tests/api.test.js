@@ -386,4 +386,8 @@ describe('course tests', async () => {
     })
   })
 
+  afterAll(async done => {
+    done();
+  });
+
 })

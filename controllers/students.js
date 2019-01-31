@@ -4,7 +4,12 @@ const db = require('../models/index')
 
 //Get request that returns all students as JSON
 studentsRouter.get('/', async (request, response) => {
-  const students = await db.Student.findAll({})
+  let students = await db.Student.findAll({})
+
+  // hide student numbers from JSON
+  students.forEach(student => {
+    student.student_number = ''
+  })
   response.status(200).json(students) // todo: formatointi
 })
 
@@ -32,8 +37,11 @@ studentsRouter.post('/', async (request, response) => {
     }
 
     // check if user exists in db
-    let student = await db.Student
-      .findByPk(body.student_id)
+    let student = await db.Student.findOne({
+      where: {
+        student_number: body.student_number
+      }
+    })
 
     if (!student) {
       student = await db.Student.create({
@@ -48,8 +56,11 @@ studentsRouter.post('/', async (request, response) => {
     } else {
       await student.addCourse(course)
     }
-
-    response.status(201).json(course)
+    student.student_number = ''
+    response.status(201).json({
+      'student': student,
+      'course': course
+    })
   } catch (exception) {
     console.log(exception.message)
     response.status(400).json({ error: 'bad request' })

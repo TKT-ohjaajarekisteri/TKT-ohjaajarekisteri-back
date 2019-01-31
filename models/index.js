@@ -1,12 +1,11 @@
 
-'use strict'
-
 var fs        = require('fs')
 var path      = require('path')
 var Sequelize = require('sequelize')
 const config = require('../utils/config')
 const db = {}
 
+//Initialize Sequelize
 const sequelize = new Sequelize(config.databaseUrl, {
   host: 'db',
   port: config.port,
@@ -16,7 +15,7 @@ const sequelize = new Sequelize(config.databaseUrl, {
     'ssl': true
   },
   //Shows SQL queries from Sequelize
-  logging: false,
+  logging: config.logging,
   operatorsAliases: false,
   pool: {
     max: 5,
@@ -26,6 +25,8 @@ const sequelize = new Sequelize(config.databaseUrl, {
   }
 })
 
+
+//Assigns model names to db based on file names
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -36,6 +37,7 @@ fs
     db[model.name] = model
   })
 
+//Associates all models of db
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db)
@@ -45,6 +47,7 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
+//Checks database connection and creates tables if they don't exist
 db.connect = async () => {
   try {
     await sequelize.authenticate()

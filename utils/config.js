@@ -4,10 +4,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 let port = null
 let databaseUrl = null
+let logging = true
 
 if (process.env.NODE_ENV === 'test') {
   port = process.env.TEST_PORT
   databaseUrl = process.env.TEST_DATABASE_URL
+  logging = false
 }
 
 if (process.env.NODE_ENV === 'development') {
@@ -17,5 +19,6 @@ if (process.env.NODE_ENV === 'development') {
 
 module.exports = {
   databaseUrl,
-  port
+  port,
+  logging
 }

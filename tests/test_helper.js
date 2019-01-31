@@ -29,15 +29,15 @@ const initialStudents = [
 const initialCourses = [
   {
     learningopportunity_id: 'ohtu2018',
-    course_name: 'Ohjelmistotuotanto',
+    course_name: 'Ohjelmistotuotanto 8',
     period: 3,
     year: 2018
   },
   {
     learningopportunity_id: 'ohtu2017',
-    course_name: 'Ohjelmistotuotanto',
-    period: 3,
-    year: 2017
+    course_name: 'Ohjelmistotuotanto 05',
+    period: 1,
+    year: 2015
   },
   {
     learningopportunity_id: 'tira2018',

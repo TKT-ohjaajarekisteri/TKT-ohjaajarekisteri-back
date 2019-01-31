@@ -1,4 +1,6 @@
 'use strict'
+
+//Sequelize model for Student database object
 module.exports = (sequelize, Sequelize) => {
   const Student = sequelize.define('Student', {
     student_id: {
@@ -38,6 +40,7 @@ module.exports = (sequelize, Sequelize) => {
     }
   })
 
+  //Association table config for Sequelize
   Student.associate = (models) => {
     Student.belongsToMany(models.Course, {
       through: 'student_course',

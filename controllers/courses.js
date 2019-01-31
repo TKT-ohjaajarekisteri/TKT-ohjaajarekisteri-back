@@ -1,11 +1,13 @@
 const coursesRouter = require('express').Router()
 const db = require('../models/index')
 
+//Get request that returns all courses on the database
 coursesRouter.get('/', async (request, response) => {
   const courses = await db.Course.findAll({})
   response.status(200).json(courses) // todo: formatointi
 })
 
+//Post request that adds a course to the database
 coursesRouter.post('/', async (request, response) => {
   try {
 
@@ -23,13 +25,14 @@ coursesRouter.post('/', async (request, response) => {
   }
 })
 
+//Get request that returns a course based on id
 coursesRouter.get('/:id', async (request, response) => {
   const course = await db.Course
     .findByPk(request.params.id)
   response.status(200).json(course)
 })
 
-// doesn't work currently
+//Get request that returns all of the students on a course
 coursesRouter.get('/:id/students', async (request, response) => {
   const course = await db.Course
     .findByPk(request.params.id)
@@ -38,6 +41,7 @@ coursesRouter.get('/:id/students', async (request, response) => {
   response.status(200).json(students)
 })
 
+//Delete request that deletes a course from the database based on id
 coursesRouter.delete('/:id', async (request, response) => {
   try {
     await db.Course.destroy({ where: { course_id: request.params.id } })

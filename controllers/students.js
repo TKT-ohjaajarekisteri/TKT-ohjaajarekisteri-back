@@ -1,11 +1,15 @@
 const studentsRouter = require('express').Router()
 const db = require('../models/index')
 
+
+//Get request that returns all students as JSON
 studentsRouter.get('/', async (request, response) => {
   const students = await db.Student.findAll({})
   response.status(200).json(students) // todo: formatointi
 })
 
+/*Post request that creates a new student and a new course
+Also creates a association between the course and student created*/
 studentsRouter.post('/', async (request, response) => {
   const body = request.body
   try {
@@ -52,12 +56,14 @@ studentsRouter.post('/', async (request, response) => {
   }
 })
 
+//Get request that returns a student based on id
 studentsRouter.get('/:id', async (request, response) => {
   const student = await db.Student
     .findByPk(request.params.id)
   response.status(200).json(student)
 })
 
+//Delete request that deletes a student from the database based on id
 studentsRouter.delete('/:id', async (request, response) => {
   try {
     await db.Student.destroy({ where: { student_id: request.params.id } })

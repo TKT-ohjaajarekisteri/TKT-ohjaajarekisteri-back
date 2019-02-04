@@ -1,6 +1,6 @@
 const loginRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
-const config = require('../config/')
+const config = require('../utils/config')
 const axios = require('axios')
 const db = require('../models/index')
 
@@ -84,7 +84,7 @@ loginRouter.post('/', async (request, response) => {
             role: 'student',
             role_id: savedStudent.student_id
           })
-        const token = jwt.sign({ id: savedStudent.student_id, role: savedUser.role }, config.secret)
+        const token = jwt.sign({ id: savedUser.user_id, role: savedUser.role }, config.secret)
         return response.status(200).json({
           token,
           user: {

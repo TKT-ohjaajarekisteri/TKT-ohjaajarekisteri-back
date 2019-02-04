@@ -4,7 +4,6 @@ const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const config = require('./utils/config')
-const db = require('./models')
 
 // Middleware
 app.use(cors())
@@ -27,12 +26,15 @@ const PORT = config.port
 const server = http.createServer(app)
 
 if (process.env.NODE_ENV !== 'test') {
-// Database connection
+  // Database connection
+  const db = require('./models')
   db.connect()
 
-  {server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-  })}
+  {
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`)
+    })
+  }
 }
 
 module.exports = {

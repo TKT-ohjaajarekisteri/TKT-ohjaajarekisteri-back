@@ -26,6 +26,32 @@ const initialStudents = [
   }
 ]
 
+const initialUsers = [
+  {
+    role: 'admin',
+    role_id: 1 
+  },
+  {
+    role: 'student',
+    role_id: 1 
+  },
+  {
+    role: 'student',
+    role_id: 2
+  },
+  {
+    role: 'student',
+    role_id: 3
+  }
+]
+
+const initialAdmins = [
+  {
+    username: "testAdmin",
+    password: "right"
+  }
+]
+
 const initialCourses = [
   {
     learningopportunity_id: 'ohtu2018',
@@ -58,6 +84,16 @@ const coursesInDb = async () => {
   return courses
 }
 
+const usersInDb = async () => {
+  const users = await db.User.findAll({})
+  return users
+}
+
 module.exports = {
-  initialStudents, initialCourses, studentsInDb, coursesInDb
+  initialStudents,
+  initialCourses,
+  studentsInDb,
+  initialUsers,
+  coursesInDb,
+  usersInDb
 }

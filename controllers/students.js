@@ -1,9 +1,11 @@
 const studentsRouter = require('express').Router()
 const db = require('../models/index')
+const checkAdmin = require('../utils/middlewate/checkRoute').checkAdmin
+const checkLogin = require('../utils/middlewate/checkRoute').checkLogin
 
 
 //Get request that returns all students as JSON
-studentsRouter.get('/', async (request, response) => {
+studentsRouter.get('/', checkAdmin , async (request, response) => {
   let students = await db.Student.findAll({})
 
   // hide student numbers from JSON
@@ -15,6 +17,7 @@ studentsRouter.get('/', async (request, response) => {
 
 /*Post request that creates a new student and a new course
 Also creates a association between the course and student created*/
+/*
 studentsRouter.post('/', async (request, response) => {
   const body = request.body
   try {
@@ -66,16 +69,30 @@ studentsRouter.post('/', async (request, response) => {
     response.status(400).json({ error: 'bad request' })
   }
 })
+*/
 
 //Get request that returns a student based on id
-studentsRouter.get('/:id', async (request, response) => {
-  const student = await db.Student
+studentsRouter.get('/:id', checkLogin, async (request, response) => {
+  const user = await db.User
     .findByPk(request.params.id)
+  const student = await db.Student
+    .findByPk(user.role_id)
   response.status(200).json(student)
 })
 
+//Get request that returns all of the courses a student is on
+studentsRouter.get('/:id/courses', checkLogin, async (request, response) => {
+  const user = await db.User
+    .findByPk(request.params.id)
+  const student = await db.Student
+    .findByPk(user.role_id)
+  const courses = await student.getCourses()
+
+  response.status(200).json(courses)
+})
+
 //Delete request that deletes a student from the database based on id
-studentsRouter.delete('/:id', async (request, response) => {
+studentsRouter.delete('/:id', checkAdmin, async (request, response) => {
   try {
     await db.Student.destroy({ where: { student_id: request.params.id } })
     response.status(204).end()

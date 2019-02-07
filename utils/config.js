@@ -5,6 +5,7 @@ let port = null
 let databaseUrl = null
 let logging = true
 let secret = null
+let login = 'http://opetushallinto.cs.helsinki.fi/login'
 
 if (process.env.NODE_ENV === 'production') {
   port = process.env.PORT
@@ -29,5 +30,6 @@ module.exports = {
   databaseUrl,
   port,
   logging,
-  secret
+  secret,
+  login
 }

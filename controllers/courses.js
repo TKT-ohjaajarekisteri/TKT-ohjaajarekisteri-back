@@ -1,7 +1,7 @@
 const coursesRouter = require('express').Router()
 const db = require('../models/index')
-const checkAdmin = require('../utils/middlewate/checkRoute').checkAdmin
-const checkLogin = require('../utils/middlewate/checkRoute').checkLogin
+const checkAdmin = require('../utils/middleware/checkRoute').checkAdmin
+const checkLogin = require('../utils/middleware/checkRoute').checkLogin
 
 //Get request that returns all courses on the database
 coursesRouter.get('/', checkLogin, async (request, response) => {

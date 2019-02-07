@@ -1,7 +1,7 @@
 const studentsRouter = require('express').Router()
 const db = require('../models/index')
 const checkAdmin = require('../utils/middleware/checkRoute').checkAdmin
-const checkLogin = require('../utils/middleware/checkRoute').checkLogin
+const checkUser = require('../utils/middleware/checkRoute').checkUser
 
 
 //Get request that returns all students as JSON
@@ -72,7 +72,7 @@ studentsRouter.post('/', async (request, response) => {
 */
 
 //Get request that returns a student based on id
-studentsRouter.get('/:id', checkLogin, async (request, response) => {
+studentsRouter.get('/:id', checkUser, async (request, response) => {
   const user = await db.User
     .findByPk(request.params.id)
   const student = await db.Student
@@ -81,7 +81,7 @@ studentsRouter.get('/:id', checkLogin, async (request, response) => {
 })
 
 //Get request that returns all of the courses a student is on
-studentsRouter.get('/:id/courses', checkLogin, async (request, response) => {
+studentsRouter.get('/:id/courses', checkUser, async (request, response) => {
   const user = await db.User
     .findByPk(request.params.id)
   const student = await db.Student
@@ -92,7 +92,7 @@ studentsRouter.get('/:id/courses', checkLogin, async (request, response) => {
 })
 
 //Delete request that deletes a student from the database based on id
-studentsRouter.delete('/:id', checkAdmin, async (request, response) => {
+studentsRouter.delete('/:id', checkUser, async (request, response) => {
   try {
     await db.Student.destroy({ where: { student_id: request.params.id } })
     response.status(204).end()

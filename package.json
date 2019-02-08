@@ -9,7 +9,9 @@
     "watch": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose",
     "test-coverage": "cross-env NODE_ENV=test jest --coverage --forceExit",
-    "codecov": "./node_modules/.bin/codecov"
+    "codecov": "./node_modules/.bin/codecov",
+    "migrate": "node_modules/.bin/sequelize db:migrate",
+    "migrate-undo": "node_modules/.bin/sequelize db:migrate:undo"
   },
   "repository": {
     "type": "git",
@@ -36,11 +38,14 @@
     "collectCoverage": true
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
     "morgan": "^1.9.1",
     "pg": "^7.8.0",
-    "sequelize": "^4.42.0"
+    "sequelize": "^4.42.0",
+    "sequelize-cli": "^5.4.0"
   }
 }

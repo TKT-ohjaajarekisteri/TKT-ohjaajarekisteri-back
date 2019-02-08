@@ -25,6 +25,7 @@ if (process.env.NODE_ENV === 'test') {
 if (process.env.NODE_ENV === 'development') {
   port = process.env.DEV_PORT
   databaseUrl = process.env.DEV_DATABASE_URL
+  fakeLogin = true
   secret = process.env.SECRET
 }
 

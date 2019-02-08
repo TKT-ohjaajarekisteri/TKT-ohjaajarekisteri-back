@@ -33,5 +33,6 @@ module.exports = {
   port,
   logging,
   secret,
-  login
+  login,
+  fakeLogin
 }

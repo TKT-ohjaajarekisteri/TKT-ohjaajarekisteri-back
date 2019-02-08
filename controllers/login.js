@@ -15,6 +15,7 @@ const db = require('../models/index')
 
 // Request user from auth server
 const authenticateOpetushallinto = async (username, password) => {
+  console.log('real login')
   try {
     const response = await axios.post(config.login,
       {
@@ -30,18 +31,31 @@ const authenticateOpetushallinto = async (username, password) => {
 }
 
 // Function for unit testing
-const authenticateFake = async (username, password) => {
-  return { // test data
-    username: 'poju',
-    student_number: '123456789',
-    first_names: 'Juhani',
-    last_name: 'Pouta'
+const authenticateFake = (username, password) => {
+  console.log('fake login')
+  if (username === 'poju' && password === 'password') {
+    return { // test data
+      data: {
+        username: 'poju',
+        student_number: '123456789',
+        first_names: 'Juhani',
+        last_name: 'Pouta'
+      }
+    }
+  } else {
+    console.log('incorrect creds')
+    return {
+      data: {
+        error: 'incorrect credentials'
+      }
+    }
   }
 }
 
 const authenticate = async (username, password) => {
   if (config.fakeLogin) {
     // Used for automatic unit tests
+    console.log('testing')
     return await authenticateFake(username, password)
   } else {
     return await authenticateOpetushallinto(username, password)
@@ -68,14 +82,23 @@ loginRouter.post('/', async (request, response) => {
     }
     const authenticatedUser = authResponse.data
 
+    console.log('auth data: ', authenticatedUser)
+    console.log('is this right? -- ', authenticatedUser.hasOwnProperty('student_number'))
+
     if (!authenticatedUser.hasOwnProperty('student_number')) {
       // authenticatedUser was not found. Check if the login is for admin
+      console.log('admin logging in')
       await loginAdmin(request, response)
     } else {
       // authenticatedUser was found. Get student data or add student to database
+      console.log('student logging in')
       await loginStudent(request, response, authenticatedUser)
     }
+
+    console.log('end of funct')
   } catch (error) {
+
+    console.log('This is how it ends')
     console.log(error)
     return response.status(500).json({ error: 'authentication error' })
   }
@@ -83,10 +106,10 @@ loginRouter.post('/', async (request, response) => {
 
 
 const loginAdmin = async (request, response) => {
+  console.log('admin username: ', request.body.username)
   try {
     // find admin and user info
-    console.log('loggin admin')
-    const foundAdmin = await db.Admin.findOne({ where: { username: request.body.username } })
+    const foundAdmin = await db.Admin.findOne({ where: { username: request.body.username, password: request.body.password } })
     if (!foundAdmin) {
       // incorrect credentials from auth server
       return response.status(401).json({ error: 'incorrect credentials' })
@@ -97,7 +120,7 @@ const loginAdmin = async (request, response) => {
     return response.status(200).json({
       token,
       user: {
-        user_id: foundAdmin.admin_id,
+        user_id: foundUser.user_id,
         role: 'admin'
       }
     })
@@ -120,7 +143,7 @@ const loginStudent = async (request, response, authenticatedUser) => {
       return response.status(200).json({
         token,
         user: {
-          user_id: foundStudent.student_id,
+          user_id: foundUser.user_id,
           role: 'student',
           email: foundStudent.email ? true : false // if the student has an email address added
         }
@@ -143,7 +166,7 @@ const loginStudent = async (request, response, authenticatedUser) => {
       return response.status(200).json({
         token,
         user: {
-          user_id: savedStudent.student_id,
+          user_id: savedUser.user_id,
           role: savedUser.role,
           email: savedStudent.email ? true : false // if the student has an email address added
         }

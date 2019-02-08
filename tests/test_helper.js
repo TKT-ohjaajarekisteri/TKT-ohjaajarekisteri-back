@@ -26,24 +26,24 @@ const initialStudents = [
   }
 ]
 
-const initialUsers = [
-  {
-    role: 'admin',
-    role_id: 1
-  },
-  {
-    role: 'student',
-    role_id: 1
-  },
-  {
-    role: 'student',
-    role_id: 2
-  },
-  {
-    role: 'student',
-    role_id: 3
-  }
-]
+// const initialUsers = [
+//   {
+//     role: 'admin',
+//     role_id: 1
+//   },
+//   {
+//     role: 'student',
+//     role_id: 1
+//   },
+//   {
+//     role: 'student',
+//     role_id: 2
+//   },
+//   {
+//     role: 'student',
+//     role_id: 3
+//   }
+// ]
 
 const initialAdmins = [
   {
@@ -99,7 +99,8 @@ module.exports = {
   initialCourses,
   initialAdmins,
   studentsInDb,
-  initialUsers,
+  // initialUsers,
   coursesInDb,
-  usersInDb
+  usersInDb,
+  adminsInDb
 }

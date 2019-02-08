@@ -28,7 +28,7 @@ module.exports = (sequelize, Sequelize) => {
     }
   })
 
-   //Association table config for Sequelize
+  //Association table config for Sequelize
   Course.associate = (models) => {
     Course.belongsToMany(models.Student, {
       through: 'student_course',

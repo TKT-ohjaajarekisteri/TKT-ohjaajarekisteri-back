@@ -1,10 +1,11 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
-let port = null
-let databaseUrl = null
+
+let port = process.env.DEV_PORT
+let databaseUrl = process.env.DEV_DATABASE_URL
+let secret = process.env.SECRET
 let logging = true
-let secret = null
 
 if (process.env.NODE_ENV === 'production') {
   port = process.env.PORT

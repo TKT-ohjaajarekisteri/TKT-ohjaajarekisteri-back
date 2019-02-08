@@ -98,4 +98,32 @@ studentsRouter.delete('/:id', checkUser, async (request, response) => {
   }
 })
 
+studentsRouter.put('/:id', checkUser, async (request, response) => {
+  try {
+    let user = await db.User.findOne({ where: { user_id: request.params.id } })
+    let student = await db.Student.findOne({ where: { student_id: user.role_id } })
+    const body = request.body
+
+    await student.update({ nickname: body.nickname, email: body.email, phone: body.phone })
+    response.status(201).end()
+    
+  } catch (error) {
+    console.log(error.message)
+    response.status(400).json({ error: 'bad request' })
+  }
+})
+
+// UNSAFE!!! Only for development
+studentsRouter.delete('/dev/:student_number', async (request, response) => {
+  try {
+    const student = await db.Student.destroy({ where: { student_number: request.params.student_number } })
+    await db.User.destroy({ where: { role_id: student.student_id } })
+    response.status(204).end()
+
+  } catch (exception) {
+    console.log(exception)
+    response.status(400).json({ error: 'bad request' })
+  }
+})
+
 module.exports = studentsRouter

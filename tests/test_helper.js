@@ -1,24 +1,24 @@
 const db = require('../models/index')
 const initialStudents = [
   {
-    student_number: 'a1504546',
-    first_name: 'Juhani',
+    student_number: '123456789',
+    first_names: 'Juhani',
     last_name: 'Pouta',
     nickname: 'Juhani',
     phone: '0401234567',
     email: 'juhani.pouta@gmail.com',
   },
   {
-    student_number: 'a1504512',
-    first_name: 'Aarlo',
+    student_number: '987654321',
+    first_names: 'Aarlo',
     last_name: 'Kustaa',
     nickname: 'Arska',
     phone: '0401234598',
     email: 'arska.kustaa@gmail.com',
   },
   {
-    student_number: 'a1504502',
-    first_name: 'Tomi',
+    student_number: '192837465',
+    first_names: 'Tomi',
     last_name: 'Virtanen',
     nickname: 'Tomppa',
     phone: '0405674567',
@@ -26,29 +26,29 @@ const initialStudents = [
   }
 ]
 
-const initialUsers = [
-  {
-    role: 'admin',
-    role_id: 1 
-  },
-  {
-    role: 'student',
-    role_id: 1 
-  },
-  {
-    role: 'student',
-    role_id: 2
-  },
-  {
-    role: 'student',
-    role_id: 3
-  }
-]
+// const initialUsers = [
+//   {
+//     role: 'admin',
+//     role_id: 1
+//   },
+//   {
+//     role: 'student',
+//     role_id: 1
+//   },
+//   {
+//     role: 'student',
+//     role_id: 2
+//   },
+//   {
+//     role: 'student',
+//     role_id: 3
+//   }
+// ]
 
 const initialAdmins = [
   {
-    username: "testAdmin",
-    password: "right"
+    username: 'testAdmin',
+    password: 'password'
   }
 ]
 
@@ -89,11 +89,18 @@ const usersInDb = async () => {
   return users
 }
 
+const adminsInDb = async () => {
+  const admins = await db.Admin.findAll({})
+  return admins
+}
+
 module.exports = {
   initialStudents,
   initialCourses,
+  initialAdmins,
   studentsInDb,
-  initialUsers,
+  // initialUsers,
   coursesInDb,
-  usersInDb
+  usersInDb,
+  adminsInDb
 }

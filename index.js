@@ -4,10 +4,23 @@ const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const config = require('./utils/config')
+const logger = require('./utils/middleware/logger')
+
+// Run middleware given except for a specific path
+const unless = (path, middleware) => {
+  return (req, res, next) => {
+    if (path === req.path) {
+      return next()
+    } else {
+      return middleware(req, res, next)
+    }
+  }
+}
 
 // Middleware
 app.use(cors())
 app.use(bodyParser.json())
+app.use(unless('/api/login', logger))
 app.use(express.static('build'))
 
 // Routers

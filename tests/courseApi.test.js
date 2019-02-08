@@ -11,9 +11,9 @@ describe.skip('course tests', async () => {
     })
   })
   describe('when there is initially some courses saved', async () => {
-    beforeAll(async () => {
-      await Promise.all(initialCourses.map(n => db.Student.create( n )))
-    })
+    // beforeAll(async () => {
+    //   await Promise.all(initialCourses.map(n => db.Course.create( n )))
+    // })
 
     test('all courses are returned as json by GET /api/courses', async () => {
       const coursesInDatabase = await coursesInDb()

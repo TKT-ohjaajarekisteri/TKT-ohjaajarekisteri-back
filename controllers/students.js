@@ -5,13 +5,8 @@ const checkUser = require('../utils/middleware/checkRoute').checkUser
 
 
 //Get request that returns all students as JSON
-studentsRouter.get('/', checkAdmin , async (request, response) => {
+studentsRouter.get('/', checkAdmin, async (request, response) => {
   let students = await db.Student.findAll({})
-
-  // hide student numbers from JSON
-  students.forEach(student => {
-    student.student_number = ''
-  })
   response.status(200).json(students) // todo: formatointi
 })
 

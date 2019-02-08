@@ -5,6 +5,7 @@ const axios = require('axios')
 const db = require('../models/index')
 
 // Check for usre credentials on 'http://opetushallinto.cs.helsinki.fi/login'
+// Data returned is in this format
 // {
 //   "username": "",
 //   "student_number": "",
@@ -12,7 +13,7 @@ const db = require('../models/index')
 //   "last_name": ""
 // }
 
-
+// Request user from auth server
 const authenticateOpetushallinto = async (username, password) => {
   try {
     const response = await axios.post(config.login,
@@ -28,18 +29,23 @@ const authenticateOpetushallinto = async (username, password) => {
   }
 }
 
-// Function for testing
+// Function for unit testing
 const authenticateFake = async (username, password) => {
-  return { // manual test data
-    student_number: "123456789",
-    first_name: "test",
-    last_name: "testersson"
+  return { // test data
+    username: 'poju',
+    student_number: '123456789',
+    first_names: 'Juhani',
+    last_name: 'Pouta'
   }
 }
 
 const authenticate = async (username, password) => {
-  return await authenticateOpetushallinto(username, password)
-  // return await authenticateFake(username, password)
+  if (config.fakeLogin) {
+    // Used for automatic unit tests
+    return await authenticateFake(username, password)
+  } else {
+    return await authenticateOpetushallinto(username, password)
+  }
 }
 
 
@@ -62,11 +68,11 @@ loginRouter.post('/', async (request, response) => {
     }
     const authenticatedUser = authResponse.data
 
-    console.log('auth USER: ', authenticatedUser)
-
     if (!authenticatedUser.hasOwnProperty('student_number')) {
+      // authenticatedUser was not found. Check if the login is for admin
       await loginAdmin(request, response)
     } else {
+      // authenticatedUser was found. Get student data or add student to database
       await loginStudent(request, response, authenticatedUser)
     }
   } catch (error) {
@@ -100,6 +106,7 @@ const loginAdmin = async (request, response) => {
     return response.status(500).json({ error: 'authentication error' })
   }
 }
+
 
 const loginStudent = async (request, response, authenticatedUser) => {
   try {

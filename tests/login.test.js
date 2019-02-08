@@ -4,11 +4,10 @@ const api = supertest(app)
 const db = require('../models/index')
 const jwt = require('jsonwebtoken')
 const config = require('../utils/config')
-const { initialStudents, initialAdmins, usersInDb, studentsInDb } = require('./test_helper')
+const { initialStudents, initialAdmins, usersInDb, studentsInDb, deleteUser } = require('./test_helper')
 
 describe('/api/login', async () => {
-  let adminToken = null
-  beforeAll(async () => {
+  beforeEach(async () => {
     await db.User.destroy({
       where: {}
     })
@@ -98,19 +97,37 @@ describe('/api/login', async () => {
     expect(response.body.user).toEqual({ user_id: user_id, role: 'student', email: true })
   })
 
-  // test('correct error with existing admin credentials', async () => {
+  test('correct error with incorrect student credentials', async () => {
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'pohu', password: 'password' })
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
 
-  // })
+    expect(response.body.error).toBe('incorrect credentials')
+  })
 
-  // test('can login with existing admin credentials', async () => {
+  test('when loggin in first time with correct student credentials a user is created', async () => {
+    await deleteUser('123456789')
+    let usersBefore = await usersInDb()
 
-  // })
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'poju', password: 'password' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
-  // test('can login with existing admin credentials', async () => {
+    let usersAfter = await usersInDb()
+    expect(usersAfter.length).toBe(4)
 
-  // })
-
-  // test('can login with existing admin credentials', async () => {
-
-  // })
+    let decodedToken = jwt.verify(response.body.token, config.secret)
+    let students = await studentsInDb()
+    let student_id = students.find(s => s.student_number === '123456789').student_id
+    
+    let users = await usersInDb()
+    let user_id = users.find(u => u.role_id === student_id).user_id
+    
+    expect(decodedToken.id).toBe(user_id)
+    expect(response.body.user).toEqual({ user_id: user_id, role: 'student', email: false })
+  })
 })

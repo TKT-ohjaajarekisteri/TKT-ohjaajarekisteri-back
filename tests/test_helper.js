@@ -26,25 +26,6 @@ const initialStudents = [
   }
 ]
 
-// const initialUsers = [
-//   {
-//     role: 'admin',
-//     role_id: 1
-//   },
-//   {
-//     role: 'student',
-//     role_id: 1
-//   },
-//   {
-//     role: 'student',
-//     role_id: 2
-//   },
-//   {
-//     role: 'student',
-//     role_id: 3
-//   }
-// ]
-
 const initialAdmins = [
   {
     username: 'testAdmin',
@@ -94,13 +75,20 @@ const adminsInDb = async () => {
   return admins
 }
 
+const deleteUser = async (student_number) => {
+  const foundStudent = await db.Student.findOne({ where: { student_number: student_number } })
+  const foundUser = await db.User.findOne({ where: { role_id: foundStudent.student_id } })
+  await db.Student.destroy({ where: { student_id: foundStudent.student_id } })
+  await db.User.destroy({ where: { user_id: foundUser.user_id } })
+}
+
 module.exports = {
   initialStudents,
   initialCourses,
   initialAdmins,
   studentsInDb,
-  // initialUsers,
   coursesInDb,
   usersInDb,
-  adminsInDb
+  adminsInDb,
+  deleteUser
 }

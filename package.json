@@ -8,6 +8,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "watch": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose",
+    "test-simple": "cross-env NODE_ENV=test jest",
     "test-coverage": "cross-env NODE_ENV=test jest --coverage --forceExit",
     "codecov": "./node_modules/.bin/codecov",
     "migrate": "node_modules/.bin/sequelize db:migrate",

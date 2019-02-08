@@ -1,14 +1,16 @@
 const coursesRouter = require('express').Router()
 const db = require('../models/index')
+const checkAdmin = require('../utils/middleware/checkRoute').checkAdmin
+const checkLogin = require('../utils/middleware/checkRoute').checkLogin
 
 //Get request that returns all courses on the database
-coursesRouter.get('/', async (request, response) => {
+coursesRouter.get('/', checkLogin, async (request, response) => {
   const courses = await db.Course.findAll({})
   response.status(200).json(courses) // todo: formatointi
 })
 
 //Post request that adds a course to the database
-coursesRouter.post('/', async (request, response) => {
+coursesRouter.post('/', checkAdmin, async (request, response) => {
   try {
 
     const course = await db.Course.create({
@@ -26,14 +28,14 @@ coursesRouter.post('/', async (request, response) => {
 })
 
 //Get request that returns a course based on id
-coursesRouter.get('/:id', async (request, response) => {
+coursesRouter.get('/:id', checkLogin, async (request, response) => {
   const course = await db.Course
     .findByPk(request.params.id)
   response.status(200).json(course)
 })
 
 //Get request that returns all of the students on a course
-coursesRouter.get('/:id/students', async (request, response) => {
+coursesRouter.get('/:id/students', checkLogin, async (request, response) => {
   const course = await db.Course
     .findByPk(request.params.id)
   const students = await course.getStudents()
@@ -46,7 +48,7 @@ coursesRouter.get('/:id/students', async (request, response) => {
 })
 
 //Delete request that deletes a course from the database based on id
-coursesRouter.delete('/:id', async (request, response) => {
+coursesRouter.delete('/:id', checkAdmin, async (request, response) => {
   try {
     await db.Course.destroy({ where: { course_id: request.params.id } })
     response.status(204).end()

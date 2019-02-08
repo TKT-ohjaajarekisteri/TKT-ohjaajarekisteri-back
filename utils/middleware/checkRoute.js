@@ -9,6 +9,29 @@ const getTokenFrom = (request) => {
   return null
 }
 
+const checkUser = (req, res, next) => {
+  try {
+    const token = getTokenFrom(req)
+    const decodedToken = jwt.verify(token, config.secret)
+
+    if (!token || !decodedToken.id) {
+      return res.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    if (decodedToken.id !== req.params.id) {
+      return res.status(401).json({ error: 'not authorized user' })
+    }
+
+    next()
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError') {
+      res.status(401).json({ error: error.message })
+    } else {
+      res.status(500).json({ error: error })
+    }
+  }
+}
+
 const checkLogin = (req, res, next) => {
   try {
     const token = getTokenFrom(req)
@@ -18,7 +41,7 @@ const checkLogin = (req, res, next) => {
       return res.status(401).json({ error: 'token missing or invalid' })
     }
 
-    return next()
+    next()
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
       res.status(401).json({ error: error.message })
@@ -40,7 +63,7 @@ const checkAdmin = (req, res, next) => {
       return res.status(401).json({ error: 'not admin' })
     }
 
-    return next()
+    next()
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
       res.status(401).json({ error: error.message })
@@ -53,5 +76,6 @@ const checkAdmin = (req, res, next) => {
 module.exports = {
   checkLogin,
   checkAdmin,
+  checkUser,
   getTokenFrom
 }

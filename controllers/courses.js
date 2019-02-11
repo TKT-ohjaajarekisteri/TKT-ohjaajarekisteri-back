@@ -2,7 +2,11 @@ const coursesRouter = require('express').Router()
 const db = require('../models/index')
 const checkAdmin = require('../utils/middleware/checkRoute').checkAdmin
 const checkLogin = require('../utils/middleware/checkRoute').checkLogin
+/*
 const getTokenFrom = require('../utils/middleware/checkRoute').getTokenFrom
+const jwt = require('jsonwebtoken')
+const config = require('../config')
+*/
 
 //Get request that returns all courses on the database
 coursesRouter.get('/', checkLogin, async (request, response) => {
@@ -10,12 +14,12 @@ coursesRouter.get('/', checkLogin, async (request, response) => {
   response.status(200).json(courses) // todo: formatointi
 })
 
+/*
 coursesRouter.post('/', checkLogin, async (request, response) => {
   const body = request.body
-  
   try {
 
-    const token = getTokenFrom(req)
+    const token = getTokenFrom(request)
     const decodedToken = jwt.verify(token, config.secret)
 
     // get current user from db
@@ -48,7 +52,6 @@ coursesRouter.post('/', checkLogin, async (request, response) => {
         year: body.year
       })
     }
-    
     await student.addCourse(course)
 
     response.status(201).json(course)
@@ -58,8 +61,8 @@ coursesRouter.post('/', checkLogin, async (request, response) => {
     response.status(400).json({ error: 'bad request' })
   }
 })
+*/
 
-/*
 //Post request that adds a course to the database by Admin
 coursesRouter.post('/', checkAdmin, async (request, response) => {
   try {
@@ -77,7 +80,7 @@ coursesRouter.post('/', checkAdmin, async (request, response) => {
     response.status(400).json({ error: 'bad request' })
   }
 })
-*/
+
 
 //Get request that returns a course based on id
 coursesRouter.get('/:id', checkLogin, async (request, response) => {

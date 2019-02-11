@@ -1,35 +1,35 @@
+const { production, development, test } = require('../config/sequelize')
+
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-let port = process.env.DEV_PORT
-let databaseUrl = process.env.DEV_DATABASE_URL
+let sequelizeConfig = null
+let port = null
 let secret = process.env.SECRET
 let logging = true
 let fakeLogin = false
 let login = 'http://opetushallinto.cs.helsinki.fi/login'
 
 if (process.env.NODE_ENV === 'production') {
+  sequelizeConfig = production
   port = process.env.PORT
-  databaseUrl = process.env.DATABASE_URL
-  logging = false
 }
 
 if (process.env.NODE_ENV === 'test') {
-  port = process.env.TEST_PORT
-  databaseUrl = process.env.TEST_DATABASE_URL
-  logging = false,
+  sequelizeConfig = test
   fakeLogin = true
+  port = process.env.TEST_PORT
 }
 
 if (process.env.NODE_ENV === 'development') {
-  port = process.env.DEV_PORT
-  databaseUrl = process.env.DEV_DATABASE_URL
+  sequelizeConfig = development
   fakeLogin = true
+  port = process.env.DEV_PORT
 }
 
 module.exports = {
-  databaseUrl,
+  sequelizeConfig,
   port,
   logging,
   secret,

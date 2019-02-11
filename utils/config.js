@@ -1,10 +1,11 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
-let port = null
-let databaseUrl = null
+
+let port = process.env.DEV_PORT
+let databaseUrl = process.env.DEV_DATABASE_URL
+let secret = process.env.SECRET
 let logging = true
-let secret = null
 let fakeLogin = false
 let login = 'http://opetushallinto.cs.helsinki.fi/login'
 
@@ -19,13 +20,12 @@ if (process.env.NODE_ENV === 'test') {
   databaseUrl = process.env.TEST_DATABASE_URL
   logging = false,
   fakeLogin = true
-  secret = process.env.SECRET
 }
 
 if (process.env.NODE_ENV === 'development') {
   port = process.env.DEV_PORT
   databaseUrl = process.env.DEV_DATABASE_URL
-  secret = process.env.SECRET
+  fakeLogin = true
 }
 
 module.exports = {

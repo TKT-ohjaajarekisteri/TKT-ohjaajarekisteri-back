@@ -114,16 +114,16 @@ studentsRouter.put('/:id', checkUser, async (request, response) => {
 })
 
 // UNSAFE!!! Only for development
-studentsRouter.delete('/dev/:student_number', async (request, response) => {
-  try {
-    const student = await db.Student.destroy({ where: { student_number: request.params.student_number } })
-    await db.User.destroy({ where: { role_id: student.student_id } })
-    response.status(204).end()
+// studentsRouter.delete('/dev/:student_number', async (request, response) => {
+//   try {
+//     const student = await db.Student.destroy({ where: { student_number: request.params.student_number } })
+//     await db.User.destroy({ where: { role_id: student.student_id } })
+//     response.status(204).end()
 
-  } catch (exception) {
-    console.log(exception)
-    response.status(400).json({ error: 'bad request' })
-  }
-})
+//   } catch (exception) {
+//     console.log(exception)
+//     response.status(400).json({ error: 'bad request' })
+//   }
+// })
 
 module.exports = studentsRouter

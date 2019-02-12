@@ -18,7 +18,7 @@ const checkUser = (req, res, next) => {
       return res.status(401).json({ error: 'token missing or invalid' })
     }
 
-    if (decodedToken.id !== req.params.id) {
+    if (decodedToken.id === req.params.id) {
       return res.status(401).json({ error: 'not authorized user' })
     }
 
@@ -59,7 +59,7 @@ const checkAdmin = (req, res, next) => {
     if (!token || !decodedToken.id) {
       return res.status(401).json({ error: 'token missing or invalid' })
     }
-    if (decodedToken.role !== 'admin') {
+    if (decodedToken.role === 'admin') {
       return res.status(401).json({ error: 'not admin' })
     }
 

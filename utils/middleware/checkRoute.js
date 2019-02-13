@@ -9,16 +9,25 @@ const getTokenFrom = (request) => {
   return null
 }
 
+const authenticateToken = (req) => {
+  const token = getTokenFrom(req)
+  const decodedToken = jwt.verify(token, config.secret)
+
+  if (!token || !decodedToken.id) {
+    return null
+  }
+  return decodedToken
+}
+
 const checkUser = (req, res, next) => {
   try {
-    const token = getTokenFrom(req)
-    const decodedToken = jwt.verify(token, config.secret)
+    const token = authenticateToken(req)
 
-    if (!token || !decodedToken.id) {
+    if (!token) {
       return res.status(401).json({ error: 'token missing or invalid' })
     }
 
-    if (decodedToken.id === req.params.id) {
+    if (token.id === req.params.id) {
       return res.status(401).json({ error: 'not authorized user' })
     }
 
@@ -34,10 +43,9 @@ const checkUser = (req, res, next) => {
 
 const checkLogin = (req, res, next) => {
   try {
-    const token = getTokenFrom(req)
-    const decodedToken = jwt.verify(token, config.secret)
+    const token = authenticateToken(req)
 
-    if (!token || !decodedToken.id) {
+    if (!token) {
       return res.status(401).json({ error: 'token missing or invalid' })
     }
 
@@ -53,13 +61,13 @@ const checkLogin = (req, res, next) => {
 
 const checkAdmin = (req, res, next) => {
   try {
-    const token = getTokenFrom(req)
-    const decodedToken = jwt.verify(token, config.secret)
+    const token = authenticateToken(req)
 
-    if (!token || !decodedToken.id) {
+    if (!token) {
       return res.status(401).json({ error: 'token missing or invalid' })
     }
-    if (decodedToken.role === 'admin') {
+
+    if (token.role === 'admin') {
       return res.status(401).json({ error: 'not admin' })
     }
 
@@ -77,5 +85,6 @@ module.exports = {
   checkLogin,
   checkAdmin,
   checkUser,
-  getTokenFrom
+  getTokenFrom,
+  authenticateToken
 }

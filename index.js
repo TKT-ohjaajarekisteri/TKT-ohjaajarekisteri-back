@@ -26,6 +26,7 @@ app.use(express.static('build'))
 // Routers
 const coursesRouter = require('./controllers/courses')
 const studentsRouter = require('./controllers/students')
+const adminsRouter = require('./controllers/admins')
 const loginRouter = require('./controllers/login')
 const tokenCheckRouter = require('./controllers/tokenCheck')
 
@@ -33,6 +34,7 @@ const tokenCheckRouter = require('./controllers/tokenCheck')
 const apiUrl = '/api'
 app.use(`${apiUrl}/courses`, coursesRouter)
 app.use(`${apiUrl}/students`, studentsRouter)
+app.use(`${apiUrl}/admins`, adminsRouter)
 app.use(`${apiUrl}/login`, loginRouter)
 app.use(`${apiUrl}/tokenCheck`, tokenCheckRouter)
 

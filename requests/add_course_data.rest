@@ -1,0 +1,10 @@
+POST http://localhost:3004/api/courses
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE1NTAxNDAwOTR9.d6yCZvwwMRWimTTLc3K-Sb9T8kQe6qr-amFvfdMLqPQ
+
+{
+  "learningopportunity_id": "TKT20089",
+  "course_name": "Ohjelmistotuotanto 5",
+  "period": 4,
+  "year": 2019
+}

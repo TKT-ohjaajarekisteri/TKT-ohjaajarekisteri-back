@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 'use strict'
 
-var Sequelize = require('sequelize');
+var Sequelize = require('sequelize')
 
 /**
  * Actions summary:
@@ -282,4 +283,4 @@ module.exports = {
     })
   },
   info: info
-};
+}

@@ -41,7 +41,7 @@ studentsRouter.post('/', checkUser, async (request, response) => {
     // get current user from db
     const user = await db.User.findOne({
       where: {
-        user_id: decodedToken.user_id
+        user_id: decodedToken.id
       }
     })
 

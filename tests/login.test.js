@@ -110,6 +110,7 @@ describe('/api/login', async () => {
   test('when loggin in first time with correct student credentials a user is created', async () => {
     await deleteUser('123456789')
     let usersBefore = await usersInDb()
+    expect(usersBefore.length).toBe(3)
 
     const response = await api
       .post('/api/login')

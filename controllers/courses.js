@@ -1,12 +1,9 @@
 const coursesRouter = require('express').Router()
 const db = require('../models/index')
-const checkAdmin = require('../utils/middleware/checkRoute').checkAdmin
-const checkLogin = require('../utils/middleware/checkRoute').checkLogin
-/*
-const getTokenFrom = require('../utils/middleware/checkRoute').getTokenFrom
+const { checkAdmin, checkLogin, getTokenFrom } = require('../utils/middleware/checkRoute')
 const jwt = require('jsonwebtoken')
-const config = require('../config')
-*/
+const config = require('../utils/config')
+
 
 //Get request that returns all courses on the database
 coursesRouter.get('/', checkLogin, async (request, response) => {
@@ -14,7 +11,7 @@ coursesRouter.get('/', checkLogin, async (request, response) => {
   response.status(200).json(courses) // todo: formatointi
 })
 
-/*
+
 coursesRouter.post('/', checkLogin, async (request, response) => {
   const body = request.body
   try {
@@ -25,7 +22,7 @@ coursesRouter.post('/', checkLogin, async (request, response) => {
     // get current user from db
     const user = await db.User.findOne({
       where: {
-        user_id: decodedToken.user_id
+        user_id: decodedToken.id
       }
     })
 
@@ -61,10 +58,10 @@ coursesRouter.post('/', checkLogin, async (request, response) => {
     response.status(400).json({ error: 'bad request' })
   }
 })
-*/
+
 
 //Post request that adds a course to the database by Admin
-coursesRouter.post('/', checkAdmin, async (request, response) => {
+coursesRouter.post('/admin', checkAdmin, async (request, response) => {
   try {
 
     const course = await db.Course.create({

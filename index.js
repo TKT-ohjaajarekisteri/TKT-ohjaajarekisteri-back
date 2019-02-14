@@ -27,12 +27,14 @@ app.use(express.static('build'))
 const coursesRouter = require('./controllers/courses')
 const studentsRouter = require('./controllers/students')
 const loginRouter = require('./controllers/login')
+const tokenCheckRouter = require('./controllers/tokenCheck')
 
 
 const apiUrl = '/api'
 app.use(`${apiUrl}/courses`, coursesRouter)
 app.use(`${apiUrl}/students`, studentsRouter)
 app.use(`${apiUrl}/login`, loginRouter)
+app.use(`${apiUrl}/tokenCheck`, tokenCheckRouter)
 
 // Initialize server
 const PORT = config.port

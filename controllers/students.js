@@ -116,8 +116,9 @@ studentsRouter.put('/:id', checkUser, async (request, response) => {
 // UNSAFE!!! Only for development
 // studentsRouter.delete('/dev/:student_number', async (request, response) => {
 //   try {
-//     const student = await db.Student.destroy({ where: { student_number: request.params.student_number } })
+//     const student = await db.Student.findOne({ where: { student_number: request.params.student_number } })
 //     await db.User.destroy({ where: { role_id: student.student_id } })
+//     await db.Student.destroy({ where: { student_id: student.student_id } })
 //     response.status(204).end()
 
 //   } catch (exception) {

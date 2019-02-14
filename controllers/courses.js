@@ -1,8 +1,6 @@
 const coursesRouter = require('express').Router()
 const db = require('../models/index')
-const { checkAdmin, checkLogin, getTokenFrom } = require('../utils/middleware/checkRoute')
-const jwt = require('jsonwebtoken')
-const config = require('../utils/config')
+const { checkAdmin, checkLogin } = require('../utils/middleware/checkRoute')
 
 
 //Get request that returns all courses on the database
@@ -10,55 +8,6 @@ coursesRouter.get('/', checkLogin, async (request, response) => {
   const courses = await db.Course.findAll({})
   response.status(200).json(courses) // todo: formatointi
 })
-
-
-coursesRouter.post('/', checkLogin, async (request, response) => {
-  const body = request.body
-  try {
-
-    const token = getTokenFrom(request)
-    const decodedToken = jwt.verify(token, config.secret)
-
-    // get current user from db
-    const user = await db.User.findOne({
-      where: {
-        user_id: decodedToken.id
-      }
-    })
-
-    const student = await db.Student.findOne({
-      where: {
-        student_id: user.role_id
-      }
-    })
-
-    // check if course exists in db
-    let course = await db.Course.findOne({
-      where: {
-        learningopportunity_id: body.learningopportunity_id,
-        period: body.period,
-        year: body.year
-      }
-    })
-
-    if (!course) {
-      course = await db.Course.create({
-        learningopportunity_id: body.learningopportunity_id,
-        course_name: body.course_name,
-        period: body.period,
-        year: body.year
-      })
-    }
-    await student.addCourse(course)
-
-    response.status(201).json(course)
-
-  } catch (exception) {
-    console.log(exception.message)
-    response.status(400).json({ error: 'bad request' })
-  }
-})
-
 
 //Post request that adds a course to the database by Admin
 coursesRouter.post('/admin', checkAdmin, async (request, response) => {

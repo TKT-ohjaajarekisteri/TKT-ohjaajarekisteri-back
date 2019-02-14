@@ -2,7 +2,7 @@ const studentsRouter = require('express').Router()
 const db = require('../models/index')
 const { checkUser, checkAdmin, getTokenFrom } = require('../utils/middleware/checkRoute')
 const jwt = require('jsonwebtoken')
-const config = require('../config')
+const config = require('../config/config')
 
 
 //Get request that returns all students as JSON

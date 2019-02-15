@@ -1,23 +1,56 @@
 const studentsRouter = require('express').Router()
 const db = require('../models/index')
+const { checkUser, checkAdmin, getTokenFrom } = require('../utils/middleware/checkRoute')
+const jwt = require('jsonwebtoken')
+const config = require('../config/config')
 
 
 //Get request that returns all students as JSON
-studentsRouter.get('/', async (request, response) => {
+studentsRouter.get('/', checkAdmin, async (request, response) => {
   let students = await db.Student.findAll({})
-
-  // hide student numbers from JSON
-  students.forEach(student => {
-    student.student_number = ''
-  })
   response.status(200).json(students) // todo: formatointi
 })
 
-/*Post request that creates a new student and a new course
-Also creates a association between the course and student created*/
-studentsRouter.post('/', async (request, response) => {
+//Get request that returns a student based on id
+studentsRouter.get('/:id', checkUser, async (request, response) => {
+  const user = await db.User
+    .findByPk(request.params.id)
+  const student = await db.Student
+    .findByPk(user.role_id)
+  response.status(200).json(student)
+})
+
+//Get request that returns all of the courses a student is on
+studentsRouter.get('/:id/courses', checkUser, async (request, response) => {
+  const user = await db.User
+    .findByPk(request.params.id)
+  const student = await db.Student
+    .findByPk(user.role_id)
+  const courses = await student.getCourses()
+
+  response.status(200).json(courses)
+})
+
+studentsRouter.post('/', checkUser, async (request, response) => {
   const body = request.body
   try {
+
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, config.secret)
+
+    // get current user from db
+    const user = await db.User.findOne({
+      where: {
+        user_id: decodedToken.id
+      }
+    })
+
+    const student = await db.Student.findOne({
+      where: {
+        student_id: user.role_id
+      }
+    })
+
     // check if course exists in db
     let course = await db.Course.findOne({
       where: {
@@ -35,47 +68,18 @@ studentsRouter.post('/', async (request, response) => {
         year: body.year
       })
     }
+    await student.addCourse(course)
 
-    // check if user exists in db
-    let student = await db.Student.findOne({
-      where: {
-        student_number: body.student_number
-      }
-    })
+    response.status(201).json(course)
 
-    if (!student) {
-      student = await db.Student.create({
-        student_number: body.student_number,
-        first_name: body.first_name,
-        last_name: body.last_name,
-        nickname: body.nickname,
-        phone: body.phone,
-        email: body.email
-      })
-      await student.addCourse(course)
-    } else {
-      await student.addCourse(course)
-    }
-    student.student_number = ''
-    response.status(201).json({
-      'student': student,
-      'course': course
-    })
   } catch (exception) {
     console.log(exception.message)
     response.status(400).json({ error: 'bad request' })
   }
 })
 
-//Get request that returns a student based on id
-studentsRouter.get('/:id', async (request, response) => {
-  const student = await db.Student
-    .findByPk(request.params.id)
-  response.status(200).json(student)
-})
-
 //Delete request that deletes a student from the database based on id
-studentsRouter.delete('/:id', async (request, response) => {
+studentsRouter.delete('/:id', checkUser, async (request, response) => {
   try {
     await db.Student.destroy({ where: { student_id: request.params.id } })
     response.status(204).end()
@@ -85,5 +89,34 @@ studentsRouter.delete('/:id', async (request, response) => {
     response.status(400).json({ error: 'bad request' })
   }
 })
+
+studentsRouter.put('/:id', checkUser, async (request, response) => {
+  try {
+    let user = await db.User.findOne({ where: { user_id: request.params.id } })
+    let student = await db.Student.findOne({ where: { student_id: user.role_id } })
+    const body = request.body
+
+    await student.update({ nickname: body.nickname, email: body.email, phone: body.phone })
+    response.status(201).end()
+    
+  } catch (error) {
+    console.log(error.message)
+    response.status(400).json({ error: 'bad request' })
+  }
+})
+
+// UNSAFE!!! Only for development
+// studentsRouter.delete('/dev/:student_number', async (request, response) => {
+//   try {
+//     const student = await db.Student.findOne({ where: { student_number: request.params.student_number } })
+//     await db.User.destroy({ where: { role_id: student.student_id } })
+//     await db.Student.destroy({ where: { student_id: student.student_id } })
+//     response.status(204).end()
+
+//   } catch (exception) {
+//     console.log(exception)
+//     response.status(400).json({ error: 'bad request' })
+//   }
+// })
 
 module.exports = studentsRouter

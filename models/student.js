@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       unique: true
     },
-    first_name: {
+    first_names: {
       type: Sequelize.STRING(127),
       allowNull: false
     },
@@ -25,7 +25,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     nickname: {
       type: Sequelize.STRING(63),
-      allowNull: false
+      allowNull: true
     },
     phone: {
       type: Sequelize.STRING(31),
@@ -33,7 +33,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     email: {
       type: Sequelize.STRING(127),
-      allowNull: false,
+      allowNull: true,
       validate: {
         isEmail: true
       }

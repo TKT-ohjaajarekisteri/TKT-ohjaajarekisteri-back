@@ -6,24 +6,7 @@ const config = require('../utils/config')
 const db = {}
 
 //Initialize Sequelize
-const sequelize = new Sequelize(config.databaseUrl, {
-  host: 'db',
-  port: config.port,
-  dialect: 'postgres',
-  'ssl': true,
-  'dialectOptions': {
-    'ssl': true
-  },
-  //Shows SQL queries from Sequelize
-  logging: config.logging,
-  operatorsAliases: false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 10000,
-    idle: 300000000
-  }
-})
+const sequelize = new Sequelize(config.sequelizeConfig.url, config.sequelizeConfig)
 
 
 //Assigns model names to db based on file names
@@ -57,7 +40,7 @@ db.connect = async () => {
     console.error('Unable to connect to the database:', exception)
   }
   await sequelize.sync()
-  //await sequelize.sync({ force:true })
+  // await sequelize.sync({ force:true })
   console.log('Tables have been created')
 }
 

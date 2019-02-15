@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const config = require('../utils/config')
 const { initialStudents, initialAdmins, usersInDb, studentsInDb, deleteUser } = require('./test_helper')
 
-describe('/api/login', async () => {
+describe.skip('/api/login', async () => {
   beforeEach(async () => {
     await db.User.destroy({
       where: {}

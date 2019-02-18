@@ -40,7 +40,17 @@ const authenticateFake = (username, password) => {
         last_name: 'Pouta'
       }
     }
-  } else {
+  } else if (username === 'tytto' && password === 'password') {
+    return { // test data
+      data: {
+        username: 'tytto',
+        student_number: '987654321',
+        first_names: 'Katriina',
+        last_name: 'Myrsky'
+      }
+    }
+  }
+  else {
     return {
       data: {
         error: 'incorrect credentials'

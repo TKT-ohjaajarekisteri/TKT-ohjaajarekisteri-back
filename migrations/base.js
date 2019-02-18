@@ -39,6 +39,7 @@ var migrationCommands = [{
       'username': {
         'type': Sequelize.STRING(55),
         'field': 'username',
+        'unique': true,
         'allowNull': false
       },
       'password': {

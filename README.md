@@ -8,7 +8,6 @@ Backend for University of Helsinki's teaching assistant register.
 
 [![codecov](https://codecov.io/gh/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back/branch/master/graph/badge.svg)](https://codecov.io/gh/TKT-ohjaajarekisteri/TKT-ohjaajarekisteri-back)
 
-[Staging version in Heroku](https://tkt-ohjaajarekisteri-back.herokuapp.com/)
 
 
 

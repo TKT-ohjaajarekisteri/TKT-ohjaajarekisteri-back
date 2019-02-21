@@ -1,4 +1,4 @@
-const { production, development, test } = require('./sequelize')
+const { production, development, test } = require('../config/sequelize')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()

@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const config = require('./utils/config')
+const config = require('./config/config')
 const logger = require('./utils/middleware/logger')
 
 // Run middleware given except for a specific path

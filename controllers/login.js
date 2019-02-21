@@ -1,6 +1,6 @@
 const loginRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
-const config = require('../utils/config')
+const config = require('../config/config')
 const axios = require('axios')
 const db = require('../models/index')
 

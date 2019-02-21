@@ -2,7 +2,7 @@
 var fs        = require('fs')
 var path      = require('path')
 var Sequelize = require('sequelize')
-const config = require('../utils/config')
+const config = require('../config/config')
 const db = {}
 
 //Initialize Sequelize

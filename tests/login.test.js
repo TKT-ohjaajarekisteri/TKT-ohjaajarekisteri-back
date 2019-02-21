@@ -3,7 +3,7 @@ const supertest = require('supertest')
 const api = supertest(app)
 const db = require('../models/index')
 const jwt = require('jsonwebtoken')
-const config = require('../utils/config')
+const config = require('../config/config')
 const { initialStudents, initialAdmins, usersInDb, studentsInDb, deleteUser } = require('./test_helper')
 
 describe.skip('/api/login', async () => {

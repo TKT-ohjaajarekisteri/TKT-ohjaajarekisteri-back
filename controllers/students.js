@@ -55,7 +55,7 @@ studentsRouter.post('/', checkUser, async (request, response) => {
     let course = await db.Course.findOne({
       where: {
         learningopportunity_id: body.learningopportunity_id,
-        period: body.period,
+        periods: body.period,
         year: body.year
       }
     })
@@ -64,7 +64,7 @@ studentsRouter.post('/', checkUser, async (request, response) => {
       course = await db.Course.create({
         learningopportunity_id: body.learningopportunity_id,
         course_name: body.course_name,
-        period: body.period,
+        periods: body.period,
         year: body.year
       })
     }

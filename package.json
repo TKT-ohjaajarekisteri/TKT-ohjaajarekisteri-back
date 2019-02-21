@@ -47,6 +47,7 @@
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
     "morgan": "^1.9.1",
+    "node-cron": "^2.0.3",
     "pg": "^7.8.0",
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.4.0"

@@ -40,7 +40,7 @@ db.connect = async () => {
     console.error('Unable to connect to the database:', exception)
   }
   await sequelize.sync()
-  // await sequelize.sync({ force:true })
+  //await sequelize.sync({ force:true })
   console.log('Tables have been created')
 }
 

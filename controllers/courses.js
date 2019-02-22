@@ -14,7 +14,7 @@ coursesRouter.get('/', checkAdmin, async (req, res) => {
 //Returns the added courses as json
 coursesRouter.get('/update', checkAdmin, async (req, res) => {
   try {
-    const updatedCourses = updateCourses()
+    const updatedCourses = await updateCourses()
     res.status(200).json(updatedCourses)
   } catch (exception) {
     console.log(exception.message)

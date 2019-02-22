@@ -43,14 +43,7 @@ app.use(`${apiUrl}/tokenCheck`, tokenCheckRouter)
 //Updates courses on database every day at one second before midnight
 cron.schedule('59 59 23 * * *', async function() {
   try {
-    const updatedCourses = await updateCourses()
-    if(updatedCourses.length > 0) {
-      console.log('New courses added to database:')
-      console.log(updatedCourses)  
-    } else {
-      console.log('Database was already up to date')
-    }
-
+    await updateCourses()
   } catch(exception) {
     console.log(exception.message)
   }

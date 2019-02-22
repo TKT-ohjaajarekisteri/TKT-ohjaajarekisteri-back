@@ -1,5 +1,6 @@
 POST http://localhost:8001/api/students
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE1NTAxNDAwOTR9.d6yCZvwwMRWimTTLc3K-Sb9T8kQe6qr-amFvfdMLqPQ
 
 {
   "student_number": "aaacddbss",

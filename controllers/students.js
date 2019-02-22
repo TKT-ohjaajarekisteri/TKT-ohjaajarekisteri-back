@@ -32,18 +32,17 @@ studentsRouter.get('/:id/courses', /* checkUser, */ async (request, response) =>
 })
 
 // Adds student to a course
-
 studentsRouter.post('/:id/apply', /* checkUser, */ async (request, response) => {
   const body = request.body
   try {
 
-    //const token = getTokenFrom(request)
-    //const decodedToken = jwt.verify(token, config.secret)
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, config.secret)
 
     // get current user from db
     const user = await db.User.findOne({
       where: {
-        user_id: /* decodedToken.id */ 1 // works only with hard coded student number! *WHY?*
+        user_id: decodedToken.id
       }
     })
     const student = await db.Student.findOne({
@@ -51,12 +50,16 @@ studentsRouter.post('/:id/apply', /* checkUser, */ async (request, response) => 
         student_id: user.role_id
       }
     })
+
+    // finds all courses with given course id, and adds them to the student-course association table
     await Promise.all(body.course_ids.map(async course_id => {
       const course = await db.Course.findOne({
         where: {
           course_id: course_id
         }
       })
+
+      // sequelize method that creates a association for student - course
       await student.addCourse(course)
       response.status(201).json(course)
     }))
@@ -73,13 +76,13 @@ studentsRouter.delete('/:student_id/courses/:course_id', /* checkUser, */ async 
   
   try {
 
-    //const token = getTokenFrom(request)
-    //const decodedToken = jwt.verify(token, config.secret)
+    const token = getTokenFrom(request)
+    const decodedToken = jwt.verify(token, config.secret)
 
     // get current user from db
     const user = await db.User.findOne({
       where: {
-        user_id: /* decodedToken.id */ 2
+        user_id: decodedToken.id
       }
     })
 
@@ -95,11 +98,11 @@ studentsRouter.delete('/:student_id/courses/:course_id', /* checkUser, */ async 
         course_id: request.params.course_id
       }
     })
-    console.log('poistettava: ', course)
-    // await student.destroy(course)
-    await course.destroy(student)
 
-    response.status(201).json(course)
+    // sequelize method to severe connection from assossication table
+    await student.removeCourse(course)
+
+    response.status(204).json(course)
 
   } catch (exception) {
     console.log(exception.message)

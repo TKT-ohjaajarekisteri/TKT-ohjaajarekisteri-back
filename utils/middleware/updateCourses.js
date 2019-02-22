@@ -11,34 +11,40 @@ const updateCourses = async () => {
     
   const addedCourses = []
 
-  console.log('Updating courses...')
-  for(let i = 0; i < courses.length; i++) {
-    const course = courses[i]
-    
-    
-    for(let j = 0; j < course.periods.length; j++) {
-      const foundCourse = await db.Course.findOne({
-        where: {
-          learningopportunity_id: course.learningopportunity_id,
-          course_name: course.realisation_name[0].text,
-          period: course.periods[j],
-          year: course.start_date.substring(0,4)
-        }
-      })
+  const currentCourses = await db.Course.findAll({ 
+    raw:true,
+    attributes: {
+      exclude: ['course_id', 'createdAt', 'updatedAt']
+    }
+  })
 
-      if(!foundCourse) {
-        const addedCourse = await db.Course.create({
-          learningopportunity_id: course.learningopportunity_id,
-          course_name: course.realisation_name[0].text,
-          period: course.periods[j],
-          year: course.start_date.substring(0,4)
-        })
-        addedCourses.push(addedCourse)
+  console.log('Updating courses...')
+  for(let i = 0; i < courses.length; i++) {    
+    for(let j = 0; j < courses[i].periods.length; j++) {
+      const course = {
+        learningopportunity_id: courses[i].learningopportunity_id,
+        course_name: courses[i].realisation_name[0].text,
+        period: courses[i].periods[j],
+        year: parseInt(courses[i].start_date.substring(0,4))
+      }
+      if(!courseExistsInDB(currentCourses, course)) {
+        addedCourses.push(course)     
       }
     }
   }
+  await db.Course.bulkCreate(addedCourses)
   console.log('Courses have been updated')
   return addedCourses
+}
+
+const courseExistsInDB = (currentCourses, course) => {
+  for(let k = 0; k < currentCourses.length; k++) { 
+    if(JSON.stringify(currentCourses[k]) === JSON.stringify(course)) {
+      return true
+    }
+    delete currentCourses[k]
+  }
+  return false
 }
 
 module.exports = {

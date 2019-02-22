@@ -7,14 +7,15 @@ const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 //Get request that returns all courses on the database
 coursesRouter.get('/', async (request, response) => {
   const courses = await db.Course.findAll({})
-  response.status(200).json(courses) // todo: formatointi
+  response.status(200).json(courses)
 })
 
 //Updates all course data from studies.helsinki.fi course list
 //Returns the added courses as json
 coursesRouter.get('/update', async (request, response) => {
   try {
-    response.status(200).json(updateCourses()) // todo: formatointi  
+    const updatedCourses = updateCourses()
+    response.status(200).json(updatedCourses)
   } catch (exception) {
     console.log(exception.message)
     response.status(400).json({ error: 'malformatted json' })
@@ -28,7 +29,7 @@ coursesRouter.post('/admin', checkAdmin, async (request, response) => {
     const course = await db.Course.create({
       learningopportunity_id: request.body.learningopportunity_id,
       course_name: request.body.course_name,
-      periods: request.body.period,
+      period: request.body.period,
       year: request.body.year
     })
     response.status(201).json(course)

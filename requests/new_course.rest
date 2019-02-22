@@ -1,9 +1,3 @@
-POST http://localhost:3004/api/courses
+POST http://localhost:3004/api/students/1/courses/1/
 Content-Type: application/json
-
-{
-  "learningopportunity_id": "TKT20006",
-  "course_name": "Ohjelmistotuotanto",
-  "period": 2,
-  "year": 2019
-}
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE1NTAxNDAwOTR9.d6yCZvwwMRWimTTLc3K-Sb9T8kQe6qr-amFvfdMLqPQ

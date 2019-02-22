@@ -1,0 +1,8 @@
+POST http://localhost:8001/api/students/1/apply
+Content-Type: application/json
+
+{
+  "course_ids": [
+    1, 2, 3, 4
+  ]
+}

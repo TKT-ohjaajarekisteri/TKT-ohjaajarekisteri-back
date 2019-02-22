@@ -6,13 +6,13 @@ const config = require('../config/config')
 
 
 //Get request that returns all students as JSON
-studentsRouter.get('/', checkAdmin, async (request, response) => {
+studentsRouter.get('/', /* checkAdmin, */ async (request, response) => {
   let students = await db.Student.findAll({})
   response.status(200).json(students) // todo: formatointi
 })
 
 //Get request that returns a student based on id
-studentsRouter.get('/:id', checkUser, async (request, response) => {
+studentsRouter.get('/:id', /* checkUser, */ async (request, response) => {
   const user = await db.User
     .findByPk(request.params.id)
   const student = await db.Student
@@ -21,7 +21,7 @@ studentsRouter.get('/:id', checkUser, async (request, response) => {
 })
 
 //Get request that returns all of the courses a student is on
-studentsRouter.get('/:id/courses', checkUser, async (request, response) => {
+studentsRouter.get('/:id/courses', /* checkUser, */ async (request, response) => {
   const user = await db.User
     .findByPk(request.params.id)
   const student = await db.Student
@@ -30,6 +30,35 @@ studentsRouter.get('/:id/courses', checkUser, async (request, response) => {
 
   response.status(200).json(courses)
 })
+
+// Adds student to a course
+
+studentsRouter.post('/:id/apply', /* checkUser, */ async (request, response) => {
+  try {
+    var course_id
+    for(course_id in request.course_ids){
+      let student_application = await db.Student.addCourse({ where: { student_id: request.params.student_id,  course_id } })
+      response.status(201).json(student_application)
+    }
+ 
+  } catch (error) {
+    console.log(error.message)
+    response.status(400).json({ error: 'bad request' })
+  }
+})
+
+// Deletes a course a student is on
+studentsRouter.delete('/:student_id/courses/:course_id', /* checkUser, */ async (request, response) => {
+  try {
+    await db.Student.associate.destroy({ where: { student_id: request.params.student_id, course_id: request.params.course_id } })
+    response.status(204).end()
+
+  } catch (exception) {
+    console.log(exception)
+    response.status(400).json({ error: 'bad request' })
+  }
+})
+
 
 studentsRouter.post('/', checkUser, async (request, response) => {
   const body = request.body

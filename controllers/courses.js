@@ -4,7 +4,7 @@ const { checkAdmin, checkLogin } = require('../utils/middleware/checkRoute')
 
 
 //Get request that returns all courses on the database
-coursesRouter.get('/', checkLogin, async (request, response) => {
+coursesRouter.get('/', /* checkLogin, */ async (request, response) => {
   const courses = await db.Course.findAll({})
   response.status(200).json(courses) // todo: formatointi
 })

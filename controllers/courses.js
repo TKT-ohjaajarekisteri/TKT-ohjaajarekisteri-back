@@ -5,14 +5,14 @@ const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 
 
 //Get request that returns all courses on the database
-coursesRouter.get('/', checkAdmin, async (request, response) => {
+coursesRouter.get('/', async (request, response) => {
   const courses = await db.Course.findAll({})
   response.status(200).json(courses) // todo: formatointi
 })
 
 //Updates all course data from studies.helsinki.fi course list
 //Returns the added courses as json
-coursesRouter.get('/update', checkAdmin, async (request, response) => {
+coursesRouter.get('/update', async (request, response) => {
   try {
     response.status(200).json(updateCourses()) // todo: formatointi  
   } catch (exception) {

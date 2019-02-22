@@ -84,8 +84,8 @@ var migrationCommands = [{
         'field': 'course_name',
         'allowNull': false
       },
-      'periods': {
-        'type': Sequelize.ARRAY(Sequelize.INTEGER),
+      'period': {
+        'type': Sequelize.INTEGER,
         'field': 'period',
         'allowNull': false
       },

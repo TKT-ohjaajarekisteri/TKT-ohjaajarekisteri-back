@@ -13,16 +13,16 @@ const db = require('../models/index')
 //   "last_name": ""
 // }
 
-// Request user from auth server
+// req user from auth server
 const authenticateOpetushallinto = async (username, password) => {
   try {
-    const response = await axios.post(config.login,
+    const res = await axios.post(config.login,
       {
         'username': username,
         'password': password
       }
     )
-    return response
+    return res
 
   } catch (error) {
     throw error
@@ -70,49 +70,49 @@ const authenticate = async (username, password) => {
 
 
 // Route for handling login
-loginRouter.post('/', async (request, response) => {
+loginRouter.post('/', async (req, res) => {
   try {
-    if (!request.body.username || !request.body.password) {
+    if (!req.body.username || !req.body.password) {
       // username or password field undefined
-      return response.status(400).json({ error: 'missing username or password' })
+      return res.status(400).json({ error: 'missing username or password' })
     }
 
     // authenticate user
     let authResponse
     try {
-      authResponse = await authenticate(request.body.username, request.body.password)
+      authResponse = await authenticate(req.body.username, req.body.password)
     } catch (error) {
       //error from auth server
       console.log(error.message)
-      return response.status(500).json({ error: 'authentication error' })
+      return res.status(500).json({ error: 'authentication error' })
     }
     const authenticatedUser = authResponse.data
     if (!authenticatedUser.hasOwnProperty('student_number')) {
       // authenticatedUser was not found. Check if the login is for admin
-      await loginAdmin(request, response)
+      await loginAdmin(req, res)
     } else {
       // authenticatedUser was found. Get student data or add student to database
-      await loginStudent(request, response, authenticatedUser)
+      await loginStudent(req, res, authenticatedUser)
     }
   } catch (error) {
     console.log(error.message)
-    return response.status(500).json({ error: 'authentication error' })
+    return res.status(500).json({ error: 'authentication error' })
   }
 })
 
 
-const loginAdmin = async (request, response) => {
+const loginAdmin = async (req, res) => {
   try {
     // find admin and user info
-    const foundAdmin = await db.Admin.findOne({ where: { username: request.body.username, password: request.body.password } })
+    const foundAdmin = await db.Admin.findOne({ where: { username: req.body.username, password: req.body.password } })
     if (!foundAdmin) {
       // incorrect credentials from auth server
-      return response.status(401).json({ error: 'incorrect credentials' })
+      return res.status(401).json({ error: 'incorrect credentials' })
     }
     const foundUser = await db.User.findOne({ where: { role_id: foundAdmin.admin_id, role: 'admin' } })
     // jwt sign for admin
     const token = jwt.sign({ id: foundUser.user_id, role: foundUser.role }, config.secret)
-    return response.status(200).json({
+    return res.status(200).json({
       token,
       user: {
         user_id: foundUser.user_id,
@@ -121,12 +121,12 @@ const loginAdmin = async (request, response) => {
     })
   } catch (error) {
     console.log(error.message)
-    return response.status(500).json({ error: 'authentication error' })
+    return res.status(500).json({ error: 'authentication error' })
   }
 }
 
 
-const loginStudent = async (request, response, authenticatedUser) => {
+const loginStudent = async (req, res, authenticatedUser) => {
   try {
     // find student and user info
     const foundStudent = await db.Student.findOne({ where: { student_number: authenticatedUser.student_number } })
@@ -134,7 +134,7 @@ const loginStudent = async (request, response, authenticatedUser) => {
       // user already in database, no need to add
       const foundUser = await db.User.findOne({ where: { role_id: foundStudent.student_id, role: 'student' } })
       const token = jwt.sign({ id: foundUser.user_id, role: foundUser.role }, config.secret)
-      return response.status(200).json({
+      return res.status(200).json({
         token,
         user: {
           user_id: foundUser.user_id,
@@ -157,7 +157,7 @@ const loginStudent = async (request, response, authenticatedUser) => {
           role_id: savedStudent.student_id
         })
       const token = jwt.sign({ id: savedUser.user_id, role: savedUser.role }, config.secret)
-      return response.status(200).json({
+      return res.status(200).json({
         token,
         user: {
           user_id: savedUser.user_id,
@@ -168,7 +168,7 @@ const loginStudent = async (request, response, authenticatedUser) => {
     }
   } catch (error) {
     console.log(error.message)
-    return response.status(500).json({ error: 'authentication error' })
+    return res.status(500).json({ error: 'authentication error' })
   }
 }
 

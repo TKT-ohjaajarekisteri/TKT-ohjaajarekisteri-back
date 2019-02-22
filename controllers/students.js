@@ -1,6 +1,6 @@
 const studentsRouter = require('express').Router()
 const db = require('../models/index')
-const { checkUser, checkAdmin, getTokenFrom } = require('../utils/middleware/checkRoute')
+const { checkUser, checkLogin, checkAdmin, getTokenFrom } = require('../utils/middleware/checkRoute')
 const jwt = require('jsonwebtoken')
 const config = require('../config/config')
 
@@ -31,8 +31,8 @@ studentsRouter.get('/:id/courses', checkUser, async (request, response) => {
   response.status(200).json(courses)
 })
 
-// Adds student to a course
-studentsRouter.post('/:id/apply', checkUser, async (request, response) => {
+// Adds student to given courses
+studentsRouter.post('/:id/apply', checkLogin, async (request, response) => {
   const body = request.body
   try {
 
@@ -58,7 +58,6 @@ studentsRouter.post('/:id/apply', checkUser, async (request, response) => {
           course_id: course_id
         }
       })
-
       // sequelize method that creates a association for student - course
       await student.addCourse(course)
       response.status(201).json(course)

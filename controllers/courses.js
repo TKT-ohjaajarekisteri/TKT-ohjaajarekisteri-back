@@ -29,7 +29,7 @@ coursesRouter.post('/admin', checkAdmin, async (request, response) => {
 
 
 //Get request that returns a course based on id
-coursesRouter.get('/:id', /* checkLogin, */ async (request, response) => {
+coursesRouter.get('/:id', checkLogin, async (request, response) => {
   const course = await db.Course
     .findByPk(request.params.id)
   response.status(200).json(course)

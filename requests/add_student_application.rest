@@ -1,5 +1,6 @@
-POST http://localhost:8001/api/students/1/apply
+POST http://localhost:8001/api/students/2/apply
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE1NTA4NDIxMzN9.Sx9vNeq8XOqflyXlIDY6hKroh7CeFrnp1yXV4n-yT-s
 
 // adds student id 1 to courses given below
 

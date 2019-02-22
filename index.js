@@ -5,6 +5,8 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const config = require('./config/config')
 const logger = require('./utils/middleware/logger')
+const cron = require('node-cron')
+const updateCourses = require('./utils/middleware/updateCourses').updateCourses
 
 // Run middleware given except for a specific path
 const unless = (path, middleware) => {
@@ -37,6 +39,22 @@ app.use(`${apiUrl}/students`, studentsRouter)
 app.use(`${apiUrl}/admins`, adminsRouter)
 app.use(`${apiUrl}/login`, loginRouter)
 app.use(`${apiUrl}/tokenCheck`, tokenCheckRouter)
+
+//Updates courses on database every day at one second before midnight
+cron.schedule('59 59 23 * * *', async function() {
+  try {
+    const updatedCourses = await updateCourses()
+    if(updatedCourses.length > 0) {
+      console.log('New courses added to database:')
+      console.log(updatedCourses)  
+    } else {
+      console.log('Database was already up to date')
+    }
+
+  } catch(exception) {
+    console.log(exception.message)
+  }
+})
 
 // Initialize server
 const PORT = config.port

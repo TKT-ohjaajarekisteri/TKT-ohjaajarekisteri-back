@@ -1,2 +1,0 @@
-
-DELETE http://localhost:3004/api/students/0123456789

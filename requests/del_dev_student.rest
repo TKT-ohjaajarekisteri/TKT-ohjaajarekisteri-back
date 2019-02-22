@@ -1,2 +1,2 @@
 
-DELETE http://localhost:3004/api/students/dev/123456789
+DELETE http://localhost:8001/api/students/dev/123456789

@@ -1,12 +1,25 @@
 const coursesRouter = require('express').Router()
 const db = require('../models/index')
 const { checkAdmin, checkLogin } = require('../utils/middleware/checkRoute')
+const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 
 
-//Get req that returns all courses on the database
-coursesRouter.get('/', checkLogin, async (req, res) => {
+//Get request that returns all courses on the database
+coursesRouter.get('/', async (request, response) => {
   const courses = await db.Course.findAll({})
-  res.status(200).json(courses) // todo: formatointi
+  response.status(200).json(courses)
+})
+
+//Updates all course data from studies.helsinki.fi course list
+//Returns the added courses as json
+coursesRouter.get('/update', async (request, response) => {
+  try {
+    const updatedCourses = updateCourses()
+    response.status(200).json(updatedCourses)
+  } catch (exception) {
+    console.log(exception.message)
+    response.status(400).json({ error: 'malformatted json' })
+  }
 })
 
 //Post req that adds a course to the database by Admin

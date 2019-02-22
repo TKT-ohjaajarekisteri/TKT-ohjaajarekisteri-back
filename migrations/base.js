@@ -80,7 +80,7 @@ var migrationCommands = [{
         'allowNull': false
       },
       'course_name': {
-        'type': Sequelize.STRING(63),
+        'type': Sequelize.STRING(255),
         'field': 'course_name',
         'allowNull': false
       },

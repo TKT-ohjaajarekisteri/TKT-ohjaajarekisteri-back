@@ -8,7 +8,7 @@ const config = require('../config/config')
 //Get req that returns all students as JSON
 studentsRouter.get('/', checkAdmin, async (req, res) => {
   let students = await db.Student.findAll({})
-  res.status(200).json(students) // todo: formatointi
+  response.status(200).json(students)
 })
 
 //Get req that returns a student based on id
@@ -55,7 +55,7 @@ studentsRouter.post('/', checkUser, async (req, res) => {
     let course = await db.Course.findOne({
       where: {
         learningopportunity_id: body.learningopportunity_id,
-        period: body.period,
+        periods: body.period,
         year: body.year
       }
     })
@@ -64,7 +64,7 @@ studentsRouter.post('/', checkUser, async (req, res) => {
       course = await db.Course.create({
         learningopportunity_id: body.learningopportunity_id,
         course_name: body.course_name,
-        period: body.period,
+        periods: body.period,
         year: body.year
       })
     }

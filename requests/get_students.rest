@@ -1,1 +1,2 @@
-GET http://localhost:3004/api/students
+GET http://localhost:8001/api/students
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImFkbWluIiwiaWF0IjoxNTUwODM5MDU2fQ.j3-ora4N58OO2ZUUiqOMcy1ZPC39WVVdG1F4FnW3KYw

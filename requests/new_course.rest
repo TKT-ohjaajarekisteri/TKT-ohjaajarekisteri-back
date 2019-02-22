@@ -1,9 +1,0 @@
-POST http://localhost:3004/api/courses
-Content-Type: application/json
-
-{
-  "learningopportunity_id": "TKT20006",
-  "course_name": "Ohjelmistotuotanto",
-  "period": 2,
-  "year": 2019
-}

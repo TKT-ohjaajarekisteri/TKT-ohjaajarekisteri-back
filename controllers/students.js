@@ -6,13 +6,13 @@ const config = require('../config/config')
 
 
 //Get request that returns all students as JSON
-studentsRouter.get('/', /* checkAdmin, */ async (request, response) => {
+studentsRouter.get('/', checkAdmin, async (request, response) => {
   let students = await db.Student.findAll({})
   response.status(200).json(students) // todo: formatointi
 })
 
 //Get request that returns a student based on id
-studentsRouter.get('/:id', /* checkUser, */ async (request, response) => {
+studentsRouter.get('/:id', checkUser, async (request, response) => {
   const user = await db.User
     .findByPk(request.params.id)
   const student = await db.Student
@@ -21,7 +21,7 @@ studentsRouter.get('/:id', /* checkUser, */ async (request, response) => {
 })
 
 //Get request that returns all of the courses a student is on
-studentsRouter.get('/:id/courses', /* checkUser, */ async (request, response) => {
+studentsRouter.get('/:id/courses', checkUser, async (request, response) => {
   const user = await db.User
     .findByPk(request.params.id)
   const student = await db.Student
@@ -32,7 +32,7 @@ studentsRouter.get('/:id/courses', /* checkUser, */ async (request, response) =>
 })
 
 // Adds student to a course
-studentsRouter.post('/:id/apply', /* checkUser, */ async (request, response) => {
+studentsRouter.post('/:id/apply', checkUser, async (request, response) => {
   const body = request.body
   try {
 
@@ -72,7 +72,7 @@ studentsRouter.post('/:id/apply', /* checkUser, */ async (request, response) => 
 })
 
 // Deletes a course a student is on
-studentsRouter.delete('/:student_id/courses/:course_id', /* checkUser, */ async (request, response) => {
+studentsRouter.delete('/:student_id/courses/:course_id', checkUser, async (request, response) => {
   
   try {
 

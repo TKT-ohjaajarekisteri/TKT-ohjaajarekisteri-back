@@ -8,9 +8,10 @@ const axios = require('axios')
 let token = null
 let courses = null
 let students = null
+const index = 0
 const { coursesInDb, initialCourses, initialStudents } = require('./test_helper')
 
-describe('tests for the courses controller', () => {
+describe.skip('tests for the courses controller', () => {
   beforeAll(async () => {
     await db.Course.destroy({
       where: {}
@@ -43,7 +44,7 @@ describe('tests for the courses controller', () => {
         .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
-
+      expect(response.body).toBeDefined()
       expect(JSON.stringify(courses[0].learningopportunity_id)).toEqual(JSON.stringify(response.body[0].learningopportunity_id))
       expect(JSON.stringify(courses[1].learningopportunity_id)).toEqual(JSON.stringify(response.body[1].learningopportunity_id))
 
@@ -58,16 +59,15 @@ describe('tests for the courses controller', () => {
       courses = await Promise.all(initialCourses.map(n => db.Course.create( n )))
     })
 
-    test('Course is returned as json by GET /api/courses/id', async () => {
-      const index = 0
-
+    test('Course is returned as json by GET /api/courses/:course_id', async () => {
       const response = await api
         .get(`/api/courses/${courses[index].course_id}`)
         .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
-      expect(JSON.stringify(courses[index]).learningopportunity_id).toEqual(JSON.stringify(response.learningopportunity_id))
+      expect(response.text).toBeDefined()
+      expect(response.text).toContain(courses[index].learningopportunity_id)
     })
 
     test('Courses are returned as json by GET /api/courses', async () => {
@@ -95,18 +95,18 @@ describe('tests for the courses controller', () => {
 
         students = await Promise.all(initialStudents.map(n => db.Student.create( n )))
 
-        await students[0].addCourse(courses[0])
+        await students[index].addCourse(courses[index])
       })
 
-      test('Students that have applied to course are listed with GET /api/courses/id/students', async () => {
-        const index = 0
+      test('Students that have applied to course are listed with GET /api/courses/:course_id/students', async () => {
         const response = await api
           .get(`/api/courses/${courses[index].course_id}/students`)
           .set('Authorization', `bearer ${token}`)
           .expect(200)
           .expect('Content-Type', /application\/json/)
 
-        expect(JSON.stringify(students[index]).student_number).toEqual(JSON.stringify(response.student_number))
+        expect(response.text).toBeDefined()
+        expect(response.text).toContain(students[index].student_number)
       })
     })  
   })

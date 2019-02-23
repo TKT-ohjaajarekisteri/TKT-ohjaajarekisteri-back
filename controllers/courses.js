@@ -5,7 +5,7 @@ const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 
 
 //Get request that returns all courses on the database
-coursesRouter.get('/', checkAdmin, async (req, res) => {
+coursesRouter.get('/', checkLogin, async (req, res) => {
   const courses = await db.Course.findAll({})
   res.status(200).json(courses)
 })

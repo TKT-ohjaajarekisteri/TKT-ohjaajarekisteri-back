@@ -27,7 +27,7 @@ const checkUser = (req, res, next) => {
       return res.status(401).json({ error: 'token missing or invalid' })
     }
 
-    if (token.id === req.params.id) {
+    if (token.id.toString() !== req.params.id.toString()) {
       return res.status(401).json({ error: 'not authorized user' })
     }
 

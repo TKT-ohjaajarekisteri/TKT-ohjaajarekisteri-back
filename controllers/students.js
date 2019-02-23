@@ -8,7 +8,7 @@ const config = require('../config/config')
 //Get req that returns all students as JSON
 studentsRouter.get('/', checkAdmin, async (req, res) => {
   let students = await db.Student.findAll({})
-  response.status(200).json(students)
+  res.status(200).json(students)
 })
 
 //Get req that returns a student based on id

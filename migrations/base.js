@@ -127,9 +127,9 @@ var migrationCommands = [{
         'unique': true,
         'allowNull': false
       },
-      'first_name': {
+      'first_names': {
         'type': Sequelize.STRING(127),
-        'field': 'first_name',
+        'field': 'first_names',
         'allowNull': false
       },
       'last_name': {

@@ -5,24 +5,54 @@ const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 
 
 //Get request that returns all courses on the database
-coursesRouter.get('/', async (request, response) => {
+coursesRouter.get('/', checkAdmin, async (req, res) => {
   const courses = await db.Course.findAll({})
-  response.status(200).json(courses)
+  res.status(200).json(courses)
 })
 
 //Updates all course data from studies.helsinki.fi course list
 //Returns the added courses as json
-coursesRouter.get('/update', async (request, response) => {
+coursesRouter.get('/update', checkAdmin, async (req, res) => {
   try {
-    const updatedCourses = updateCourses()
-    response.status(200).json(updatedCourses)
+    const updatedCourses = await updateCourses()
+    res.status(200).json(updatedCourses)
   } catch (exception) {
     console.log(exception.message)
-    response.status(400).json({ error: 'malformatted json' })
+    res.status(400).json({ error: 'malformatted json' })
   }
 })
 
-//Post req that adds a course to the database by Admin
+//Get request that returns a course based on id
+coursesRouter.get('/:id', checkLogin, async (req, res) => {
+  const course = await db.Course
+    .findByPk(req.params.id)
+  res.status(200).json(course)
+})
+
+//Get request that returns all of the students on a course
+coursesRouter.get('/:id/students', checkAdmin, async (req, res) => {
+  const course = await db.Course
+    .findByPk(req.params.id)
+  const students = await course.getStudents()
+  res.status(200).json(students)
+})
+
+/* Only for development
+//Delete request that deletes a course from the database based on id
+coursesRouter.delete('/:id', checkAdmin, async (req, res) => {
+  try {
+    await db.Course.destroy({ where: { course_id: req.params.id } })
+    res.status(204).end()
+
+  } catch (exception) {
+    console.log(exception)
+    res.status(400).json({ error: 'bad req' })
+  }
+})
+*/
+
+/* Only for development, manual posting is not necessary
+//Post request that adds a course to the database by Admin
 coursesRouter.post('/admin', checkAdmin, async (req, res) => {
   try {
 
@@ -39,39 +69,6 @@ coursesRouter.post('/admin', checkAdmin, async (req, res) => {
     res.status(400).json({ error: 'bad req' })
   }
 })
-
-
-//Get req that returns a course based on id
-coursesRouter.get('/:id', checkLogin, async (req, res) => {
-  const course = await db.Course
-    .findByPk(req.params.id)
-  res.status(200).json(course)
-})
-
-//Get req that returns all of the students on a course
-coursesRouter.get('/:id/students', checkLogin, async (req, res) => {
-  const course = await db.Course
-    .findByPk(req.params.id)
-  const students = await course.getStudents()
-
-  // hide student numbers from JSON
-  students.forEach(student => {
-    student.student_number = ''
-  })
-  res.status(200).json(students)
-})
-
-//Delete req that deletes a course from the database based on id
-coursesRouter.delete('/:id', checkAdmin, async (req, res) => {
-  try {
-    await db.Course.destroy({ where: { course_id: req.params.id } })
-    res.status(204).end()
-
-  } catch (exception) {
-    console.log(exception)
-    res.status(400).json({ error: 'bad req' })
-  }
-})
-
+*/
 
 module.exports = coursesRouter

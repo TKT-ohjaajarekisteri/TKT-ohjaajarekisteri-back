@@ -33,7 +33,8 @@ const updateCourses = async () => {
     }
   }
   await db.Course.bulkCreate(addedCourses)
-  console.log('Courses have been updated')
+  if(addedCourses.length > 0) console.log('Courses have been updated')
+  else console.log('Database already up to date')
   return addedCourses
 }
 

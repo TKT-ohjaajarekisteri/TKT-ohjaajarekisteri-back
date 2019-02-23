@@ -1,2 +1,2 @@
-GET http://localhost:8001/api/courses
+GET http://localhost:8001/api/courses/update
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImFkbWluIiwiaWF0IjoxNTUwODQ0NjA2fQ.IzsMj38j7BWLGpLnELIsxPbnBIBe-QbgKYX3z904oKg

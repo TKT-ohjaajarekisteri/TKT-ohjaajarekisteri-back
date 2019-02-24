@@ -10,6 +10,7 @@ let students = null
 let courses = null
 let users = null
 let studentToken = null
+let addedStudent = null
 const index = 0
 
 describe('tests for the students controller', () => {
@@ -83,7 +84,7 @@ describe('tests for the students controller', () => {
           .expect('Content-Type', /application\/json/)
 
         const studentWithCourse = await db.Student.findOne({ where: {
-          student_id: students[0].student_id
+          student_id: students[index].student_id
         },
         include: [{ model: db.Course, as: 'courses' }] 
         })
@@ -108,45 +109,60 @@ describe('tests for the students controller', () => {
         })
 
         test('Removes relation between a course and a student with DELETE /api/students/:user_id/courses/:course_id', async () => {
-          const response = await api
+          const studentWithCourseAtStart = await db.Student.findOne({ where: {
+            student_id: students[index].student_id
+          },
+          include: [{ model: db.Course, as: 'courses' }] 
+          })
+
+          expect(JSON.stringify(studentWithCourseAtStart)).toBeDefined()
+
+          await api
             .delete(`/api/students/${users[index].user_id}/courses/${courses[index].course_id}`)
             .set('Authorization', `bearer ${studentToken}`)
             .expect(204)
-            .expect('Content-Type', /application\/json/)
 
-          expect(response.text).toBeDefined()
-          expect(response.text).toContain(courses[index].learningopportunity_id)
+          const studentWithCourse = await db.Student.findOne({ where: {
+            student_id: students[index].student_id
+          },
+          include: [{ model: db.Course, as: 'courses' }] 
+          })
+    
+          expect(JSON.stringify(studentWithCourse.courses[index]))
+            .toBeUndefined()
+        })
+
+        describe('update and delete tests', () => {
+          test('Student can update his/her own data with PUT /api/students/:id', async () => {
+            await api
+              .put(`/api/students/${users[index].user_id}`)
+              .set('Authorization', `bearer ${studentToken}`)
+              .send({ nickname: 'Jonska', email: 'maili@hotmail.com', phone: '0402356543' })
+              .expect(201)
+      
+            const updatedStudent = await db.Student.findOne({ where: { student_id: students[index].student_id } })
+      
+            expect(updatedStudent).not.toContain(students[index].phone)
+            expect(updatedStudent.phone).toBe('0402356543')
+          })
+      
+          test('Student can delete his/her own data with DELETE /api/students/:id', async () => {
+            const studentsAtStart = await studentsInDb()
+      
+            await api
+              .delete(`/api/students/${users[index].user_id}`)
+              .set('Authorization', `bearer ${studentToken}`)
+              .expect(204)
+      
+            const studentsAfterOperation = await studentsInDb()
+      
+            const contents = studentsAfterOperation.map(r => r.first_names)
+      
+            expect(contents).not.toContain(students[index].first_names)
+            expect(studentsAfterOperation.length).toBe(studentsAtStart.length - 1)
+          })
         })
       })
     })
   })
-
-  /*
-  describe.skip('deleting a student', () => {
-
-    test('DELETE /api/students/:id succeeds with proper statuscode', async () => {
-      const addedStudent = await db.Student.create({
-        student_number: 'a1539505',
-        first_name: 'Jouni',
-        last_name: 'Ranta',
-        nickname: 'Jouni',
-        phone: '0445634767',
-        email: 'jouni.ranta@gmail.com',
-      })
-
-      const studentsAtStart = await studentsInDb()
-
-      await api
-        .delete(`/api/students/${addedStudent.student_id}`)
-        .expect(204)
-
-      const studentsAfterOperation = await studentsInDb()
-
-      const contents = studentsAfterOperation.map(r => r.first_name)
-
-      expect(contents).not.toContain(addedStudent.first_name)
-      expect(studentsAfterOperation.length).toBe(studentsAtStart.length - 1)
-
-    })
-  })*/
 })

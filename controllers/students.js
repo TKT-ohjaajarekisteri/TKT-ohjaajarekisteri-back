@@ -1,8 +1,6 @@
 const studentsRouter = require('express').Router()
 const db = require('../models/index')
-const { checkUser, checkLogin, checkAdmin, getTokenFrom } = require('../utils/middleware/checkRoute')
-const config = require('../config/config')
-const jwt = require('jsonwebtoken')
+const { checkUser, checkAdmin } = require('../utils/middleware/checkRoute')
 
 //Get request that returns all students as JSON
 studentsRouter.get('/', checkAdmin, async (req, res) => {
@@ -66,12 +64,12 @@ studentsRouter.post('/:id/apply', checkUser, async (req, res) => {
 })
 
 // Removes relation between student and course
-studentsRouter.delete('/:user_id/courses/:course_id', checkUser, async (req, res) => {
+studentsRouter.delete('/:id/courses/:course_id', checkUser, async (req, res) => {
   try {
     // get current user from db
     const user = await db.User.findOne({
       where: {
-        user_id: req.params.user_id
+        user_id: req.params.id
       }
     })
 
@@ -90,7 +88,7 @@ studentsRouter.delete('/:user_id/courses/:course_id', checkUser, async (req, res
 
     // sequelize method to severe connection from assossication table
     await student.removeCourse(course)
-    res.status(204).json(course)
+    res.status(204).end()
 
   } catch (exception) {
     console.log(exception.message)
@@ -103,7 +101,8 @@ studentsRouter.delete('/:user_id/courses/:course_id', checkUser, async (req, res
 //Delete request that deletes a student from the database based on id
 studentsRouter.delete('/:id', checkUser, async (req, res) => {
   try {
-    await db.Student.destroy({ where: { student_id: req.params.id } })
+    const user = await db.User.findOne({ where: { user_id: req.params.id } })
+    await db.Student.destroy({ where: { student_id: user.role_id } })
     res.status(204).end()
 
   } catch (exception) {

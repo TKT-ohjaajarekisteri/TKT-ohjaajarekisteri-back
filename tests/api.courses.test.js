@@ -11,7 +11,7 @@ let students = null
 const index = 0
 const { coursesInDb, initialCourses, initialStudents } = require('./test_helper')
 
-describe.skip('tests for the courses controller', () => {
+describe('tests for the courses controller', () => {
   beforeAll(async () => {
     await db.Course.destroy({
       where: {}

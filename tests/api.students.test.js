@@ -10,7 +10,6 @@ let students = null
 let courses = null
 let users = null
 let studentToken = null
-let addedStudent = null
 const index = 0
 
 describe('tests for the students controller', () => {

@@ -29,7 +29,7 @@ studentsRouter.get('/:id/courses', checkUser, async (req, res) => {
 })
 
 // Adds student to given courses
-studentsRouter.post('/:id/apply', checkUser, async (req, res) => {
+studentsRouter.post('/:id/courses/apply', checkUser, async (req, res) => {
   const body = req.body
   try {
     // get current user from db

@@ -13,6 +13,7 @@ let studentToken = null
 const index = 0
 
 describe('tests for the students controller', () => {
+  jest.setTimeout(15000)
   beforeAll(async () => {
     await db.User.destroy({
       where: {}
@@ -74,9 +75,9 @@ describe('tests for the students controller', () => {
         courses = await Promise.all(initialCourses.map(n => db.Course.create( n )))
       })
 
-      test('Student can apply to a course with POST /api/students/:id/apply', async () => {
+      test('Student can apply to a course with POST /api/students/:id/courses/apply', async () => {
         const response = await api
-          .post(`/api/students/${users[index].user_id}/apply`)
+          .post(`/api/students/${users[index].user_id}/courses/apply`)
           .set('Authorization', `bearer ${studentToken}`)
           .send({ 'course_ids': [courses[index].course_id] })
           .expect(201)

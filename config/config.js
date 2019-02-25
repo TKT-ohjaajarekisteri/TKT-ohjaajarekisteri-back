@@ -20,6 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 
 if (process.env.NODE_ENV === 'test') {
   sequelizeConfig = test
+  logging = false
   fakeLogin = true
   port = process.env.TEST_PORT
 }

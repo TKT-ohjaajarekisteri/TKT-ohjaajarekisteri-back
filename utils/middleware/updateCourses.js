@@ -7,7 +7,7 @@ const updateCourses = async () => {
   const candidateDataJson = await axios.get(config.candidateCoursesUrl)
   const masterDataJson = await axios.get(config.masterCoursesUrl)
         
-  const courses = Object.assign(candidateDataJson.data, masterDataJson.data)
+  const courses = candidateDataJson.data.concat(masterDataJson.data)
     
   const addedCourses = []
 
@@ -39,7 +39,7 @@ const updateCourses = async () => {
 }
 
 const courseExistsInDB = (currentCourses, course) => {
-  for(let k = 0; k < currentCourses.length; k++) { 
+  for(let k = 0; k < currentCourses.length; k++) {
     if(JSON.stringify(currentCourses[k]) === JSON.stringify(course)) {
       return true
     }

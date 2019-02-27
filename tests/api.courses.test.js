@@ -5,6 +5,7 @@ const db = require('../models/index')
 const jwt = require('jsonwebtoken')
 const config = require('../config/config')
 const axios = require('axios')
+const sort = require('fast-sort')
 let token = null
 let courses = null
 let students = null
@@ -44,9 +45,17 @@ describe('tests for the courses controller', () => {
         .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
-      expect(response.body).toBeDefined()
+      console.log('netistä:', response.body)
+      sort(response.body).asc([
+        'learningopportunity_id', // Sort by ID
+        'period', // courses with the same ID are sorted by period
+      ])
+      sort(courses).asc([
+        'learningopportunity_id', // Sort by ID
+        'period', // courses with the same ID are sorted by period
+      ])
       expect(JSON.stringify(courses[0].learningopportunity_id)).toEqual(JSON.stringify(response.body[0].learningopportunity_id))
-      //expect(JSON.stringify(courses[1].learningopportunity_id)).toEqual(JSON.stringify(response.body[1].learningopportunity_id))
+      expect(JSON.stringify(courses[1].learningopportunity_id)).toEqual(JSON.stringify(response.body[1].learningopportunity_id))
 
     })
   })

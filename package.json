@@ -45,6 +45,7 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "fast-sort": "^1.5.5",
     "jsonwebtoken": "^8.4.0",
     "morgan": "^1.9.1",
     "node-cron": "^2.0.3",

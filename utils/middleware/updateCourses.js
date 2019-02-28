@@ -1,13 +1,14 @@
 const axios = require('axios')
 const db = require('../../models/index')
 const config = require('../../config/config')
+const sort = require('fast-sort')
 
 //Updates all courses
 const updateCourses = async () => {
   const candidateDataJson = await axios.get(config.candidateCoursesUrl)
   const masterDataJson = await axios.get(config.masterCoursesUrl)
         
-  const courses = Object.assign(candidateDataJson.data, masterDataJson.data)
+  const courses = candidateDataJson.data.concat(masterDataJson.data)
     
   const addedCourses = []
 
@@ -32,6 +33,11 @@ const updateCourses = async () => {
       }
     }
   }
+  sort(addedCourses).asc([
+    'learningopportunity_id', // Sort by ID
+    'period', // courses with the same ID are sorted by period
+  ])
+
   await db.Course.bulkCreate(addedCourses)
   if(addedCourses.length > 0) console.log('Courses have been updated')
   else console.log('Database already up to date')
@@ -39,7 +45,7 @@ const updateCourses = async () => {
 }
 
 const courseExistsInDB = (currentCourses, course) => {
-  for(let k = 0; k < currentCourses.length; k++) { 
+  for(let k = 0; k < currentCourses.length; k++) {
     if(JSON.stringify(currentCourses[k]) === JSON.stringify(course)) {
       return true
     }

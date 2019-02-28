@@ -2,234 +2,167 @@ const { app } = require('../index')
 const supertest = require('supertest')
 const api = supertest(app)
 const db = require('../models/index')
-const { studentsInDb } = require('./test_helper')
+const jwt = require('jsonwebtoken')
+const config = require('../config/config')
+const { initialStudents, studentsInDb, initialCourses } = require('./test_helper')
+let token = null
+let students = null
+let courses = null
+let users = null
+let studentToken = null
+const index = 0
 
-describe.skip('student tests', () => {
+describe('tests for the students controller', () => {
+  jest.setTimeout(15000)
   beforeAll(async () => {
-    //await db.sequelize.sync({force:true})
-    await db.Student.destroy({
+    await db.User.destroy({
+      where: {}
+    })
+  
+    await db.Admin.destroy({
       where: {}
     })
 
+    const admin = await db.Admin.create({ username: 'testAdmin', password: 'password' })
+    const adminUser = await db.User.create({ role: 'admin', role_id: admin.admin_id })
+    token = jwt.sign({ id: adminUser.user_id, role: adminUser.role }, config.secret)
   })
-  describe('when there is initially some students saved', () => {
-    // beforeAll(async () => {
-    //   await Promise.all(initialStudents.map(n => db.Student.create( n )))
 
-    // })
+  describe('When database has students', () => {
+    beforeAll(async () => {
+      await db.Student.destroy({
+        where: {}
+      })  
 
-    test('all students are returned as json by GET /api/students', async () => {
+      students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
+      users = await Promise.all(students.map(student => db.User.create({ role: 'student', role_id: student.student_id })))
+      studentToken = jwt.sign({ id: users[index].user_id, role: users[index].role }, config.secret)
+    })
+
+    test('Student is returned as json by GET /api/students/:user_id', async () => {
+      const response = await api
+        .get(`/api/students/${users[index].user_id}`)
+        .set('Authorization', `bearer ${studentToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+      expect(response.text).toBeDefined()
+      expect(response.text).toContain(students[index].student_number)
+    })
+
+    test('Students are returned as json by GET /api/students', async () => {
       const studentsInDatabase = await studentsInDb()
 
       const response = await api
         .get('/api/students')
+        .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
       
       expect(response.body.length).toBe(studentsInDatabase.length)
 
-      const returnedContents = response.body.map(n => n.first_name)
+      const returnedContents = response.body.map(n => n.student_number)
       studentsInDatabase.forEach(student => {
-        expect(returnedContents).toContain(student.first_name)
+        expect(returnedContents).toContain(student.student_number)
+      })
+    })
+
+    describe('When database has courses and students', () => {
+      beforeAll(async () => {
+        await db.Course.destroy({
+          where: {}
+        })  
+
+        courses = await Promise.all(initialCourses.map(n => db.Course.create( n )))
       })
 
-    })
-  })
+      test('Student can apply to a course with POST /api/students/:id/courses/apply', async () => {
+        const response = await api
+          .post(`/api/students/${users[index].user_id}/courses/apply`)
+          .set('Authorization', `bearer ${studentToken}`)
+          .send({ 'course_ids': [courses[index].course_id] })
+          .expect(201)
+          .expect('Content-Type', /application\/json/)
 
-  describe('adding a new student', () => {
+        const studentWithCourse = await db.Student.findOne({ where: {
+          student_id: students[index].student_id
+        },
+        include: [{ model: db.Course, as: 'courses' }] 
+        })
 
-    test('POST /api/students succeeds with valid data', async () => {
-      const studentsAtStart = await studentsInDb()
-
-      const newStudent = {
-        student_number: 'a2352332',
-        first_name: 'Pekka',
-        last_name: 'Ranta',
-        nickname: 'Pekka',
-        learningopportunity_id: 'TKT30508',
-        course_name: 'Ohjelmistotuotanto 9',
-        phone: '0445634567',
-        email: 'pekka.ranta@gmail.com',
-        period: 3,
-        year: 2018
-      }
-
-      await api
-        .post('/api/students')
-        .send(newStudent)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
-
-      const studentsAfterOperation = await studentsInDb()
-
-      expect(studentsAfterOperation.length).toBe(studentsAtStart.length + 1)
-
-      const contents = studentsAfterOperation.map(r => r.first_name)
-      expect(contents).toContain('Pekka')
-
-    })
-
-    test('POST /api/students fails with proper statuscode if student number is missing', async () => {
-
-      const newStudent = {
-        first_name: 'Pekka',
-        last_name: 'Ranta',
-        nickname: 'Pekka',
-        learningopportunity_id: 'TKT31508',
-        course_name: 'Ohjelmistotuotanto 9',
-        phone: '0445634567',
-        email: 'pekka.ranta@gmail.com',
-        period: 3,
-        year: 2018
-      }
-
-      const studentsAtStart = await studentsInDb()
-
-      await api
-        .post('/api/students')
-        .send(newStudent)
-        .expect(400)
-
-      const studentsAfterOperation = await studentsInDb()
-
-      expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
-
-    })
-
-    test('POST /api/students fails with proper statuscode if first name is missing', async () => {
-
-      const newStudent = {
-        student_number: 'a1504525',
-        last_name: 'Ranta',
-        nickname: 'Pekka',
-        learningopportunity_id: 'TKT32508',
-        course_name: 'Ohjelmistotuotanto 9',
-        phone: '0445634567',
-        email: 'pekka.ranta@gmail.com',
-        period: 3,
-        year: 2018
-      }
-
-      const studentsAtStart = await studentsInDb()
-
-      await api
-        .post('/api/students')
-        .send(newStudent)
-        .expect(400)
-
-      const studentsAfterOperation = await studentsInDb()
-
-      expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
-
-    })
-
-    test('POST /api/students fails with proper statuscode if last name is missing', async () => {
-
-      const newStudent = {
-        student_number: 'a1504567',
-        first_name: 'Pekka',
-        nickname: 'Pekka',
-        learningopportunity_id: 'TKT30568',
-        course_name: 'Ohjelmistotuotanto 9',
-        phone: '0445634567',
-        email: 'pekka.ranta@gmail.com',
-        period: 3,
-        year: 2018
-      }
-
-      const studentsAtStart = await studentsInDb()
-
-      await api
-        .post('/api/students')
-        .send(newStudent)
-        .expect(400)
-
-      const studentsAfterOperation = await studentsInDb()
-
-      expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
-
-    })
-
-    test('POST /api/students fails with proper statuscode if nickname is missing', async () => {
-
-      const newStudent = {
-        student_number: 'a1500512',
-        first_name: 'Pekka',
-        last_name: 'Ranta',
-        learningopportunity_id: 'TKT30548',
-        course_name: 'Ohjelmistotuotanto 15',
-        phone: '0445634567',
-        email: 'pekka.ranta@gmail.com',
-        period: 3,
-        year: 2018
-      }
-
-      const studentsAtStart = await studentsInDb()
-
-      await api
-        .post('/api/students')
-        .send(newStudent)
-        .expect(400)
-
-      const studentsAfterOperation = await studentsInDb()
-
-      expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
-
-    })
-
-    test('POST /api/students fails with proper statuscode if email is missing', async () => {
-
-      const newStudent = {
-        student_number: 'a1504421',
-        first_name: 'Pekka',
-        last_name: 'Ranta',
-        learningopportunity_id: 'TKT30508',
-        course_name: 'Ohjelmistotuotanto 54',
-        nickname: 'Pekka',
-        phone: '0445634567',
-        period: 3,
-        year: 2018
-      }
-
-      const studentsAtStart = await studentsInDb()
-
-      await api
-        .post('/api/students')
-        .send(newStudent)
-        .expect(400)
-
-      const studentsAfterOperation = await studentsInDb()
-
-      expect(studentsAfterOperation.length).toBe(studentsAtStart.length)
-
-    })
-  })
-
-  describe('deleting a student', () => {
-
-    test('DELETE /api/students/:id succeeds with proper statuscode', async () => {
-      const addedStudent = await db.Student.create({
-        student_number: 'a1539505',
-        first_name: 'Jouni',
-        last_name: 'Ranta',
-        nickname: 'Jouni',
-        phone: '0445634767',
-        email: 'jouni.ranta@gmail.com',
+        expect(JSON.stringify(studentWithCourse.courses[index]).learningopportunity_id)
+          .toEqual(JSON.stringify(courses[index]).learningopportunity_id)
+        expect(response.text).toBeDefined()
+        expect(response.text).toContain(courses[index].learningopportunity_id)
       })
 
-      const studentsAtStart = await studentsInDb()
+    
+      describe('When database has an association', () => {
+        test('Courses that a student has applied to are listed with GET /api/students/:user_id/courses', async () => {
+          const response = await api
+            .get(`/api/students/${users[index].user_id}/courses`)
+            .set('Authorization', `bearer ${studentToken}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
 
-      await api
-        .delete(`/api/students/${addedStudent.student_id}`)
-        .expect(204)
+          expect(response.text).toBeDefined()
+          expect(response.text).toContain(courses[index].learningopportunity_id)
+        })
 
-      const studentsAfterOperation = await studentsInDb()
+        test('Removes relation between a course and a student with DELETE /api/students/:user_id/courses/:course_id', async () => {
+          const studentWithCourseAtStart = await db.Student.findOne({ where: {
+            student_id: students[index].student_id
+          },
+          include: [{ model: db.Course, as: 'courses' }] 
+          })
 
-      const contents = studentsAfterOperation.map(r => r.first_name)
+          expect(JSON.stringify(studentWithCourseAtStart)).toBeDefined()
 
-      expect(contents).not.toContain(addedStudent.first_name)
-      expect(studentsAfterOperation.length).toBe(studentsAtStart.length - 1)
+          await api
+            .delete(`/api/students/${users[index].user_id}/courses/${courses[index].course_id}`)
+            .set('Authorization', `bearer ${studentToken}`)
+            .expect(204)
 
+          const studentWithCourse = await db.Student.findOne({ where: {
+            student_id: students[index].student_id
+          },
+          include: [{ model: db.Course, as: 'courses' }] 
+          })
+    
+          expect(JSON.stringify(studentWithCourse.courses[index]))
+            .toBeUndefined()
+        })
+
+        describe('update and delete tests', () => {
+          test('Student can update his/her own data with PUT /api/students/:id', async () => {
+            await api
+              .put(`/api/students/${users[index].user_id}`)
+              .set('Authorization', `bearer ${studentToken}`)
+              .send({ nickname: 'Jonska', email: 'maili@hotmail.com', phone: '0402356543' })
+              .expect(201)
+      
+            const updatedStudent = await db.Student.findOne({ where: { student_id: students[index].student_id } })
+      
+            expect(updatedStudent).not.toContain(students[index].phone)
+            expect(updatedStudent.phone).toBe('0402356543')
+          })
+      
+          test('Student can delete his/her own data with DELETE /api/students/:id', async () => {
+            const studentsAtStart = await studentsInDb()
+      
+            await api
+              .delete(`/api/students/${users[index].user_id}`)
+              .set('Authorization', `bearer ${studentToken}`)
+              .expect(204)
+      
+            const studentsAfterOperation = await studentsInDb()
+      
+            const contents = studentsAfterOperation.map(r => r.first_names)
+      
+            expect(contents).not.toContain(students[index].first_names)
+            expect(studentsAfterOperation.length).toBe(studentsAtStart.length - 1)
+          })
+        })
+      })
     })
   })
 })

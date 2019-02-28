@@ -7,6 +7,7 @@ const config = require('../config/config')
 const { initialStudents, initialAdmins, usersInDb, studentsInDb, deleteUser } = require('./test_helper')
 
 describe('/api/login', async () => {
+  jest.setTimeout(15000)
   beforeEach(async () => {
     await db.User.destroy({
       where: {}

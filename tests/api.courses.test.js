@@ -45,7 +45,7 @@ describe('tests for the courses controller', () => {
         .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
-      console.log('netistä:', response.body)
+
       sort(response.body).asc([
         'learningopportunity_id', // Sort by ID
         'period', // courses with the same ID are sorted by period

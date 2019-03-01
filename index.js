@@ -6,6 +6,7 @@ const cors = require('cors')
 const config = require('./config/config')
 const logger = require('./utils/middleware/logger')
 const cron = require('node-cron')
+const logging = require('./config/config').logging
 const updateCourses = require('./utils/middleware/updateCourses').updateCourses
 
 // Run middleware given except for a specific path
@@ -13,12 +14,13 @@ const unless = (path, middleware) => {
   return (req, res, next) => {
     if (path === req.path) {
       return next()
-    } else {
+    } else if (logging) {
       return middleware(req, res, next)
+    } else {
+      return next()
     }
   }
 }
-
 // Middleware
 app.use(cors())
 app.use(bodyParser.json())
@@ -58,14 +60,19 @@ const server = http.createServer(app)
 if (process.env.NODE_ENV !== 'test') {
   // Database connection
   const db = require('./models')
-  db.connect()
-  updateCourses()
+  connect(db)
   {
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`)
     })
   }
 }
+
+async function connect(db) {
+  await db.connect()
+  await updateCourses()
+}
+
 
 module.exports = {
   app, server

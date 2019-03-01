@@ -1,6 +1,7 @@
 const axios = require('axios')
 const db = require('../../models/index')
 const config = require('../../config/config')
+const sort = require('fast-sort')
 
 //Updates all courses
 const updateCourses = async () => {
@@ -20,6 +21,12 @@ const updateCourses = async () => {
   console.log('Updating courses...')
   await addCoursesToDatabase(candidataCourses, addedCourses, currentCourses)
   await addCoursesToDatabase(masterCourses, addedCourses, currentCourses)
+
+  sort(addedCourses).asc([
+    'learningopportunity_id', // Sort by ID
+    'period', // courses with the same ID are sorted by period
+  ])
+
   await db.Course.bulkCreate(addedCourses)
   if(addedCourses.length > 0) console.log('Courses have been updated')
   else console.log('Database already up to date')

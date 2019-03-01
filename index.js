@@ -6,7 +6,6 @@ const cors = require('cors')
 const config = require('./config/config')
 const logger = require('./utils/middleware/logger')
 const cron = require('node-cron')
-const logging = require('./config/config').logging
 const updateCourses = require('./utils/middleware/updateCourses').updateCourses
 
 // Run middleware given except for a specific path
@@ -14,10 +13,8 @@ const unless = (path, middleware) => {
   return (req, res, next) => {
     if (path === req.path) {
       return next()
-    } else if (logging) {
-      return middleware(req, res, next)
     } else {
-      return next()
+      return middleware(req, res, next)
     }
   }
 }
@@ -44,13 +41,15 @@ app.use(`${apiUrl}/login`, loginRouter)
 app.use(`${apiUrl}/tokenCheck`, tokenCheckRouter)
 
 //Updates courses on database every day at one second before midnight
-cron.schedule('59 59 23 * * *', async function() {
-  try {
-    await updateCourses()
-  } catch(exception) {
-    console.log(exception.message)
-  }
-})
+if (process.env.NODE_ENV !== 'test') {
+  cron.schedule('59 23 * * *', async function() {
+    try {
+      await updateCourses()
+    } catch(exception) {
+      console.log(exception.message)
+    }
+  })
+}
 
 // Initialize server
 const PORT = config.port
@@ -60,7 +59,7 @@ if (process.env.NODE_ENV !== 'test') {
   // Database connection
   const db = require('./models')
   db.connect()
-
+  updateCourses()
   {
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`)

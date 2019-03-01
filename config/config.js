@@ -27,7 +27,6 @@ if (process.env.NODE_ENV === 'test') {
 
 if (process.env.NODE_ENV === 'development') {
   sequelizeConfig = development
-  fakeLogin = true
   port = process.env.DEV_PORT
 }
 

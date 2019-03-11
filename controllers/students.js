@@ -126,6 +126,21 @@ studentsRouter.put('/:id', checkUser, async (req, res) => {
   }
 })
 
+//Only for development
+studentsRouter.put('/:id/deleteCD', checkUser, async (req, res) => {
+  try {
+    let user = await db.User.findOne({ where: { user_id: req.params.id } })
+    let student = await db.Student.findOne({ where: { student_id: user.role_id } })
+
+    await student.update({ nickname: null, email: null, phone: null })
+    res.status(201).end()
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(400).json({ error: 'bad req' })
+  }
+})
+
 // UNSAFE!!! Only for development
 // studentsRouter.delete('/dev/:student_number', async (req, res) => {
 //   try {

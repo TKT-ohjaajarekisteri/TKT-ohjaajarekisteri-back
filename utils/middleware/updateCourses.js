@@ -42,8 +42,11 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses) => {
         period: courses[i].periods[j],
         year: parseInt(courses[i].start_date.substring(0,4))
       }
-      if(!courseExistsInDB(currentCourses, course)) {
-        addedCourses.push(course)     
+      const courseIdentifier = course.learningopportunity_id.substring(0,3)
+      if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
+        if(!courseExistsInDB(currentCourses, course)) {
+          addedCourses.push(course)     
+        }
       }
     }
   }

@@ -1,4 +1,5 @@
 const db = require('../models/index')
+
 const initialStudents = [
   {
     student_number: '123456789',
@@ -38,22 +39,50 @@ const initialCourses = [
     learningopportunity_id: 'ohtu2018',
     course_name: 'Ohjelmistotuotanto 8',
     period: 3,
-    year: 2018
+    year: (parseInt(new Date().getFullYear()) + 1)
   },
   {
     learningopportunity_id: 'ohtu2017',
     course_name: 'Ohjelmistotuotanto 05',
     period: 1,
-    year: 2015
+    year: (parseInt(new Date().getFullYear()) + 1)
   },
   {
     learningopportunity_id: 'tira2018',
     course_name: 'Tietorakenteet ja algoritmit',
     period: 2,
-    year: 2018
+    year: (parseInt(new Date().getFullYear()) + 1)
   }
+
 ]
 
+const initialPastCourses = [
+  {
+    learningopportunity_id: 'ohtu2018',
+    course_name: 'Ohjelmistotuotanto 8',
+    period: 3,
+    year: (parseInt(new Date().getFullYear()) + 1)
+  },
+  {
+    learningopportunity_id: 'ohtu2017',
+    course_name: 'Ohjelmistotuotanto 05',
+    period: 1,
+    year: (parseInt(new Date().getFullYear()) + 1)
+  },
+  {
+    learningopportunity_id: 'tira2018',
+    course_name: 'Tietorakenteet ja algoritmit',
+    period: 2,
+    year: (parseInt(new Date().getFullYear()) + 1)
+  },
+  {
+    learningopportunity_id: 'jtkt018',
+    course_name: 'Johdatus Tietojenkäsittelytieteisiin',
+    period: 4,
+    year: (parseInt(new Date().getFullYear()) - 1)
+  }
+
+]
 
 const studentsInDb = async () => {
   const students = await db.Student.findAll({})
@@ -85,6 +114,7 @@ const deleteUser = async (student_number) => {
 module.exports = {
   initialStudents,
   initialCourses,
+  initialPastCourses,
   initialAdmins,
   studentsInDb,
   coursesInDb,

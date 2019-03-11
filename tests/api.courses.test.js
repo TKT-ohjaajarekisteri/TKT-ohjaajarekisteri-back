@@ -37,7 +37,7 @@ describe('tests for the courses controller', () => {
     courses = candidateDataJson.data.concat(masterDataJson.data)
   })
 
-  describe('When database is empty', () => {
+  describe.skip('When database is empty', () => {
   
     test('Courses are updated correctly', async () => {
       const response = await api

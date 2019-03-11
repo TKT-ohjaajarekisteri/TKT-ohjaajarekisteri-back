@@ -1,0 +1,2 @@
+PUT http://localhost:8001/api/students/3/deleteCD
+Content-Type: application/json

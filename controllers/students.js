@@ -127,10 +127,9 @@ studentsRouter.put('/:id', checkUser, async (req, res) => {
 })
 
 //Only for development
-studentsRouter.put('/:id/deleteCD', checkUser, async (req, res) => {
+studentsRouter.put('/:id/deleteCD', async (req, res) => {
   try {
-    let user = await db.User.findOne({ where: { user_id: req.params.id } })
-    let student = await db.Student.findOne({ where: { student_id: user.role_id } })
+    let student = await db.Student.findOne({ where: { student_id: req.params.id } })
 
     await student.update({ nickname: null, email: null, phone: null })
     res.status(201).end()

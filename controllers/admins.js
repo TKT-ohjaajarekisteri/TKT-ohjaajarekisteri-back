@@ -9,4 +9,5 @@ const db = require('../models/index')
   response.status(200).json(admins)
 })*/
 
+
 module.exports = adminsRouter

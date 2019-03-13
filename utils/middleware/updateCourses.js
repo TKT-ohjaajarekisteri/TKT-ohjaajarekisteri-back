@@ -46,6 +46,7 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses) => {
       if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
         if(!courseExistsInDB(currentCourses, course)) {
           addedCourses.push(course)     
+          currentCourses.push(course)  
         }
       }
     }

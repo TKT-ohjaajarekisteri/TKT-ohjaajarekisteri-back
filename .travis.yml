@@ -23,7 +23,11 @@ env:
 	
 install:
   - npm install
-
+  
+branches:
+  only:
+    - travisDB
+    
 deploy:
   provider: script
   script: './deploy_dockerhub.sh'

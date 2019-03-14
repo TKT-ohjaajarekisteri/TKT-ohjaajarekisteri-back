@@ -82,6 +82,25 @@ const deleteUser = async (student_number) => {
   await db.User.destroy({ where: { user_id: foundUser.user_id } })
 }
 
+const makeCourseArray = (array) => {
+  const courses = []
+  for(let i = 0; i < array.length; i++) {    
+    for(let j = 0; j < array[i].periods.length; j++) {
+      const course = {
+        learningopportunity_id: array[i].learningopportunity_id,
+        course_name: array[i].realisation_name[0].text,
+        period: array[i].periods[j],
+        year: parseInt(array[i].start_date.substring(0,4))
+      }
+      const courseIdentifier = course.learningopportunity_id.substring(0,3)
+      if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
+        courses.push(course)
+      }
+    }
+  }
+  return courses
+}
+
 module.exports = {
   initialStudents,
   initialCourses,
@@ -90,5 +109,6 @@ module.exports = {
   coursesInDb,
   usersInDb,
   adminsInDb,
-  deleteUser
+  deleteUser,
+  makeCourseArray
 }

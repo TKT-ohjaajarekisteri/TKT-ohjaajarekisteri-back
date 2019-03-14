@@ -7,8 +7,12 @@ const sort = require('fast-sort')
 const updateCourses = async () => {
   const candidateDataJson = await axios.get(config.candidateCoursesUrl)
   const masterDataJson = await axios.get(config.masterCoursesUrl) 
+  const dataScienceDataJson = await axios.get(config.dataScienceCoursesUrl)
+
   const candidataCourses = Object.assign(candidateDataJson.data)
   const masterCourses = Object.assign(masterDataJson.data)
+  const dataScienceCourses = Object.assign(dataScienceDataJson.data)
+
   const addedCourses = []
 
   const currentCourses = await db.Course.findAll({ 
@@ -21,6 +25,7 @@ const updateCourses = async () => {
   console.log('Updating courses...')
   await addCoursesToDatabase(candidataCourses, addedCourses, currentCourses)
   await addCoursesToDatabase(masterCourses, addedCourses, currentCourses)
+  await addCoursesToDatabase(dataScienceCourses, addedCourses, currentCourses)
 
   sort(addedCourses).asc([
     'learningopportunity_id', // Sort by ID
@@ -33,6 +38,7 @@ const updateCourses = async () => {
   return addedCourses
 }
 
+//Adds the courses from an array to the database
 const addCoursesToDatabase = async (courses, addedCourses, currentCourses) => {
   for(let i = 0; i < courses.length; i++) {    
     for(let j = 0; j < courses[i].periods.length; j++) {
@@ -44,7 +50,7 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses) => {
       }
       const courseIdentifier = course.learningopportunity_id.substring(0,3)
       if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
-        if(!courseExistsInDB(currentCourses, course)) {
+        if(!courseExists(currentCourses, course)) {
           addedCourses.push(course)     
           currentCourses.push(course)  
         }
@@ -53,7 +59,8 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses) => {
   }
 }
 
-const courseExistsInDB = (currentCourses, course) => {
+//Checks if the course exists in database or has been added recently
+const courseExists = (currentCourses, course) => {
   for(let k = 0; k < currentCourses.length; k++) { 
     if(JSON.stringify(currentCourses[k]) === JSON.stringify(course)) {
       return true

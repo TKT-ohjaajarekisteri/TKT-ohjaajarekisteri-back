@@ -4,8 +4,6 @@ const api = supertest(app)
 const db = require('../models/index')
 const jwt = require('jsonwebtoken')
 const config = require('../config/config')
-const axios = require('axios')
-const sort = require('fast-sort')
 let token = null
 let courses = null
 let students = null
@@ -31,33 +29,6 @@ describe('tests for the courses controller', () => {
     const admin = await db.Admin.create({ username: 'testAdmin', password: 'password' })
     const adminUser = await db.User.create({ role: 'admin', role_id: admin.admin_id })
     token = jwt.sign({ id: adminUser.user_id, role: adminUser.role }, config.secret)
-
-    const candidateDataJson = await axios.get(config.candidateCoursesUrl)
-    const masterDataJson = await axios.get(config.masterCoursesUrl)
-    courses = candidateDataJson.data.concat(masterDataJson.data)
-  })
-
-  describe.skip('When database is empty', () => {
-  
-    test('Courses are updated correctly', async () => {
-      const response = await api
-        .get('/api/courses/update')
-        .set('Authorization', `bearer ${token}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
-
-      sort(response.body).asc([
-        'learningopportunity_id', // Sort by ID
-        'period', // courses with the same ID are sorted by period
-      ])
-      sort(courses).asc([
-        'learningopportunity_id', // Sort by ID
-        'period', // courses with the same ID are sorted by period
-      ])
-      expect(JSON.stringify(courses[0].learningopportunity_id)).toEqual(JSON.stringify(response.body[0].learningopportunity_id))
-      expect(JSON.stringify(courses[1].learningopportunity_id)).toEqual(JSON.stringify(response.body[1].learningopportunity_id))
-
-    })
   })
 
   describe('When database has courses', () => {

@@ -1,4 +1,4 @@
-const { production, development, test } = require('../config/sequelize')
+const { production, development, test, travis } = require('../config/sequelize')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -20,6 +20,13 @@ if (process.env.NODE_ENV === 'production') {
 
 if (process.env.NODE_ENV === 'test') {
   sequelizeConfig = test
+  logging = false
+  fakeLogin = true
+  port = process.env.TEST_PORT
+}
+
+if (process.env.NODE_ENV === 'test') {
+  sequelizeConfig = travis
   logging = false
   fakeLogin = true
   port = process.env.TEST_PORT

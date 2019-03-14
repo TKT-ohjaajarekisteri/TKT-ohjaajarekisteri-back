@@ -22,13 +22,13 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
     if (key <= week){
       period = periods[key]
     }
-  });
+  })
 
   const periodNow = (parseInt(period) + 1) % 5
  
-  var filteredCourses = courses.filter(c=> {
+  var filteredCourses = courses.filter(c => {
     return c.year >= year || (c.period >= periodNow && c.year > year)
-  });
+  })
 
   res.status(200).json(filteredCourses)
 })

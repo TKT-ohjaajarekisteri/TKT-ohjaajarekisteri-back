@@ -111,6 +111,7 @@ studentsRouter.delete('/:id', checkUser, async (req, res) => {
   }
 })
 
+//Updates students contact details
 studentsRouter.put('/:id', checkUser, async (req, res) => {
   try {
     let user = await db.User.findOne({ where: { user_id: req.params.id } })

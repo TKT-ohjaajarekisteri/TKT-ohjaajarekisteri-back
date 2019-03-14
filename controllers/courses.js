@@ -41,17 +41,7 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
 })
  */
 
-//Updates all course data from studies.helsinki.fi course list
-//Returns the added courses as json
-coursesRouter.get('/update', checkAdmin, async (req, res) => {
-  try {
-    const updatedCourses = await updateCourses()
-    res.status(200).json(updatedCourses)
-  } catch (exception) {
-    console.log(exception.message)
-    res.status(400).json({ error: 'malformatted json' })
-  }
-})
+
 
 //Get request that returns a course based on id
 coursesRouter.get('/:id', checkLogin, async (req, res) => {
@@ -98,6 +88,21 @@ coursesRouter.post('/admin', checkAdmin, async (req, res) => {
   } catch (exception) {
     console.log(exception.message)
     res.status(400).json({ error: 'bad req' })
+  }
+})
+*/
+
+/*
+//Maybe unnecessary?
+//Updates all course data from studies.helsinki.fi course list
+//Returns the added courses as json
+coursesRouter.get('/update', checkAdmin, async (req, res) => {
+  try {
+    const updatedCourses = await updateCourses()
+    res.status(200).json(updatedCourses)
+  } catch (exception) {
+    console.log(exception.message)
+    res.status(400).json({ error: 'malformatted json' })
   }
 })
 */

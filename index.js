@@ -21,7 +21,6 @@ const unless = (path, middleware) => {
     }
   }
 }
-
 // Middleware
 app.use(cors())
 app.use(bodyParser.json())
@@ -44,13 +43,15 @@ app.use(`${apiUrl}/login`, loginRouter)
 app.use(`${apiUrl}/tokenCheck`, tokenCheckRouter)
 
 //Updates courses on database every day at one second before midnight
-cron.schedule('59 59 23 * * *', async function() {
-  try {
-    await updateCourses()
-  } catch(exception) {
-    console.log(exception.message)
-  }
-})
+if (process.env.NODE_ENV !== 'test') {
+  cron.schedule('59 23 * * *', async function() {
+    try {
+      await updateCourses()
+    } catch(exception) {
+      console.log(exception.message)
+    }
+  })
+}
 
 // Initialize server
 const PORT = config.port
@@ -59,14 +60,19 @@ const server = http.createServer(app)
 if (process.env.NODE_ENV !== 'test') {
   // Database connection
   const db = require('./models')
-  db.connect()
-
+  connect(db)
   {
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`)
     })
   }
 }
+
+async function connect(db) {
+  await db.connect()
+  await updateCourses()
+}
+
 
 module.exports = {
   app, server

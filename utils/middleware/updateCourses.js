@@ -6,10 +6,13 @@ const sort = require('fast-sort')
 //Updates all courses
 const updateCourses = async () => {
   const candidateDataJson = await axios.get(config.candidateCoursesUrl)
-  const masterDataJson = await axios.get(config.masterCoursesUrl)
-        
-  const courses = candidateDataJson.data.concat(masterDataJson.data)
-    
+  const masterDataJson = await axios.get(config.masterCoursesUrl) 
+  const dataScienceDataJson = await axios.get(config.dataScienceCoursesUrl)
+
+  const candidataCourses = Object.assign(candidateDataJson.data)
+  const masterCourses = Object.assign(masterDataJson.data)
+  const dataScienceCourses = Object.assign(dataScienceDataJson.data)
+
   const addedCourses = []
 
   const currentCourses = await db.Course.findAll({ 
@@ -20,19 +23,10 @@ const updateCourses = async () => {
   })
 
   console.log('Updating courses...')
-  for(let i = 0; i < courses.length; i++) {    
-    for(let j = 0; j < courses[i].periods.length; j++) {
-      const course = {
-        learningopportunity_id: courses[i].learningopportunity_id,
-        course_name: courses[i].realisation_name[0].text,
-        period: courses[i].periods[j],
-        year: parseInt(courses[i].start_date.substring(0,4))
-      }
-      if(!courseExistsInDB(currentCourses, course)) {
-        addedCourses.push(course)     
-      }
-    }
-  }
+  await addCoursesToDatabase(candidataCourses, addedCourses, currentCourses)
+  await addCoursesToDatabase(masterCourses, addedCourses, currentCourses)
+  await addCoursesToDatabase(dataScienceCourses, addedCourses, currentCourses)
+
   sort(addedCourses).asc([
     'learningopportunity_id', // Sort by ID
     'period', // courses with the same ID are sorted by period
@@ -44,12 +38,33 @@ const updateCourses = async () => {
   return addedCourses
 }
 
-const courseExistsInDB = (currentCourses, course) => {
-  for(let k = 0; k < currentCourses.length; k++) {
+//Adds the courses from an array to the database
+const addCoursesToDatabase = async (courses, addedCourses, currentCourses) => {
+  for(let i = 0; i < courses.length; i++) {    
+    for(let j = 0; j < courses[i].periods.length; j++) {
+      const course = {
+        learningopportunity_id: courses[i].learningopportunity_id,
+        course_name: courses[i].realisation_name[0].text,
+        period: courses[i].periods[j],
+        year: parseInt(courses[i].start_date.substring(0,4))
+      }
+      const courseIdentifier = course.learningopportunity_id.substring(0,3)
+      if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
+        if(!courseExists(currentCourses, course)) {
+          addedCourses.push(course)     
+          currentCourses.push(course)  
+        }
+      }
+    }
+  }
+}
+
+//Checks if the course exists in database or has been added recently
+const courseExists = (currentCourses, course) => {
+  for(let k = 0; k < currentCourses.length; k++) { 
     if(JSON.stringify(currentCourses[k]) === JSON.stringify(course)) {
       return true
     }
-    delete currentCourses[k]
   }
   return false
 }

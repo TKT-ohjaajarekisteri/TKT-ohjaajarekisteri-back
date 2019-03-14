@@ -16,10 +16,7 @@ before_script:
 
 cache:
   directories:
-    - node_modules
-
-env:
-- NODE_ENV=travis	
+    - node_modules	
 	
 install:
   - npm install

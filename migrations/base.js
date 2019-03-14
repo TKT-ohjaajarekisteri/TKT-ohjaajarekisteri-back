@@ -42,9 +42,9 @@ var migrationCommands = [{
         'unique': true,
         'allowNull': false
       },
-      'password': {
-        'type': Sequelize.STRING(55),
-        'field': 'password',
+      'passwordHash': {
+        'type': Sequelize.STRING,
+        'field': 'passwordHash',
         'allowNull': false
       },
       'createdAt': {

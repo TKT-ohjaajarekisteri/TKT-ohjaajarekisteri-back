@@ -48,9 +48,7 @@ module.exports = {
     }
   },
   travis: {
-    url: 'travis_ci_test',
-    port: process.env.TEST_PORT,
-    user: 'postgres',
+    url: 'postgres://postgres@127.0.0.1:5432/travis_ci_test',
     logging: false,
     dialect: 'postgresql',
     'ssl': true,

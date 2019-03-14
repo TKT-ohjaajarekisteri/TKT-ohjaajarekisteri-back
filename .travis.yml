@@ -3,16 +3,16 @@ node_js:
   - "8"
 sudo: false
 
-services:
-  - postgresql
-  
-  before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
-
 script:
 - npm run test-coverage
 - npm run codecov
 - git checkout package-lock.json
+
+services:
+  - postgresql
+  
+before_script:
+- psql -c 'create database travis_ci_test;' -U postgres
 
 cache:
   directories:
@@ -23,10 +23,6 @@ env:
 	
 install:
   - npm install
-  
-branches:
-  only:
-    - travisDB
     
 deploy:
   provider: script

@@ -10,6 +10,7 @@ before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
 
 script:
+- npm run migrate
 - npm run test-coverage
 - npm run codecov
 - git checkout package-lock.json

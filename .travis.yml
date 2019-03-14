@@ -10,13 +10,13 @@ script:
 
 cache:
   directories:
-    - node_modules	
-	
+    - node_modules
+
 install:
   - npm install
-    
+
 deploy:
   provider: script
   script: './deploy_dockerhub.sh'
   on:
-    branch: master
+     branch: master

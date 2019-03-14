@@ -8,15 +8,12 @@ script:
 - npm run codecov
 - git checkout package-lock.json
 
-services:
-  - postgresql
-  
-before_script:
-- psql -c 'create database travis_ci_test;' -U postgres
-
 cache:
   directories:
     - node_modules	
+	
+env:
+- NODE_ENV=travis		
 	
 install:
   - npm install

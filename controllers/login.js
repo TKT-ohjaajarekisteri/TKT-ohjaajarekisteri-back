@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const config = require('../config/config')
 const axios = require('axios')
 const db = require('../models/index')
+const bcrypt = require('bcrypt')
 
 // Check for usre credentials on 'http://opetushallinto.cs.helsinki.fi/login'
 // Data returned is in this format
@@ -104,11 +105,16 @@ loginRouter.post('/', async (req, res) => {
 const loginAdmin = async (req, res) => {
   try {
     // find admin and user info
-    const foundAdmin = await db.Admin.findOne({ where: { username: req.body.username, password: req.body.password } })
-    if (!foundAdmin) {
-      // incorrect credentials from auth server
+    const foundAdmin = await db.Admin.findOne({ where: { username: req.body.username } })
+
+    const passwordCorrect = foundAdmin === null ?
+      false : await bcrypt.compare(req.body.password, foundAdmin.passwordHash)
+
+    if ( !(foundAdmin && passwordCorrect) ) {
+      // incorrect credentials
       return res.status(401).json({ error: 'incorrect credentials' })
     }
+
     const foundUser = await db.User.findOne({ where: { role_id: foundAdmin.admin_id, role: 'admin' } })
     // jwt sign for admin
     const token = jwt.sign({ id: foundUser.user_id, role: foundUser.role }, config.secret)

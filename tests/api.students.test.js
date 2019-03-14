@@ -4,7 +4,7 @@ const api = supertest(app)
 const db = require('../models/index')
 const jwt = require('jsonwebtoken')
 const config = require('../config/config')
-const { initialStudents, studentsInDb, initialCourses } = require('./test_helper')
+const { initialStudents, studentsInDb, initialCourses, passwordHasher } = require('./test_helper')
 let token = null
 let students = null
 let courses = null
@@ -23,7 +23,7 @@ describe('tests for the students controller', () => {
       where: {}
     })
 
-    const admin = await db.Admin.create({ username: 'testAdmin', password: 'password' })
+    const admin = await db.Admin.create({ username: 'testAdmin', passwordHash: passwordHasher('password') })
     const adminUser = await db.User.create({ role: 'admin', role_id: admin.admin_id })
     token = jwt.sign({ id: adminUser.user_id, role: adminUser.role }, config.secret)
   })

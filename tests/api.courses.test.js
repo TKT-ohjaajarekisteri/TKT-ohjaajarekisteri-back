@@ -8,7 +8,7 @@ let token = null
 let courses = null
 let students = null
 const index = 0
-const { coursesInDb, initialCourses, initialStudents } = require('./test_helper')
+const { coursesInDb, initialCourses, initialStudents, passwordHasher } = require('./test_helper')
 
 describe('tests for the courses controller', () => {
   jest.setTimeout(15000)
@@ -26,7 +26,7 @@ describe('tests for the courses controller', () => {
     })
 
     
-    const admin = await db.Admin.create({ username: 'testAdmin', password: 'password' })
+    const admin = await db.Admin.create({ username: 'testAdmin', passwordHash: passwordHasher('password') })
     const adminUser = await db.User.create({ role: 'admin', role_id: admin.admin_id })
     token = jwt.sign({ id: adminUser.user_id, role: adminUser.role }, config.secret)
   })

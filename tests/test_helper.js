@@ -1,4 +1,6 @@
 const db = require('../models/index')
+const bcrypt = require('bcrypt')
+
 const initialStudents = [
   {
     student_number: '123456789',
@@ -26,10 +28,16 @@ const initialStudents = [
   }
 ]
 
+const passwordHasher = (password) => {
+  const saltRounds = 10
+  const passwordHash = bcrypt.hashSync(password, saltRounds)
+  return passwordHash
+}
+
 const initialAdmins = [
   {
     username: 'testAdmin',
-    password: 'password'
+    passwordHash: passwordHasher('password')
   }
 ]
 
@@ -110,5 +118,6 @@ module.exports = {
   usersInDb,
   adminsInDb,
   deleteUser,
-  makeCourseArray
+  makeCourseArray,
+  passwordHasher
 }

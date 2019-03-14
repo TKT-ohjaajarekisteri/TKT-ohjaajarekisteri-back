@@ -57,7 +57,7 @@ if (process.env.NODE_ENV !== 'test') {
 const PORT = config.port
 const server = http.createServer(app)
 
-if (process.env.NODE_ENV !== 'test' || process.env.NODE_ENV !== 'travis') {
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
   // Database connection
   const db = require('./models')
   connect(db)

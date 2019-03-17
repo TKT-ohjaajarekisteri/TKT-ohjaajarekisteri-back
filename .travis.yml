@@ -1,12 +1,16 @@
 language: node_js
 node_js:
   - "8"
-sudo: false
+sudo: true
+
+services:
+  - postgresql
+  
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
 
 script:
-- npm run test-coverage
-- npm run codecov
-- git checkout package-lock.json
+- npm run travis
 
 cache:
   directories:

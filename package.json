@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "bcrypt": "^3.0.4",
+    "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "date-fns": "^1.30.1",

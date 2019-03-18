@@ -155,6 +155,7 @@ const loginStudent = async (req, res, authenticatedUser) => {
           student_number: authenticatedUser.student_number,
           first_names: authenticatedUser.first_names,
           last_name: authenticatedUser.last_name,
+          nickname: getNickname(authenticatedUser.first_names),
           email: null
         })
       const savedUser = await db.User
@@ -176,6 +177,11 @@ const loginStudent = async (req, res, authenticatedUser) => {
     console.log(error.message)
     return res.status(500).json({ error: 'authentication error' })
   }
+}
+
+const getNickname = (str) => {
+  if(str.includes('*')) return str.substr(str.indexOf('*') + 1,str.indexOf(' '))
+  return str.substr(0,str.indexOf(' '))
 }
 
 module.exports = loginRouter

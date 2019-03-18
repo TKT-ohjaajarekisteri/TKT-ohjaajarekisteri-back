@@ -137,11 +137,6 @@ var migrationCommands = [{
         'field': 'last_name',
         'allowNull': false
       },
-      'nickname': {
-        'type': Sequelize.STRING(63),
-        'field': 'nickname',
-        'allowNull': true
-      },
       'experience': {
         'type': Sequelize.STRING(255),
         'allowNull': true        

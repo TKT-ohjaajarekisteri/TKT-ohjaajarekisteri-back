@@ -27,6 +27,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(63),
       allowNull: true
     },
+    experience: {
+      type: Sequelize.STRING(1000),
+      allowNull: true
+    },
     phone: {
       type: Sequelize.STRING(31),
       allowNull: true

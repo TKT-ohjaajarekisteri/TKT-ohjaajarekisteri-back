@@ -8,7 +8,7 @@ let token = null
 let courses = null
 let students = null
 const index = 0
-const { coursesInDb, initialCourses, initialStudents, passwordHasher } = require('./test_helper')
+const { coursesInDb, initialCourses, initialStudents, passwordHasher, initialPastCourses } = require('./test_helper')
 
 describe('tests for the courses controller', () => {
   jest.setTimeout(15000)
@@ -88,6 +88,27 @@ describe('tests for the courses controller', () => {
         expect(response.text).toBeDefined()
         expect(response.text).toContain(students[index].student_number)
       })
-    })  
+    }) 
+    
+    describe('When database has courses', () => {
+      beforeAll(async () => {
+        await db.Course.destroy({
+          where: {}
+        })
+        courses = await Promise.all(initialPastCourses.map(n => db.Course.create(n)))
+      })
+  
+      test('Past courses are not returned as json by GET /api/courses', async () => {
+        const coursesInDatabase = await coursesInDb()
+  
+        const response = await api
+          .get('/api/courses')
+          .set('Authorization', `bearer ${token}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+  
+        expect(response.body.length).toBe(coursesInDatabase.length - 1)
+      })
+    })
   })
 })

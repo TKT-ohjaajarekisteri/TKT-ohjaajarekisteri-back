@@ -45,7 +45,7 @@ studentsRouter.post('/:id/courses/apply', checkUser, async (req, res) => {
     })
 
     // finds all courses with given course id, and adds them to the student-course association table
-    await Promise.all(body.course_ids.map(async course_id => {
+    const applied = await Promise.all(body.course_ids.map(async course_id => {
       const course = await db.Course.findOne({
         where: {
           course_id: course_id
@@ -53,8 +53,9 @@ studentsRouter.post('/:id/courses/apply', checkUser, async (req, res) => {
       })
       // sequelize method that creates a association for student - course
       await student.addCourse(course)
-      res.status(201).json(course)
+      return course
     }))
+    res.status(201).json(applied)
 
   } catch (exception) {
     console.log(exception.message)
@@ -78,7 +79,7 @@ studentsRouter.delete('/:id/courses/:course_id', checkUser, async (req, res) => 
         student_id: user.role_id
       }
     })
-    
+
     // check if course exists in db
     let course = await db.Course.findOne({
       where: {

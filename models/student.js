@@ -27,6 +27,15 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(63),
       allowNull: true
     },
+    teachInEnglish: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true,
+      allowNull: true
+    },
+    experience: {
+      type: Sequelize.STRING(255),
+      allowNull: true
+    },
     phone: {
       type: Sequelize.STRING(31),
       allowNull: true

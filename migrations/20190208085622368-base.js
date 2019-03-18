@@ -18,7 +18,7 @@ var Sequelize = require('sequelize')
 
 var info = {
   'revision': 1,
-  'name': 'base',
+  'name': '20190208085622368-base',
   'created': '2019-02-08T08:56:22.368Z',
   'comment': ''
 }
@@ -141,6 +141,14 @@ var migrationCommands = [{
         'type': Sequelize.STRING(63),
         'field': 'nickname',
         'allowNull': true
+      },
+      'teachInEnglish': {
+        'type': Sequelize.BOOLEAN,
+        'allowNull': true
+      },
+      'experience': {
+        'type': Sequelize.STRING(255),
+        'allowNull': true        
       },
       'phone': {
         'type': Sequelize.STRING(31),

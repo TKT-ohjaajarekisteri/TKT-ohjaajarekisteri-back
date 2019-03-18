@@ -137,13 +137,13 @@ describe('tests for the students controller', () => {
             await api
               .put(`/api/students/${users[index].user_id}`)
               .set('Authorization', `bearer ${studentToken}`)
-              .send({ nickname: 'Jonska', email: 'maili@hotmail.com', phone: '0402356543' })
+              .send({ email: 'maili@hotmail.com', phone: '0402356543', teachInEnglish: 'true', experience: 'very good' })
               .expect(201)
       
             const updatedStudent = await db.Student.findOne({ where: { student_id: students[index].student_id } })
-      
             expect(updatedStudent).not.toContain(students[index].phone)
             expect(updatedStudent.phone).toBe('0402356543')
+            expect(updatedStudent.experience).toBe('very good')
           })
       
           test('Student can delete his/her own data with DELETE /api/students/:id', async () => {

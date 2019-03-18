@@ -28,7 +28,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: true
     },
     experience: {
-      type: Sequelize.STRING(255),
+      type: Sequelize.STRING(1000),
       allowNull: true
     },
     phone: {

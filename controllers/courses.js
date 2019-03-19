@@ -4,33 +4,30 @@ const { checkAdmin, checkLogin } = require('../utils/middleware/checkRoute')
 const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 const getISOWeek = require('date-fns/get_iso_week')
 
-// JS object for ending weeks of periods 1-5. week of year : period number
-const periods = { 9 : 3, 18 : 4, 35 : 5, 42: 1, 50 : 2 }
-
+// JS object for ending weeks of periods 1-5. Marks the week when course is no longer listed
+// format:  period number : week of the year.
+const periods = { 1:42, 2:50, 3:9, 4:18, 5:35 }
 
 
 //Get request that returns all courses on the database 
 coursesRouter.get('/', checkLogin, async (req, res) => {
-  const courses = await db.Course.findAll({})
-  
-  const today = new Date()
-  const year = today.getFullYear()
-  const week = getISOWeek(today)
-  var period = 0
+  try {
+    const courses = await db.Course.findAll({})
 
-  Object.keys(periods).forEach(function(key) {
-    if (key <= week){
-      period = periods[key]
-    }
-  })
-  
-  const periodNow = (parseInt(period) + 1) % 5
+    const today = new Date()
+    const year = today.getFullYear()
+    const week = getISOWeek(today)
 
-  var filteredCourses = courses.filter(c => {
-    return (c.year > year) || (c.period >= periodNow && c.year >= year)
-  })
+    var filteredCourses = courses.filter(c => {
+      return (periods[c.period] > week && c.year == year) || c.year > year
+    })
 
-  res.status(200).json(filteredCourses)
+    res.status(200).json(filteredCourses)
+  } catch (exception) {
+    console.log(exception.message)
+    res.status(400).json({ error: 'malformatted json' })
+  }
+
 })
 
 

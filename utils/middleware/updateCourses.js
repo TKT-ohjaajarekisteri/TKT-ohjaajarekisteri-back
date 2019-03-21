@@ -49,10 +49,13 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses) => {
         year: parseInt(courses[i].start_date.substring(0,4))
       }
       const courseIdentifier = course.learningopportunity_id.substring(0,3)
-      if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
-        if(!courseExists(currentCourses, course)) {
-          addedCourses.push(course)     
-          currentCourses.push(course)  
+      const courseName = course.course_name
+      if(!(courseName.includes('(U)') || courseName.includes('(HT)') || courseName.includes('(HT/U)'))) {
+        if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
+          if(!courseExists(currentCourses, course)) {
+            addedCourses.push(course)     
+            currentCourses.push(course)  
+          }
         }
       }
     }

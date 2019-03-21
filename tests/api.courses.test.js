@@ -54,7 +54,7 @@ describe('tests for the courses controller', () => {
       const coursesInDatabase = await coursesInDb()
 
       const response = await api
-        .get('/api/courses')
+        .get('/api/courses/all')
         .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)

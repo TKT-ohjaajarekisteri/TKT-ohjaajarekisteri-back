@@ -155,10 +155,13 @@ describe('tests for the students controller', () => {
 
         describe('update and delete tests', () => {
           test('Student can update his/her own data with PUT /api/students/:id', async () => {
+            const studentBefore = await db.Student.findOne({ where: { student_id: students[index].student_id } })
+            expect(studentBefore.teachesInEnglish).toBeTruthy()
+
             await api
               .put(`/api/students/${users[index].user_id}`)
               .set('Authorization', `bearer ${studentToken}`)
-              .send({ email: 'maili@hotmail.com', phone: '0402356543', experience: 'very good' })
+              .send({ email: 'maili@hotmail.com', phone: '0402356543', experience: 'very good', teachesInEnglish: 'false'})
               .expect(201)
       
             const updatedStudent = await db.Student.findOne({ where: { student_id: students[index].student_id } })

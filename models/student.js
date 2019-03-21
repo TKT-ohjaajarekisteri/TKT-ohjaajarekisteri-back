@@ -23,6 +23,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(127),
       allowNull: false
     },
+    teachesInEnglish: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true
+    },
     experience: {
       type: Sequelize.STRING(1000),
       allowNull: true

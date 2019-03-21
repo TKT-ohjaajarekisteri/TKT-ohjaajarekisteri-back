@@ -32,11 +32,11 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
 
 
 //Get request that returns all courses on the database 
-/* coursesRouter.get('/', checkLogin, async (req, res) => {
+ coursesRouter.get('/all', checkLogin, async (req, res) => {
   const courses = await db.Course.findAll({})
   res.status(200).json(courses)
 })
- */
+
 
 
 

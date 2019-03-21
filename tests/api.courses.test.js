@@ -10,7 +10,7 @@ let students = null
 const index = 0
 const { coursesInDb, initialCourses, initialStudents, passwordHasher, initialPastCourses } = require('./test_helper')
 
-describe('tests for the courses controller', () => {
+describe.skip('tests for the courses controller', () => {
   jest.setTimeout(15000)
   beforeAll(async () => {
     await db.Course.destroy({

@@ -12,7 +12,7 @@ let users = null
 let studentToken = null
 const index = 0
 
-describe('tests for the students controller', () => {
+describe.skip('tests for the students controller', () => {
   jest.setTimeout(15000)
   beforeAll(async () => {
     await db.User.destroy({

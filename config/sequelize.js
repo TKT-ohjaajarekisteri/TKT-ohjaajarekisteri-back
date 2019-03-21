@@ -36,7 +36,8 @@ module.exports = {
       max: 5,
       min: 0,
       acquire: 10000,
-      idle: 300000000
+      idle: 0,
+      evict: 0
     }
   },
   travis: {

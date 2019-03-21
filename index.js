@@ -73,6 +73,7 @@ async function connect(db) {
   await updateCourses()
 }
 
+app.on('close', () => db.sequelize.close())
 
 module.exports = {
   app, server

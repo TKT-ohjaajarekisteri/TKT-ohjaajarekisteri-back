@@ -7,8 +7,8 @@
     "lint": "eslint .",
     "start": "cross-env NODE_ENV=production node index.js",
     "watch": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "cross-env NODE_ENV=test jest --verbose --maxWorkers=1 --forceExit",
-    "test-simple": "cross-env NODE_ENV=test jest --maxWorkers=1 --forceExit",
+    "test": "cross-env NODE_ENV=test jest --verbose --maxWorkers=1",
+    "test-simple": "cross-env NODE_ENV=test jest --maxWorkers=1",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "migrate-test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate",
     "migrate-undo": "node_modules/.bin/sequelize db:migrate:undo",
@@ -38,7 +38,8 @@
   "jest": {
     "testEnvironment": "node",
     "coverageDirectory": "./coverage/",
-    "collectCoverage": true
+    "collectCoverage": true,
+    "globalTeardown": "<rootDir>/tests/globalTeardown.js"
   },
   "dependencies": {
     "axios": "^0.18.0",

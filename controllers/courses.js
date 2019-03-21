@@ -9,7 +9,7 @@ const getISOWeek = require('date-fns/get_iso_week')
 const periods = { 1:42, 2:50, 3:9, 4:18, 5:35 }
 
 
-//Get request that returns all courses on the database 
+//Get request that returns all courses on current period 
 coursesRouter.get('/', checkLogin, async (req, res) => {
   try {
     const courses = await db.Course.findAll({})
@@ -54,40 +54,6 @@ coursesRouter.get('/:id/students', checkAdmin, async (req, res) => {
   const students = await course.getStudents()
   res.status(200).json(students)
 })
-
-/* Only for development
-//Delete request that deletes a course from the database based on id
-coursesRouter.delete('/:id', checkAdmin, async (req, res) => {
-  try {
-    await db.Course.destroy({ where: { course_id: req.params.id } })
-    res.status(204).end()
-
-  } catch (exception) {
-    console.log(exception)
-    res.status(400).json({ error: 'bad req' })
-  }
-})
-*/
-
-/* Only for development, manual posting is not necessary
-//Post request that adds a course to the database by Admin
-coursesRouter.post('/admin', checkAdmin, async (req, res) => {
-  try {
-
-    const course = await db.Course.create({
-      learningopportunity_id: req.body.learningopportunity_id,
-      course_name: req.body.course_name,
-      period: req.body.period,
-      year: req.body.year
-    })
-    res.status(201).json(course)
-
-  } catch (exception) {
-    console.log(exception.message)
-    res.status(400).json({ error: 'bad req' })
-  }
-})
-*/
 
 /*
 //Maybe unnecessary?

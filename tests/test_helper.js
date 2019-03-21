@@ -129,8 +129,11 @@ const makeCourseArray = (array) => {
         year: parseInt(array[i].start_date.substring(0,4))
       }
       const courseIdentifier = course.learningopportunity_id.substring(0,3)
-      if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
-        courses.push(course)
+      const courseName = course.course_name
+      if(!(courseName.includes('(U)') || courseName.includes('(HT)') || courseName.includes('(HT/U)'))) {
+        if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
+          courses.push(course)
+        }
       }
     }
   }

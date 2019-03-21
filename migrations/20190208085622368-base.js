@@ -137,6 +137,9 @@ var migrationCommands = [{
         'field': 'last_name',
         'allowNull': false
       },
+      'teachesInEnglish': {
+        'type': Sequelize.BOOLEAN
+      },
       'experience': {
         'type': Sequelize.STRING(255),
         'allowNull': true        

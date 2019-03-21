@@ -119,7 +119,7 @@ studentsRouter.put('/:id', checkUser, async (req, res) => {
     let student = await db.Student.findOne({ where: { student_id: user.role_id } })
     const body = req.body
 
-    await student.update({ email: body.email, phone: body.phone, experience: body.experience })
+    await student.update({ email: body.email, phone: body.phone, experience: body.experience, teachesInEnglish: body.teachesInEnglish })
     res.status(201).end()
 
   } catch (error) {
@@ -155,53 +155,5 @@ studentsRouter.put('/:id/deleteCD', async (req, res) => {
 //     res.status(400).json({ error: 'bad req' })
 //   }
 // })
-
-/* Legacy post for adding courses
-studentsRouter.post('/', checkUser, async (req, res) => {
-  const body = req.body
-  try {
-
-    const token = getTokenFrom(req)
-    const decodedToken = jwt.verify(token, config.secret)
-
-    // get current user from db
-    const user = await db.User.findOne({
-      where: {
-        user_id: decodedToken.id
-      }
-    })
-
-    const student = await db.Student.findOne({
-      where: {
-        student_id: user.role_id
-      }
-    })
-
-    // check if course exists in db
-    let course = await db.Course.findOne({
-      where: {
-        learningopportunity_id: body.learningopportunity_id,
-        period: body.period,
-        year: body.year
-      }
-    })
-
-    if (!course) {
-      course = await db.Course.create({
-        learningopportunity_id: body.learningopportunity_id,
-        course_name: body.course_name,
-        period: body.period,
-        year: body.year
-      })
-    }
-    await student.addCourse(course)
-
-    res.status(201).json(course)
-
-  } catch (exception) {
-    console.log(exception.message)
-    res.status(400).json({ error: 'bad req' })
-  }
-})*/
 
 module.exports = studentsRouter

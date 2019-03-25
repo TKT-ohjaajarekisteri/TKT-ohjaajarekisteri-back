@@ -28,10 +28,17 @@ module.exports = (sequelize, Sequelize) => {
     }
   })
 
+  const StudentCourses = sequelize.define('student_course', {
+    accepted: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    }
+  })
+
   //Association table config for Sequelize
   Course.associate = (models) => {
     Course.belongsToMany(models.Student, {
-      through: 'student_course',
+      through: StudentCourses,
       foreignKey: 'course_id',
       as: 'students'
     })

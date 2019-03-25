@@ -244,10 +244,6 @@ var migrationCommands = [{
           'key': 'student_id'
         },
         'primaryKey': true
-      },
-      'accepted': {
-        'type': Sequelize.BOOLEAN,
-        'field': 'accepted'
       }
     },
     {}

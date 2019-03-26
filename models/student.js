@@ -23,9 +23,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(127),
       allowNull: false
     },
-    teachesInEnglish: {
+    no_english: {
       type: Sequelize.BOOLEAN,
-      defaultValue: true
+      defaultValue: false
     },
     experience: {
       type: Sequelize.STRING(1000),

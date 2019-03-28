@@ -223,6 +223,14 @@ var migrationCommands = [{
         'field': 'updatedAt',
         'allowNull': false
       },
+      'studentCourse_id': {
+        'type': Sequelize.INTEGER,
+        'field': 'studentCourse_id',
+        'unique': true,
+        'allowNull': false,
+        'primaryKey': true,
+        'autoIncrement': true
+      },
       'course_id': {
         'type': Sequelize.INTEGER,
         'field': 'course_id',
@@ -232,7 +240,7 @@ var migrationCommands = [{
           'model': 'Courses',
           'key': 'course_id'
         },
-        'primaryKey': true
+        'foreignKey': true
       },
       'student_id': {
         'type': Sequelize.INTEGER,
@@ -243,11 +251,16 @@ var migrationCommands = [{
           'model': 'Students',
           'key': 'student_id'
         },
-        'primaryKey': true
+        'foreignKey': true
+      },
+      'group': {
+        'type': Sequelize.INTEGER,
+        'field': 'group'
       },
       'accepted': {
         'type': Sequelize.BOOLEAN,
-        'field': 'accepted'
+        'field': 'accepted',
+        'defaultValue': true
       }
     },
     {}

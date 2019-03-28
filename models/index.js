@@ -8,7 +8,6 @@ const db = {}
 //Initialize Sequelize
 const sequelize = new Sequelize(config.sequelizeConfig.url, config.sequelizeConfig)
 
-
 //Assigns model names to db based on file names
 fs
   .readdirSync(__dirname)

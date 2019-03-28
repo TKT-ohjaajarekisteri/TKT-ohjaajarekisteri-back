@@ -119,7 +119,7 @@ studentsRouter.put('/:id', checkUser, async (req, res) => {
     let student = await db.Student.findOne({ where: { student_id: user.role_id } })
     const body = req.body
 
-    await student.update({ email: body.email, phone: body.phone, experience: body.experience, teachesInEnglish: body.teachesInEnglish })
+    await student.update({ email: body.email, phone: body.phone, experience: body.experience, no_english: body.no_english })
     res.status(201).end()
 
   } catch (error) {

@@ -6,7 +6,7 @@ const getISOWeek = require('date-fns/get_iso_week')
 
 // JS object for ending weeks of periods 1-5. Marks the week when course is no longer listed
 // format:  period number : week of the year.
-const periods = { 1:42, 2:50, 3:9, 4:18, 5:35 }
+const periods = { 1: 42, 2: 50, 3: 9, 4: 18, 5: 35 }
 
 
 //Get request that returns all courses on current period 
@@ -32,7 +32,7 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
 
 
 //Get request that returns all courses on the database 
- coursesRouter.get('/all', checkLogin, async (req, res) => {
+coursesRouter.get('/all', checkLogin, async (req, res) => {
   const courses = await db.Course.findAll({})
   res.status(200).json(courses)
 })
@@ -52,7 +52,21 @@ coursesRouter.get('/:id/students', checkAdmin, async (req, res) => {
   const course = await db.Course
     .findByPk(req.params.id)
   const students = await course.getStudents()
-  res.status(200).json(students)
+  const returnedStudents = students.map(stud => {
+    return {
+      email: stud.email,
+      experience: stud.experience,
+      first_names: stud.first_names,
+      last_name: stud.last_name,
+      no_english: stud.no_english,
+      phone: stud.phone,
+      student_id: stud.student_id,
+      student_number: stud.student_number,
+      accepted: stud.student_course.accepted,
+      groups: stud.student_course.groups
+    }
+  })
+  res.status(200).json(returnedStudents)
 })
 
 /*

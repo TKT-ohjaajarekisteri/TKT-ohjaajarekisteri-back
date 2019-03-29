@@ -211,7 +211,7 @@ var migrationCommands = [{
 {
   fn: 'createTable',
   params: [
-    'student_course',
+    'student_courses',
     {
       'createdAt': {
         'type': Sequelize.DATE,
@@ -255,7 +255,8 @@ var migrationCommands = [{
       },
       'groups': {
         'type': Sequelize.INTEGER,
-        'field': 'groups'
+        'field': 'groups',
+        'defaultValue': 0
       },
       'accepted': {
         'type': Sequelize.BOOLEAN,

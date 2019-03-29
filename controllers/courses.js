@@ -69,6 +69,21 @@ coursesRouter.get('/:id/students', checkAdmin, async (req, res) => {
   res.status(200).json(returnedStudents)
 })
 
+// Updates application status and group numbers of all applicants on a course
+coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
+  const course = await db.Course
+    .findByPk(req.params.id)
+  const returnedStudents = await course.getStudents().forEach(student => {
+    const foundStudent = req.body.find(a => a.student_id === student.student_id)
+    if (foundStudent) {
+      course.setStudents([foundStudent], { through: { accepted: foundStudent.accepted } })
+    }
+  })
+  res.status(200).json(returnedStudents)
+})
+
+
+
 /*
 //Maybe unnecessary?
 //Updates all course data from studies.helsinki.fi course list

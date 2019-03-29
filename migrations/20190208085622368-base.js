@@ -211,7 +211,7 @@ var migrationCommands = [{
 {
   fn: 'createTable',
   params: [
-    'student_courses',
+    'Applications',
     {
       'createdAt': {
         'type': Sequelize.DATE,
@@ -223,9 +223,9 @@ var migrationCommands = [{
         'field': 'updatedAt',
         'allowNull': false
       },
-      'studentCourse_id': {
+      'application_id': {
         'type': Sequelize.INTEGER,
-        'field': 'student_course_id',
+        'field': 'application_id',
         'unique': true,
         'allowNull': false,
         'primaryKey': true,

@@ -47,7 +47,7 @@ module.exports = (sequelize, Sequelize) => {
   //Association table config for Sequelize
   Student.associate = (models) => {
     Student.belongsToMany(models.Course, {
-      through: 'student_course',
+      through: 'Application',
       foreignKey: 'student_id'
     })
   }

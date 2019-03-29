@@ -62,8 +62,8 @@ coursesRouter.get('/:id/students', checkAdmin, async (req, res) => {
       phone: stud.phone,
       student_id: stud.student_id,
       student_number: stud.student_number,
-      accepted: stud.student_course.accepted,
-      groups: stud.student_course.groups
+      accepted: stud.Application.accepted,
+      groups: stud.Application.groups
     }
   })
   res.status(200).json(returnedStudents)

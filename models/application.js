@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const StudentCourse = sequelize.define('student_course', {
+  const Application = sequelize.define('Application', {
     groups: {
       type: Sequelize.INTEGER,
       defaultValue: 0
@@ -10,5 +10,5 @@ module.exports = (sequelize, Sequelize) => {
     }
   })
 
-  return StudentCourse
+  return Application
 }

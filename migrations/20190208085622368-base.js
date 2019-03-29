@@ -225,7 +225,7 @@ var migrationCommands = [{
       },
       'studentCourse_id': {
         'type': Sequelize.INTEGER,
-        'field': 'studentCourse_id',
+        'field': 'student_course_id',
         'unique': true,
         'allowNull': false,
         'primaryKey': true,
@@ -253,9 +253,9 @@ var migrationCommands = [{
         },
         'foreignKey': true
       },
-      'group': {
+      'groups': {
         'type': Sequelize.INTEGER,
-        'field': 'group'
+        'field': 'groups'
       },
       'accepted': {
         'type': Sequelize.BOOLEAN,

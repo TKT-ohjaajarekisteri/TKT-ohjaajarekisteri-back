@@ -2,19 +2,30 @@ const studentsRouter = require('express').Router()
 const db = require('../models/index')
 const { checkUser, checkAdmin } = require('../utils/middleware/checkRoute')
 
+
 //Get request that returns all students as JSON
 studentsRouter.get('/', checkAdmin, async (req, res) => {
-  let students = await db.Student.findAll({})
-  res.status(200).json(students) // todo: formatointi
+  try {
+    let students = await db.Student.findAll({})
+    res.status(200).json(students)
+  } catch (exception) {
+    console.log(exception.message)
+    res.status(400).json({ error: 'Could not get studentlist from db' })
+  }  
 })
 
 //Get request that returns a student based on id
 studentsRouter.get('/:id', checkUser, async (req, res) => {
-  const user = await db.User
-    .findByPk(req.params.id)
-  const student = await db.Student
-    .findByPk(user.role_id)
-  res.status(200).json(student)
+  try {
+    const user = await db.User
+      .findByPk(req.params.id)
+    const student = await db.Student
+      .findByPk(user.role_id)
+    res.status(200).json(student)
+  } catch (exception) {
+    console.log(exception.message)
+    res.status(400).json({ error: 'Could not get student from db' })
+  }
 })
 
 //Get request that returns all of the courses a student is on

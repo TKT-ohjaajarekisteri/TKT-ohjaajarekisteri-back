@@ -30,13 +30,18 @@ studentsRouter.get('/:id', checkUser, async (req, res) => {
 
 //Get request that returns all of the courses a student is on
 studentsRouter.get('/:id/courses', checkUser, async (req, res) => {
-  const user = await db.User
-    .findByPk(req.params.id)
-  const student = await db.Student
-    .findByPk(user.role_id)
-  const courses = await student.getCourses()
-
-  res.status(200).json(courses)
+  try {
+    const user = await db.User
+      .findByPk(req.params.id)
+    const student = await db.Student
+      .findByPk(user.role_id)
+    const courses = await student.getCourses()
+    console.log('controllers: studentsin studentcourses courses', courses)
+    res.status(200).json(courses)
+  } catch (exception) {
+    res.status(400).json({ error: 'Could not get the course list from db' })
+    console.log('student controllers studentcourse exception', exception.message)
+  }
 })
 
 // Adds student to given courses
@@ -76,7 +81,7 @@ studentsRouter.post('/:id/courses/apply', checkUser, async (req, res) => {
 })
 
 // Removes relation between student and course
-studentsRouter.delete('/:id/courses/:course_id', checkUser, async (req, res) => {
+studentsRouter.delete('/:id/courses/:course_id/delete', checkUser, async (req, res) => {
   try {
     // get current user from db
     const user = await db.User.findOne({
@@ -106,6 +111,7 @@ studentsRouter.delete('/:id/courses/:course_id', checkUser, async (req, res) => 
     console.log(exception.message)
     res.status(400).json({ error: 'bad request' })
   }
+  res.status(400).json({ error: 'bad request' })
 })
 
 

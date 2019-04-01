@@ -76,7 +76,7 @@ describe('tests for the students controller', () => {
       })
 
       test('Student can apply to a course with POST /api/students/:id/courses/apply', async () => {
-        course_ids = courses.map(course => course.course_id)
+        let course_ids = courses.map(course => course.course_id)
 
         const response = await api
           .post(`/api/students/${users[index].user_id}/courses/apply`)
@@ -109,13 +109,11 @@ describe('tests for the students controller', () => {
   
           courses = await Promise.all(initialCourses.map(n => db.Course.create( n )))
 
-          student = await db.Student.findOne({ where: {
+          let student = await db.Student.findOne({ where: {
             student_id: students[index].student_id
           }
           })
           student.addCourse(courses[index])
-
-
         })
 
         test('Courses that a student has applied to are listed with GET /api/students/:user_id/courses', async () => {
@@ -161,7 +159,7 @@ describe('tests for the students controller', () => {
             await api
               .put(`/api/students/${users[index].user_id}`)
               .set('Authorization', `bearer ${studentToken}`)
-              .send({ email: 'maili@hotmail.com', phone: '0402356543', experience: 'very good', no_english: 'true'})
+              .send({ email: 'maili@hotmail.com', phone: '0402356543', experience: 'very good', no_english: 'true' })
               .expect(201)
       
             const updatedStudent = await db.Student.findOne({ where: { student_id: students[index].student_id } })

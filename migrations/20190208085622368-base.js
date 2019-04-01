@@ -211,7 +211,7 @@ var migrationCommands = [{
 {
   fn: 'createTable',
   params: [
-    'student_course',
+    'Applications',
     {
       'createdAt': {
         'type': Sequelize.DATE,
@@ -223,6 +223,14 @@ var migrationCommands = [{
         'field': 'updatedAt',
         'allowNull': false
       },
+      'application_id': {
+        'type': Sequelize.INTEGER,
+        'field': 'application_id',
+        'unique': true,
+        'allowNull': false,
+        'primaryKey': true,
+        'autoIncrement': true
+      },
       'course_id': {
         'type': Sequelize.INTEGER,
         'field': 'course_id',
@@ -232,7 +240,7 @@ var migrationCommands = [{
           'model': 'Courses',
           'key': 'course_id'
         },
-        'primaryKey': true
+        'foreignKey': true
       },
       'student_id': {
         'type': Sequelize.INTEGER,
@@ -243,7 +251,17 @@ var migrationCommands = [{
           'model': 'Students',
           'key': 'student_id'
         },
-        'primaryKey': true
+        'foreignKey': true
+      },
+      'groups': {
+        'type': Sequelize.INTEGER,
+        'field': 'groups',
+        'defaultValue': 0
+      },
+      'accepted': {
+        'type': Sequelize.BOOLEAN,
+        'field': 'accepted',
+        'defaultValue': true
       }
     },
     {}

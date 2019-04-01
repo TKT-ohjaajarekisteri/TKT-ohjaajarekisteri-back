@@ -73,19 +73,21 @@ coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
   try {
     const course = await db.Course
       .findByPk(req.params.id)
-    const students = await course.getStudents()
+    let students = await course.getStudents()
 
     students.forEach(student => {
       const foundStudent = req.body.find(a => a.student_id === student.student_id)
       if (foundStudent) {
         student.Application = {
           ...student.Application,
-          accepted: foundStudent.accepted
+          accepted: foundStudent.accepted,
+          groups: foundStudent.groups
         }
       }
       return student
     })
     await course.setStudents(students, { through: { accepted: false, groups: 0 } })
+    students = await course.getStudents()
 
     const returnedStudents = students.map(stud => {
       return {
@@ -101,6 +103,7 @@ coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
         groups: stud.Application.groups
       }
     })
+
     res.status(200).json(returnedStudents)
   } catch (error) {
     console.log(error.message)

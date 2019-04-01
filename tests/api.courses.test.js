@@ -15,17 +15,17 @@ describe('tests for the courses controller', () => {
   beforeAll(async () => {
     await db.Course.destroy({
       where: {}
-    })  
+    })
 
     await db.User.destroy({
       where: {}
     })
-  
+
     await db.Admin.destroy({
       where: {}
     })
 
-    
+
     const admin = await db.Admin.create({ username: 'testAdmin', passwordHash: passwordHasher('password') })
     const adminUser = await db.User.create({ role: 'admin', role_id: admin.admin_id })
     token = jwt.sign({ id: adminUser.user_id, role: adminUser.role }, config.secret)
@@ -35,8 +35,8 @@ describe('tests for the courses controller', () => {
     beforeAll(async () => {
       await db.Course.destroy({
         where: {}
-      })  
-      courses = await Promise.all(initialCourses.map(n => db.Course.create( n )))
+      })
+      courses = await Promise.all(initialCourses.map(n => db.Course.create(n)))
     })
 
     test('Course is returned as json by GET /api/courses/:course_id', async () => {
@@ -58,7 +58,7 @@ describe('tests for the courses controller', () => {
         .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
-      
+
       expect(response.body.length).toBe(coursesInDatabase.length)
 
       const returnedContents = response.body.map(n => n.course_name)
@@ -71,10 +71,9 @@ describe('tests for the courses controller', () => {
       beforeAll(async () => {
         await db.Student.destroy({
           where: {}
-        })  
+        })
 
-        students = await Promise.all(initialStudents.map(n => db.Student.create( n )))
-
+        students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
         await students[index].addCourse(courses[index])
       })
 
@@ -88,8 +87,26 @@ describe('tests for the courses controller', () => {
         expect(response.text).toBeDefined()
         expect(response.text).toContain(students[index].student_number)
       })
-    }) 
-    
+
+      test('Applying students can be accepted as assistants with POST /api/courses/:course_id/students', async () => {
+        const studentsToAccept = students.map(student => {
+          return {
+            student_id: student.student_id,
+            accepted: true
+          }
+        })
+        const response = await api
+          .post(`/api/courses/${courses[index].course_id}/students`)
+          .set('Authorization', `bearer ${token}`)
+          .send(studentsToAccept)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+        expect(response.text).toBeDefined()
+        expect(response.text).toContain(studentsToAccept[0].student_id)
+        expect(response.text).toContain(studentsToAccept[0].accepted)
+      })
+    })
+
     describe('When database has courses', () => {
       beforeAll(async () => {
         await db.Course.destroy({
@@ -97,16 +114,16 @@ describe('tests for the courses controller', () => {
         })
         courses = await Promise.all(initialPastCourses.map(n => db.Course.create(n)))
       })
-  
+
       test('Past courses are not returned as json by GET /api/courses', async () => {
         const coursesInDatabase = await coursesInDb()
-  
+
         const response = await api
           .get('/api/courses')
           .set('Authorization', `bearer ${token}`)
           .expect(200)
           .expect('Content-Type', /application\/json/)
-  
+
         expect(response.body.length).toBe(coursesInDatabase.length - 1)
       })
     })

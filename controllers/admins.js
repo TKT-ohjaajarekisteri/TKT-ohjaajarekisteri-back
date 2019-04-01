@@ -1,5 +1,5 @@
 const adminsRouter = require('express').Router()
-const db = require('../models/index')
+//const db = require('../models/index')
 //const { checkAdmin, checkLogin } = require('../utils/middleware/checkRoute')
 
 

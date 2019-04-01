@@ -1,7 +1,7 @@
 const coursesRouter = require('express').Router()
 const db = require('../models/index')
 const { checkAdmin, checkLogin } = require('../utils/middleware/checkRoute')
-const updateCourses = require('../utils/middleware/updateCourses').updateCourses
+// const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 const getISOWeek = require('date-fns/get_iso_week')
 
 // JS object for ending weeks of periods 1-5. Marks the week when course is no longer listed
@@ -19,7 +19,7 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
     const week = getISOWeek(today)
 
     var filteredCourses = courses.filter(c => {
-      return (periods[c.period] > week && c.year == year) || c.year > year
+      return (periods[c.period] > week && c.year === year) || c.year > year
     })
 
     res.status(200).json(filteredCourses)
@@ -36,7 +36,6 @@ coursesRouter.get('/all', checkLogin, async (req, res) => {
   const courses = await db.Course.findAll({})
   res.status(200).json(courses)
 })
-
 
 
 
@@ -71,37 +70,42 @@ coursesRouter.get('/:id/students', checkAdmin, async (req, res) => {
 
 // Updates application status and group numbers of all applicants on a course
 coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
-  const course = await db.Course
-    .findByPk(req.params.id)
-  const students = await course.getStudents()
+  try {
+    const course = await db.Course
+      .findByPk(req.params.id)
+    const students = await course.getStudents()
 
-  students.forEach(student => {
-    const foundStudent = req.body.find(a => a.student_id === student.student_id)
-    if (foundStudent) {
-      student.Application = {
-        ...student.Application,
-        accepted: foundStudent.accepted
+    students.forEach(student => {
+      const foundStudent = req.body.find(a => a.student_id === student.student_id)
+      if (foundStudent) {
+        student.Application = {
+          ...student.Application,
+          accepted: foundStudent.accepted
+        }
       }
-    }
-    return student
-  })
-  await course.setStudents(students, { through: { accepted: false, groups: 0 } })
+      return student
+    })
+    await course.setStudents(students, { through: { accepted: false, groups: 0 } })
 
-  const returnedStudents = students.map(stud => {
-    return {
-      email: stud.email,
-      experience: stud.experience,
-      first_names: stud.first_names,
-      last_name: stud.last_name,
-      no_english: stud.no_english,
-      phone: stud.phone,
-      student_id: stud.student_id,
-      student_number: stud.student_number,
-      accepted: stud.Application.accepted,
-      groups: stud.Application.groups
-    }
-  })
-  res.status(200).json(returnedStudents)
+    const returnedStudents = students.map(stud => {
+      return {
+        email: stud.email,
+        experience: stud.experience,
+        first_names: stud.first_names,
+        last_name: stud.last_name,
+        no_english: stud.no_english,
+        phone: stud.phone,
+        student_id: stud.student_id,
+        student_number: stud.student_number,
+        accepted: stud.Application.accepted,
+        groups: stud.Application.groups
+      }
+    })
+    res.status(200).json(returnedStudents)
+  } catch (error) {
+    console.log(error.message)
+    res.status(400).json({ error: 'malformatted request' })
+  }
 })
 
 

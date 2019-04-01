@@ -111,7 +111,6 @@ studentsRouter.delete('/:id/courses/:course_id/delete', checkUser, async (req, r
     console.log(exception.message)
     res.status(400).json({ error: 'bad request' })
   }
-  res.status(400).json({ error: 'bad request' })
 })
 
 

@@ -77,16 +77,14 @@ coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
 
     students.forEach(student => {
       const foundStudent = req.body.find(a => a.student_id === student.student_id)
-      if (foundStudent) {
-        student.Application = {
-          ...student.Application,
-          accepted: foundStudent.accepted,
-          groups: foundStudent.groups
-        }
+      student.Application = {
+        ...student.Application,
+        accepted: foundStudent ? foundStudent.accepted : student.Application.accepted,
+        groups: foundStudent ? foundStudent.groups : student.Application.groups
       }
       return student
     })
-    await course.setStudents(students, { through: { accepted: false, groups: 0 } })
+    await course.setStudents(students)
     students = await course.getStudents()
 
     const returnedStudents = students.map(stud => {

@@ -37,6 +37,22 @@ coursesRouter.get('/all', checkLogin, async (req, res) => {
   res.status(200).json(courses)
 })
 
+coursesRouter.get('/all/students/summary', checkAdmin, async (req, res) => {
+  try {
+    const courses = await db.Course.findAll({
+      include: [{// Notice `include` takes an ARRAY
+      model: db.Student,
+      as: 'students'
+      }]
+    })
+    res.status(200).json(courses)
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(400).json({ error: 'malformatted request' })
+  }
+})
+
 
 
 //Get request that returns a course based on id

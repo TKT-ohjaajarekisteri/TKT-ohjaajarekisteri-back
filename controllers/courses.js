@@ -37,7 +37,7 @@ coursesRouter.get('/all', checkLogin, async (req, res) => {
   res.status(200).json(courses)
 })
 
-coursesRouter.get('/all/students/summary', checkAdmin, async (req, res) => {
+coursesRouter.get('/summary', checkAdmin, async (req, res) => {
   try {
     const courses = await db.Course.findAll({
       include: [{// Notice `include` takes an ARRAY

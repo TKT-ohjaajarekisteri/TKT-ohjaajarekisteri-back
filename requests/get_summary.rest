@@ -1,2 +1,2 @@
-GET http://localhost:8001/api/courses/all/students/summary
+GET http://localhost:8001/api/courses/summary
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNTU0MTMxMDc2fQ.V6f6Dd_4Dl5eMFjydNVMsnV4zbvBjJFbf9UsXphIc3k

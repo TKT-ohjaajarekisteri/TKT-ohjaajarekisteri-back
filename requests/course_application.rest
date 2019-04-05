@@ -1,0 +1,15 @@
+
+POST http://localhost:8001/api/students/2/courses/apply
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6InN0dWRlbnQiLCJpYXQiOjE1NTEzNjczNTJ9.3CImn8ctgNYa7RA5MSs2Tr3pVpKoNvcOSfe1wkOvWG0
+
+// adds student id 1 to courses given below
+
+{
+    "id":2,
+ “course_ids”: [
+   1
+ ]
+}
+
+

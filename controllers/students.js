@@ -2,30 +2,46 @@ const studentsRouter = require('express').Router()
 const db = require('../models/index')
 const { checkUser, checkAdmin } = require('../utils/middleware/checkRoute')
 
+
 //Get request that returns all students as JSON
 studentsRouter.get('/', checkAdmin, async (req, res) => {
-  let students = await db.Student.findAll({})
-  res.status(200).json(students) // todo: formatointi
+  try {
+    let students = await db.Student.findAll({})
+    res.status(200).json(students)
+  } catch (exception) {
+    console.log(exception.message)
+    res.status(400).json({ error: 'Could not get studentlist from db' })
+  }  
 })
 
 //Get request that returns a student based on id
 studentsRouter.get('/:id', checkUser, async (req, res) => {
-  const user = await db.User
-    .findByPk(req.params.id)
-  const student = await db.Student
-    .findByPk(user.role_id)
-  res.status(200).json(student)
+  try {
+    const user = await db.User
+      .findByPk(req.params.id)
+    const student = await db.Student
+      .findByPk(user.role_id)
+    res.status(200).json(student)
+  } catch (exception) {
+    console.log(exception.message)
+    res.status(400).json({ error: 'Could not get student from db' })
+  }
 })
 
 //Get request that returns all of the courses a student is on
 studentsRouter.get('/:id/courses', checkUser, async (req, res) => {
-  const user = await db.User
-    .findByPk(req.params.id)
-  const student = await db.Student
-    .findByPk(user.role_id)
-  const courses = await student.getCourses()
-
-  res.status(200).json(courses)
+  try {
+    const user = await db.User
+      .findByPk(req.params.id)
+    const student = await db.Student
+      .findByPk(user.role_id)
+    const courses = await student.getCourses()
+    //console.log('controllers: studentsin studentcourses courses', courses)
+    res.status(200).json(courses)
+  } catch (exception) {
+    res.status(400).json({ error: 'Could not get the course list from db' })
+    //console.log('student controllers studentcourse exception', exception.message)
+  }
 })
 
 // Adds student to given courses

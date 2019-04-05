@@ -138,7 +138,8 @@ var migrationCommands = [{
         'allowNull': false
       },
       'no_english': {
-        'type': Sequelize.BOOLEAN
+        'type': Sequelize.BOOLEAN,
+        'defaultValue': false
       },
       'experience': {
         'type': Sequelize.STRING(255),

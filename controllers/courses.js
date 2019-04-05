@@ -41,8 +41,8 @@ coursesRouter.get('/summary', checkAdmin, async (req, res) => {
   try {
     const courses = await db.Course.findAll({
       include: [{// Notice `include` takes an ARRAY
-      model: db.Student,
-      as: 'students'
+        model: db.Student,
+        as: 'students'
       }]
     })
     res.status(200).json(courses)

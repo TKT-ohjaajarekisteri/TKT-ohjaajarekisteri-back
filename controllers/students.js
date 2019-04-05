@@ -36,11 +36,11 @@ studentsRouter.get('/:id/courses', checkUser, async (req, res) => {
     const student = await db.Student
       .findByPk(user.role_id)
     const courses = await student.getCourses()
-    console.log('controllers: studentsin studentcourses courses', courses)
+    //console.log('controllers: studentsin studentcourses courses', courses)
     res.status(200).json(courses)
   } catch (exception) {
     res.status(400).json({ error: 'Could not get the course list from db' })
-    console.log('student controllers studentcourse exception', exception.message)
+    //console.log('student controllers studentcourse exception', exception.message)
   }
 })
 
@@ -81,7 +81,7 @@ studentsRouter.post('/:id/courses/apply', checkUser, async (req, res) => {
 })
 
 // Removes relation between student and course
-studentsRouter.delete('/:id/courses/:course_id/delete', checkUser, async (req, res) => {
+studentsRouter.delete('/:id/courses/:course_id', checkUser, async (req, res) => {
   try {
     // get current user from db
     const user = await db.User.findOne({

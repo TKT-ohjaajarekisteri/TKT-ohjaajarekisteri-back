@@ -127,7 +127,7 @@ describe('tests for the students controller', () => {
           expect(response.text).toContain(courses[index].learningopportunity_id)
         })
 
-        test('Removes relation between a course and a student with DELETE /api/students/:user_id/courses/:course_id/delete', async () => {
+        test('Removes relation between a course and a student with DELETE /api/students/:user_id/courses/:course_id', async () => {
           const studentWithCourseAtStart = await db.Student.findOne({ where: {
             student_id: students[index].student_id
           },
@@ -137,7 +137,7 @@ describe('tests for the students controller', () => {
           expect(JSON.stringify(studentWithCourseAtStart)).toBeDefined()
 
           await api
-            .delete(`/api/students/${users[index].user_id}/courses/${courses[index].course_id}/delete`)
+            .delete(`/api/students/${users[index].user_id}/courses/${courses[index].course_id}`)
             .set('Authorization', `bearer ${studentToken}`)
             .expect(204)
 

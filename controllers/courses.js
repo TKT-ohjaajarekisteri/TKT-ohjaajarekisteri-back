@@ -40,7 +40,8 @@ coursesRouter.get('/all', checkLogin, async (req, res) => {
 coursesRouter.get('/summary', checkAdmin, async (req, res) => {
   try {
     const courses = await db.Course.findAll({
-      include: [{// Notice `include` takes an ARRAY
+      include: [{// Notice `include` takes an ARRAY 
+        // because you can include multiple models
         model: db.Student,
         as: 'students'
       }]

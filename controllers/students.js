@@ -5,7 +5,7 @@ const { checkUser, checkAdmin } = require('../utils/middleware/checkRoute')
 //Get request that returns all students as JSON
 studentsRouter.get('/', checkAdmin, async (req, res) => {
   let students = await db.Student.findAll({})
-  res.status(200).json(students) // todo: formatointi
+  res.status(200).json(students)
 })
 
 //Get request that returns a student based on id

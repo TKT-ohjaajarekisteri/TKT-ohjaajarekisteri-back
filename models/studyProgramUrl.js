@@ -1,6 +1,6 @@
 'use strict'
 
-//Sequelize model for Student database object
+//Sequelize model for Study program url database object
 module.exports = (sequelize, Sequelize) => {
   const StudyProgramUrl = sequelize.define('StudyProgramUrl', {
     studyProgramUrl_id: {

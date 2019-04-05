@@ -1,0 +1,7 @@
+PUT http://localhost:8001/api/studyProgramUrls/candidate
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImFkbWluIiwiaWF0IjoxNTUwODM5MDU2fQ.j3-ora4N58OO2ZUUiqOMcy1ZPC39WVVdG1F4FnW3KYw
+
+{
+  "url": "https://studies.helsinki.fi/organizations/500-K005/courses_list.json?periods=1&periods=2&periods=3&periods=4&periods=5&types=teaching"
+}

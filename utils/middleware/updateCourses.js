@@ -1,13 +1,17 @@
 const axios = require('axios')
 const db = require('../../models/index')
-const config = require('../../config/config')
 const sort = require('fast-sort')
 
 //Updates all courses
 const updateCourses = async () => {
-  const candidateDataJson = await axios.get(config.candidateCoursesUrl)
-  const masterDataJson = await axios.get(config.masterCoursesUrl) 
-  const dataScienceDataJson = await axios.get(config.dataScienceCoursesUrl)
+
+  const candidateCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'candidate' } })
+  const masterCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'master' } })
+  const dataScienceCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'data' } })
+
+  const candidateDataJson = await axios.get(candidateCoursesUrl.url)
+  const masterDataJson = await axios.get(masterCoursesUrl.url) 
+  const dataScienceDataJson = await axios.get(dataScienceCoursesUrl.url)
 
   const candidataCourses = Object.assign(candidateDataJson.data)
   const masterCourses = Object.assign(masterDataJson.data)

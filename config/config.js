@@ -10,9 +10,6 @@ let secret = process.env.SECRET
 let logging = true
 let fakeLogin = false
 let login = 'http://opetushallinto.cs.helsinki.fi/login'
-const candidateCoursesUrl = 'https://studies.helsinki.fi/organizations/500-K005/courses_list.json?periods=1&periods=2&periods=3&periods=4&periods=5&types=teaching&types=exam'
-const masterCoursesUrl = 'https://studies.helsinki.fi/organizations/500-M009/courses_list.json?periods=1&periods=2&periods=3&periods=4&periods=5&types=teaching&types=exam'
-const dataScienceCoursesUrl = 'https://studies.helsinki.fi/organizations/500-M010/courses_list.json?periods=1&periods=2&periods=3&periods=4&periods=5&types=teaching&types=exam'
 
 if (process.env.NODE_ENV === 'production') {
   sequelizeConfig = production
@@ -44,8 +41,5 @@ module.exports = {
   logging,
   secret,
   login,
-  fakeLogin,
-  candidateCoursesUrl,
-  masterCoursesUrl,
-  dataScienceCoursesUrl
+  fakeLogin
 }

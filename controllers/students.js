@@ -120,7 +120,7 @@ studentsRouter.put('/:id', checkUser, async (req, res) => {
     const body = req.body
 
     await student.update({ email: body.email, phone: body.phone, experience: body.experience, no_english: body.no_english })
-    res.status(201).end()
+    res.status(200).end()
 
   } catch (error) {
     console.log(error.message)
@@ -134,7 +134,7 @@ studentsRouter.put('/:id/deleteCD', async (req, res) => {
     let student = await db.Student.findOne({ where: { student_id: req.params.id } })
 
     await student.update({ nickname: null, email: null, phone: null })
-    res.status(201).end()
+    res.status(200).end()
 
   } catch (error) {
     console.log(error.message)

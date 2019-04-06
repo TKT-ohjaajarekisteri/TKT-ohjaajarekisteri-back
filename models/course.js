@@ -25,6 +25,9 @@ module.exports = (sequelize, Sequelize) => {
     year: {
       type: Sequelize.INTEGER,
       allowNull: false
+    },
+    groups: {
+      type: Sequelize.INTEGER
     }
   })
 

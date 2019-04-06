@@ -18,7 +18,7 @@ const updateCourses = async () => {
   const currentCourses = await db.Course.findAll({ 
     raw:true,
     attributes: {
-      exclude: ['course_id', 'createdAt', 'updatedAt']
+      exclude: ['course_id', 'createdAt', 'updatedAt', 'groups']
     }
   })
 
@@ -53,6 +53,7 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses) => {
       if(!(courseName.includes('(U)') || courseName.includes('(HT)') || courseName.includes('(HT/U)'))) {
         if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
           if(!courseExists(currentCourses, course)) {
+            course.groups = await getMostRecentGroupSize(course)
             addedCourses.push(course)     
             currentCourses.push(course)  
           }
@@ -70,6 +71,41 @@ const courseExists = (currentCourses, course) => {
     }
   }
   return false
+}
+
+//Returns the group size of all applicants groups combined for the previous implementation of the course 
+const getMostRecentGroupSize = async (course) => {
+  const sameCourses = await db.Course.findAll({ where: { course_name: course.course_name } })
+  if(!sameCourses) return null
+
+  //Get course with the highest year and period IE the most recent course in DB
+  const years = sameCourses.map( course => course.year)
+  const previousYear = Math.max( ...years)
+  const previousYearsCourses = sameCourses.filter(course => course.year === previousYear)
+  const periods = previousYearsCourses.map( course => course.period)
+  const previousPeriod = Math.max( ...periods)
+
+  const previousCourse = await db.Course.findOne({ 
+    where: 
+      { 
+        course_name: course.course_name,
+        year: previousYear,
+        period: previousPeriod
+      },
+    include: 
+      [{
+        model: db.Student,
+        as: 'students'
+      }]
+  })
+  
+  if(previousCourse.students.length !== 0) {
+    const groups = previousCourse.students.map( student => student.Application.groups)
+    //Sum up all of the groups on the course
+    const sum = groups.reduce((partial_sum, a) => partial_sum + a)
+    return sum
+  }
+  return null
 }
 
 module.exports = {

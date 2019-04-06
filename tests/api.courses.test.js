@@ -154,5 +154,37 @@ describe('tests for the courses controller', () => {
         expect(response.body.length).toBe(coursesInDatabase.length - 1)
       })
     })
+    describe('When database has courses, students and an association is added', () => {
+      beforeAll(async () => {
+        await db.Student.destroy({
+          where: {}
+        })
+
+        students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
+        await students[index].addCourse(courses[index])
+      })
+      test('applicant list is returned via summary request', async () => {
+        const response = await api
+          .get('/api/courses/summary')
+          .set('Authorization', `bearer ${token}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.text).toContain("students")
+      })
+
+      test('non-empty applicant list is returned via summary request', async () => {
+        await students[index].addCourse(courses[index])
+        test_student = initialStudents[index]
+
+        const response = await api
+          .get('/api/courses/summary')
+          .set('Authorization', `bearer ${token}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        expect(response.text).toContain(test_student.email)
+      })
+    })
   })
 })

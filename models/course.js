@@ -25,6 +25,10 @@ module.exports = (sequelize, Sequelize) => {
     year: {
       type: Sequelize.INTEGER,
       allowNull: false
+    },
+    hidden: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     }
   })
 

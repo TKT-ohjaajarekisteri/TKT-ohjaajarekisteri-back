@@ -94,6 +94,10 @@ var migrationCommands = [{
         'field': 'year',
         'allowNull': false
       },
+      'hidden': {
+        'type': Sequelize.BOOLEAN,
+        'defaultValue': false
+      },
       'createdAt': {
         'type': Sequelize.DATE,
         'field': 'createdAt',

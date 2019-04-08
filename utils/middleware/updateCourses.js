@@ -22,7 +22,7 @@ const updateCourses = async () => {
   const currentCourses = await db.Course.findAll({ 
     raw:true,
     attributes: {
-      exclude: ['course_id', 'createdAt', 'updatedAt']
+      exclude: ['course_id', 'createdAt', 'updatedAt','hidden']
     }
   })
 

@@ -125,21 +125,18 @@ coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
   }
 })
 
-
-
-/*
-//Maybe unnecessary?
-//Updates all course data from studies.helsinki.fi course list
-//Returns the added courses as json
-coursesRouter.get('/update', checkAdmin, async (req, res) => {
+//Hides a course if it is not hidden and makes it visible if it is hidden.
+coursesRouter.put('/:id/hide', checkAdmin, async (req, res) => {
   try {
-    const updatedCourses = await updateCourses()
-    res.status(200).json(updatedCourses)
-  } catch (exception) {
-    console.log(exception.message)
-    res.status(400).json({ error: 'malformatted json' })
+    let course = await db.Course.findOne({ where: { course_id: req.params.id } })
+
+    course = await course.update({ hidden: !course.hidden })
+    res.status(200).json(course)
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(400).json({ error: 'bad req' })
   }
 })
-*/
 
 module.exports = coursesRouter

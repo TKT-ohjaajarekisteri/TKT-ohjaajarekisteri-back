@@ -50,7 +50,7 @@ describe('tests for the courses controller', () => {
       expect(response.text).toContain(courses[index].learningopportunity_id)
     })
 
-    test('Courses are returned as json by GET /api/courses', async () => {
+    test('Courses are returned as json by GET /api/courses/all', async () => {
       const coursesInDatabase = await coursesInDb()
 
       const response = await api
@@ -65,6 +65,16 @@ describe('tests for the courses controller', () => {
       coursesInDatabase.forEach(course => {
         expect(returnedContents).toContain(course.course_name)
       })
+    })
+
+    test('Course can be hidden by GET /api/courses/:id/hide', async () => {
+      const response = await api
+        .put(`/api/courses/${courses[index].course_id}/hide`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.hidden).toBeTruthy()
     })
 
     describe('When database has courses, students and an association', () => {

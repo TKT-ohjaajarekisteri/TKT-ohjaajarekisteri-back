@@ -5,6 +5,7 @@ const sort = require('fast-sort')
 const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 const makeCourseArray = require('./test_helper').makeCourseArray
 let courses = null
+const { initialStudents, studentsInDb } = require('./test_helper')
 
 describe('tests for updating courses', () => {
   jest.setTimeout(15000)
@@ -43,6 +44,45 @@ describe('tests for updating courses', () => {
     test('No new courses are added, when updated twice in a row', async () => { 
       const updatedCourses = await updateCourses()
       expect(updatedCourses.length).toEqual(0)
+    })
+  })
+
+  describe('When database has old courses with same names as the ones to be added', () => {
+    beforeAll(async () => {
+      await db.Course.destroy({
+        where: {}
+      })
+
+      await db.Student.destroy({
+        where: {}
+      })
+      
+      const oldCourses = [      
+        {
+          learningopportunity_id: 'TKT2352353',
+          course_name: courses[0].course_name,
+          year: courses[0].year - 1,
+          period: courses[0].period
+        },
+        {
+          learningopportunity_id: 'TKT2352353',
+          course_name: courses[0].course_name,
+          year: courses[0].year - 2,
+          period: courses[0].period
+        }
+      ]
+
+      const oldCoursesInDB = await db.Course.bulkCreate(oldCourses)
+      const students = await db.Student.bulkCreate(initialStudents)
+      students.forEach( student => student.Application = { groups: 2 })
+      students.forEach( async student => await student.addCourse(oldCoursesInDB[0]))
+
+    })
+
+    test('Groups are updated on new courses correctly', async () => { 
+      const updatedCourses = await updateCourses()
+      const courseWithOldImplementations = updatedCourses.filter( course => course.course_id === courses[0].course_id)
+      expect(courseWithOldImplementations.groups).toBe(6)
     })
   })
 })

@@ -95,7 +95,7 @@ var migrationCommands = [{
         'allowNull': false
       },
       'groups': {
-        'type': Sequelize.INTEGER(20),
+        'type': Sequelize.INTEGER,
         'field': 'groups'
       },
       'createdAt': {

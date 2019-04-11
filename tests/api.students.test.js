@@ -160,7 +160,7 @@ describe('tests for the students controller', () => {
               .put(`/api/students/${users[index].user_id}`)
               .set('Authorization', `bearer ${studentToken}`)
               .send({ email: 'maili@hotmail.com', phone: '0402356543', experience: 'very good', no_english: 'true' })
-              .expect(201)
+              .expect(200)
       
             const updatedStudent = await db.Student.findOne({ where: { student_id: students[index].student_id } })
             expect(updatedStudent).not.toContain(students[index].phone)

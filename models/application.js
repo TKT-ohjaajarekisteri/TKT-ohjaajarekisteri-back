@@ -7,6 +7,10 @@ module.exports = (sequelize, Sequelize) => {
     accepted: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
+    },
+    hidden: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     }
   })
 

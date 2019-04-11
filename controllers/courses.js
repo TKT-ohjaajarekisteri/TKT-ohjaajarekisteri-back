@@ -1,6 +1,6 @@
 const coursesRouter = require('express').Router()
 const db = require('../models/index')
-const { checkAdmin, checkLogin } = require('../utils/middleware/checkRoute')
+const { checkAdmin, checkLogin, authenticateToken } = require('../utils/middleware/checkRoute')
 // const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 const getISOWeek = require('date-fns/get_iso_week')
 
@@ -12,8 +12,13 @@ const periods = { 1: 42, 2: 50, 3: 9, 4: 18, 5: 35 }
 //Get request that returns all courses on current period 
 coursesRouter.get('/', checkLogin, async (req, res) => {
   try {
-    const courses = await db.Course.findAll({})
-
+    let courses = null
+    const token = authenticateToken(req)
+    if(token.role === 'admin') {
+      courses = await db.Course.findAll({})
+    } else {
+      courses = await db.Course.findAll({ where: { hidden: false } })
+    }
     const today = new Date()
     const year = today.getFullYear()
     const week = getISOWeek(today)
@@ -157,6 +162,7 @@ coursesRouter.delete('/:id', async (request, response) => {
     response.status(400).json({ error: 'bad request' })
 })
 */
+
 //Hides a course if it is not hidden and makes it visible if it is hidden.
 coursesRouter.put('/:id/hide', checkAdmin, async (req, res) => {
   try {

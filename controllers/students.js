@@ -137,7 +137,21 @@ studentsRouter.put('/:id', checkUser, async (req, res) => {
 
     await student.update({ email: body.email, phone: body.phone, experience: body.experience, no_english: body.no_english })
     res.status(200).end()
+  } catch (error) {
+    console.log(error.message)
+    res.status(400).json({ error: 'bad req' })
+  }
+})
 
+//Hides a course if it is not hidden and makes it visible if it is hidden.
+studentsRouter.put('/:id/:course_id/hide', checkUser, async (req, res) => {
+  try {
+    let user = await db.User.findOne({ where: { user_id: req.params.id } })
+    let student = await db.Student.findOne({ where: { student_id: user.role_id } })
+    let application = await db.Application.findOne({ where: { course_id: req.params.course_id, student_id: student.student_id } })
+
+    application = await application.update({ hidden: !application.hidden })
+    res.status(200).json(application)
   } catch (error) {
     console.log(error.message)
     res.status(400).json({ error: 'bad req' })

@@ -100,6 +100,7 @@ var migrationCommands = [{
       },
       'hidden': {
         'type': Sequelize.BOOLEAN,
+        'field': 'hidden',
         'defaultValue': false
       },
       'createdAt': {
@@ -308,6 +309,11 @@ var migrationCommands = [{
       'accepted': {
         'type': Sequelize.BOOLEAN,
         'field': 'accepted',
+        'defaultValue': true
+      },
+      'hidden': {
+        'type': Sequelize.BOOLEAN,
+        'field': 'hidden',
         'defaultValue': true
       }
     },

@@ -5,7 +5,7 @@ const sort = require('fast-sort')
 const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 const makeCourseArray = require('./test_helper').makeCourseArray
 let courses = null
-const { initialStudents, studentsInDb } = require('./test_helper')
+const { initialStudents } = require('./test_helper')
 
 describe('tests for updating courses', () => {
   jest.setTimeout(15000)
@@ -57,6 +57,10 @@ describe('tests for updating courses', () => {
         where: {}
       })
       
+      await db.Application.destroy({
+        where: {}
+      })
+      
       const oldCourses = [      
         {
           learningopportunity_id: 'TKT2352353',
@@ -72,17 +76,22 @@ describe('tests for updating courses', () => {
         }
       ]
 
-      const oldCoursesInDB = await db.Course.bulkCreate(oldCourses)
-      const students = await db.Student.bulkCreate(initialStudents)
-      students.forEach( student => student.Application = { groups: 2 })
-      students.forEach( async student => await student.addCourse(oldCoursesInDB[0]))
 
+      const oldCoursesInDB = await Promise.all(oldCourses.map(n => db.Course.create(n)))
+      const students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
+      students.forEach( student => 
+        student.Application = {
+          ...student.Application,
+          accepted: true,
+          groups: 2
+        })
+      await oldCoursesInDB[0].addStudents(students)
     })
 
     test('Groups are updated on new courses correctly', async () => { 
       const updatedCourses = await updateCourses()
-      const courseWithOldImplementations = updatedCourses.filter( course => course.course_id === courses[0].course_id)
-      expect(courseWithOldImplementations.groups).toBe(6)
+      const courseWithOldImplementations = updatedCourses.filter( course => course.learningopportunity_id === courses[0].learningopportunity_id && course.course_name === courses[0].course_name)
+      expect(courseWithOldImplementations[0].groups).toBe(6)
     })
   })
 })

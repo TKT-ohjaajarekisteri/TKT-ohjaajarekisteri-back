@@ -156,20 +156,6 @@ coursesRouter.delete('/:id', async (request, response) => {
     response.status(400).json({ error: 'bad request' })
   }
 })
-
-
-//Maybe unnecessary?
-//Updates all course data from studies.helsinki.fi course list
-//Returns the added courses as json
-coursesRouter.get('/update', checkAdmin, async (req, res) => {
-  try {
-    const updatedCourses = await updateCourses()
-    res.status(200).json(updatedCourses)
-  } catch (exception) {
-    console.log(exception.message)
-    res.status(400).json({ error: 'malformatted json' })
-  }
-})
 */
 
 module.exports = coursesRouter

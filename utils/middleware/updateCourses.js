@@ -93,9 +93,9 @@ const getMostRecentGroupSize = async (newCourseName, coursesAtStart) => {
   const previousPeriod = Math.max( ...periods)
 
   //Get the most recent course from courses in database
-  const previousCourse = coursesAtStart.filter(oldCourse => 
+  const previousCourse = coursesAtStart.find(oldCourse => 
     oldCourse.course_name === newCourseName && oldCourse.period === previousPeriod && oldCourse.year === previousYear)
-  if(previousCourse.students.length === 0) return null
+  if(!previousCourse.students) return null
 
   //Get the groups of all applications as an array of groups
   const groups = previousCourse.students.map( student => student.Application.groups)

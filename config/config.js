@@ -44,8 +44,5 @@ module.exports = {
   logging,
   secret,
   login,
-  fakeLogin,
-  candidateCoursesUrl,
-  masterCoursesUrl,
-  dataScienceCoursesUrl
+  fakeLogin
 }

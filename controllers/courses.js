@@ -40,7 +40,8 @@ coursesRouter.get('/all', checkLogin, async (req, res) => {
 coursesRouter.get('/summary', checkAdmin, async (req, res) => {
   try {
     const courses = await db.Course.findAll({
-      include: [{// Notice `include` takes an ARRAY
+      include: [{// Notice `include` takes an ARRAY 
+        // because you can include multiple models
         model: db.Student,
         as: 'students'
       }]
@@ -125,6 +126,37 @@ coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
   }
 })
 
+/*
+//DEV Post request that adds a course to the database
+coursesRouter.post('/', async (request, response) => {
+  try {
+
+    const course = await db.Course.create({
+      learningopportunity_id: request.body.learningopportunity_id,
+      course_name: request.body.course_name,
+      period: request.body.period,
+      year: request.body.year,
+      groups: request.body.groups
+    })
+    response.status(201).json(course)
+
+  } catch (exception) {
+    console.log(exception.message)
+    response.status(400).json({ error: 'bad request' })
+  }
+})
+
+//DEV Delete request that deletes a course from the database based on id
+coursesRouter.delete('/:id', async (request, response) => {
+  try {
+    await db.Course.destroy({ where: { course_id: request.params.id } })
+    response.status(204).end()
+
+  } catch (exception) {
+    console.log(exception)
+    response.status(400).json({ error: 'bad request' })
+})
+*/
 //Hides a course if it is not hidden and makes it visible if it is hidden.
 coursesRouter.put('/:id/hide', checkAdmin, async (req, res) => {
   try {

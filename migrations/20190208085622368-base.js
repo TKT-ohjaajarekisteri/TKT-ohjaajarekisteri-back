@@ -94,6 +94,10 @@ var migrationCommands = [{
         'field': 'year',
         'allowNull': false
       },
+      'groups': {
+        'type': Sequelize.INTEGER,
+        'field': 'groups'
+      },
       'hidden': {
         'type': Sequelize.BOOLEAN,
         'field': 'hidden',
@@ -198,6 +202,44 @@ var migrationCommands = [{
       'role_id': {
         'type': Sequelize.INTEGER,
         'field': 'role_id',
+        'allowNull': false
+      },
+      'createdAt': {
+        'type': Sequelize.DATE,
+        'field': 'createdAt',
+        'allowNull': false
+      },
+      'updatedAt': {
+        'type': Sequelize.DATE,
+        'field': 'updatedAt',
+        'allowNull': false
+      }
+    },
+    {}
+  ]
+},
+{
+  fn: 'createTable',
+  params: [
+    'StudyProgramUrls',
+    {
+      'studyProgramUrl_id': {
+        'type': Sequelize.INTEGER,
+        'field': 'studyProgramUrl_id',
+        'unique': true,
+        'allowNull': false,
+        'primaryKey': true,
+        'autoIncrement': true
+      },
+      'type': {
+        'type': Sequelize.STRING(31),
+        'field': 'type',
+        'allowNull': false,
+        'unique': true
+      },
+      'url': {
+        'type': Sequelize.STRING(255),
+        'field': 'url',
         'allowNull': false
       },
       'createdAt': {

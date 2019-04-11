@@ -11,7 +11,7 @@ studentsRouter.get('/', checkAdmin, async (req, res) => {
   } catch (exception) {
     console.log(exception.message)
     res.status(400).json({ error: 'Could not get studentlist from db' })
-  }  
+  }
 })
 
 //Get request that returns a student based on id
@@ -137,7 +137,6 @@ studentsRouter.put('/:id', checkUser, async (req, res) => {
 
     await student.update({ email: body.email, phone: body.phone, experience: body.experience, no_english: body.no_english })
     res.status(200).end()
-
   } catch (error) {
     console.log(error.message)
     res.status(400).json({ error: 'bad req' })
@@ -153,7 +152,6 @@ studentsRouter.put('/:id/:course_id/hide', checkUser, async (req, res) => {
 
     application = await application.update({ hidden: !application.hidden })
     res.status(200).json(application)
-
   } catch (error) {
     console.log(error.message)
     res.status(400).json({ error: 'bad req' })
@@ -166,7 +164,7 @@ studentsRouter.put('/:id/deleteCD', async (req, res) => {
     let student = await db.Student.findOne({ where: { student_id: req.params.id } })
 
     await student.update({ nickname: null, email: null, phone: null })
-    res.status(201).end()
+    res.status(200).end()
 
   } catch (error) {
     console.log(error.message)

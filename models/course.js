@@ -26,6 +26,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false
     },
+    groups: {
+      type: Sequelize.INTEGER
+    },
     hidden: {
       type: Sequelize.BOOLEAN,
       defaultValue: false

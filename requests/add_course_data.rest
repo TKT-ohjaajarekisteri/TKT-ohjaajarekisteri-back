@@ -1,10 +1,11 @@
-POST http://localhost:8001/api/courses/admin
+POST http://localhost:8001/api/courses/
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImFkbWluIiwiaWF0IjoxNTUwODM5MDU2fQ.j3-ora4N58OO2ZUUiqOMcy1ZPC39WVVdG1F4FnW3KYw
 
 {
-  "learningopportunity_id": "TKT20089",
-  "course_name": "Ohjelmistotuotanto 5",
-  "period": 4,
-  "year": 2019
-}
+    "learningopportunity_id": "CSM12199",
+    "course_name": "Algorithms in Molecular Biology",
+    "period": 4,
+    "year": 2018,
+    "groups": null
+  }

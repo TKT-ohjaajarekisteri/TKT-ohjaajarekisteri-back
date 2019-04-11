@@ -1,0 +1,2 @@
+
+DELETE http://localhost:8001/api/courses/255

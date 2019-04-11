@@ -94,6 +94,10 @@ var migrationCommands = [{
         'field': 'year',
         'allowNull': false
       },
+      'groups': {
+        'type': Sequelize.INTEGER,
+        'field': 'groups'
+      },
       'hidden': {
         'type': Sequelize.BOOLEAN,
         'defaultValue': false

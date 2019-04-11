@@ -6,7 +6,6 @@ const initialStudents = [
     student_number: '123456789',
     first_names: 'Juhani',
     last_name: 'Pouta',
-    nickname: 'Juhani',
     phone: '0401234567',
     email: 'juhani.pouta@gmail.com',
   },
@@ -14,7 +13,6 @@ const initialStudents = [
     student_number: '987654321',
     first_names: 'Aarlo',
     last_name: 'Kustaa',
-    nickname: 'Arska',
     phone: '0401234598',
     email: 'arska.kustaa@gmail.com',
   },
@@ -22,7 +20,6 @@ const initialStudents = [
     student_number: '192837465',
     first_names: 'Tomi',
     last_name: 'Virtanen',
-    nickname: 'Tomppa',
     phone: '0405674567',
     email: 'tomi.virtanen@gmail.com',
   }

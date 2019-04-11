@@ -180,12 +180,12 @@ describe('tests for the courses controller', () => {
           .expect(200)
           .expect('Content-Type', /application\/json/)
 
-        expect(response.text).toContain("students")
+        expect(response.text).toContain('students')
       })
 
       test('non-empty applicant list is returned via summary request', async () => {
         await students[index].addCourse(courses[index])
-        test_student = initialStudents[index]
+        const test_student = initialStudents[index]
 
         const response = await api
           .get('/api/courses/summary')

@@ -98,7 +98,13 @@ const getMostRecentGroupSize = async (newCourseName, coursesAtStart) => {
   if(!previousCourse.students) return null
 
   //Get the groups of all applications as an array of groups
-  const groups = previousCourse.students.map( student => student.Application.groups)
+  const groups = []
+
+  previousCourse.students.forEach( student => {
+    if(student.Application.accepted) {
+      groups.push(student.Application.groups)
+    }
+  })
   //Sum up all of the groups on the course
   const sum = groups.reduce((partial_sum, a) => partial_sum + a)
   return sum

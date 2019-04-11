@@ -85,13 +85,15 @@ describe('tests for updating courses', () => {
           accepted: true,
           groups: 2
         })
+
+      students[0].Application.accepted = false  
       await oldCoursesInDB[0].addStudents(students)
     })
 
     test('Groups are updated on new courses correctly', async () => { 
       const updatedCourses = await updateCourses()
       const courseWithOldImplementations = updatedCourses.filter( course => course.learningopportunity_id === courses[0].learningopportunity_id && course.course_name === courses[0].course_name)
-      expect(courseWithOldImplementations[0].groups).toBe(6)
+      expect(courseWithOldImplementations[0].groups).toBe(4)
     })
   })
 })

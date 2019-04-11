@@ -94,6 +94,10 @@ var migrationCommands = [{
         'field': 'year',
         'allowNull': false
       },
+      'hidden': {
+        'type': Sequelize.BOOLEAN,
+        'defaultValue': false
+      },
       'createdAt': {
         'type': Sequelize.DATE,
         'field': 'createdAt',
@@ -138,7 +142,8 @@ var migrationCommands = [{
         'allowNull': false
       },
       'no_english': {
-        'type': Sequelize.BOOLEAN
+        'type': Sequelize.BOOLEAN,
+        'defaultValue': false
       },
       'experience': {
         'type': Sequelize.STRING(255),

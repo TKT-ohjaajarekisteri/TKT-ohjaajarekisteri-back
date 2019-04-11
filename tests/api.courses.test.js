@@ -50,7 +50,7 @@ describe('tests for the courses controller', () => {
       expect(response.text).toContain(courses[index].learningopportunity_id)
     })
 
-    test('Courses are returned as json by GET /api/courses', async () => {
+    test('Courses are returned as json by GET /api/courses/all', async () => {
       const coursesInDatabase = await coursesInDb()
 
       const response = await api
@@ -67,14 +67,25 @@ describe('tests for the courses controller', () => {
       })
     })
 
+    test('Course can be hidden by GET /api/courses/:id/hide', async () => {
+      const response = await api
+        .put(`/api/courses/${courses[index].course_id}/hide`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.hidden).toBeTruthy()
+    })
+
     describe('When database has courses, students and an association', () => {
       beforeAll(async () => {
         await db.Student.destroy({
           where: {}
         })
-
         students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
-        await students[index].addCourse(courses[index])
+        students.forEach(async student =>
+          await student.addCourse(courses[index])
+        )
       })
 
       test('Students that have applied to course are listed with GET /api/courses/:course_id/students', async () => {
@@ -92,7 +103,8 @@ describe('tests for the courses controller', () => {
         const studentsToAccept = students.map(student => {
           return {
             student_id: student.student_id,
-            accepted: true
+            accepted: true,
+            groups: 0
           }
         })
         const response = await api
@@ -103,7 +115,32 @@ describe('tests for the courses controller', () => {
           .expect('Content-Type', /application\/json/)
         expect(response.text).toBeDefined()
         expect(response.text).toContain(studentsToAccept[0].student_id)
+        expect(response.text).toContain(studentsToAccept[1].student_id)
         expect(response.text).toContain(studentsToAccept[0].accepted)
+        expect(response.text).toContain(studentsToAccept[1].accepted)
+      })
+
+      test('Group numbers can be changed with POST /api/courses/:course_id/students', async () => {
+        const updatedGroupNumber = 17
+        const studentsToAccept = students.map(student => {
+          return {
+            student_id: student.student_id,
+            accepted: true,
+            groups: updatedGroupNumber
+          }
+        })
+        const response = await api
+          .post(`/api/courses/${courses[index].course_id}/students`)
+          .set('Authorization', `bearer ${token}`)
+          .send(studentsToAccept)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+        expect(response.text).toBeDefined()
+        expect(response.text).toContain(studentsToAccept[0].student_id)
+        expect(response.text).toContain(studentsToAccept[1].student_id)
+        expect(response.text).toContain(studentsToAccept[0].groups)
+        expect(response.text).toContain(studentsToAccept[1].groups)
+        expect(response.text).toContain(updatedGroupNumber)
       })
     })
 

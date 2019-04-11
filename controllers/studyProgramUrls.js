@@ -11,7 +11,6 @@ studyProgramUrlsRouter.get('/', checkAdmin, async (req, res) => {
 //Updates the study program url of given type or creates a new one if the type doesn't exist
 studyProgramUrlsRouter.put('/', checkAdmin, async (req, res) => {
   try {
-    //Update existing
     let studyProgramUrl = await db.StudyProgramUrl.findOne({ where: { type: req.body.type } })
     await studyProgramUrl.update({ url: req.body.url })
     res.status(200).end()

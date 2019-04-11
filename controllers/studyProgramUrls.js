@@ -13,15 +13,8 @@ studyProgramUrlsRouter.put('/', checkAdmin, async (req, res) => {
   try {
     //Update existing
     let studyProgramUrl = await db.StudyProgramUrl.findOne({ where: { type: req.body.type } })
-    if(studyProgramUrl) {
-      await studyProgramUrl.update({ url: req.body.url })
-      res.status(200).end()
-    //Or create new
-    } else {
-      await db.StudyProgramUrl.create({ type: req.body.type, url: req.body.url })
-      res.status(201).end()
-    }
-
+    await studyProgramUrl.update({ url: req.body.url })
+    res.status(200).end()
   } catch (error) {
     console.log(error.message)
     res.status(400).json({ error: 'bad req' })

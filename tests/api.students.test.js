@@ -127,6 +127,26 @@ describe('tests for the students controller', () => {
           expect(response.text).toContain(courses[index].learningopportunity_id)
         })
 
+        test('Application can be hidden by PUT /api/students/:id/:course_id/hide', async () => {
+          const response = await api
+            .put(`/api/students/${users[index].user_id}/${courses[index].course_id}/hide`)
+            .set('Authorization', `bearer ${studentToken}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+    
+          expect(response.body.hidden).toBeTruthy()
+        })
+
+        test('Application can be unhidden by PUT /api/students/:id/:course_id/hide', async () => {
+          const response = await api
+            .put(`/api/students/${users[index].user_id}/${courses[index].course_id}/hide`)
+            .set('Authorization', `bearer ${studentToken}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+    
+          expect(response.body.hidden).toBeFalsy()
+        })        
+
         test('Removes relation between a course and a student with DELETE /api/students/:user_id/courses/:course_id', async () => {
           const studentWithCourseAtStart = await db.Student.findOne({ where: {
             student_id: students[index].student_id

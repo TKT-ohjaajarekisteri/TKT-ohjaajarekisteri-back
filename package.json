@@ -16,7 +16,8 @@
     "migrate-undo": "node_modules/.bin/sequelize db:migrate:undo",
     "seed": "node_modules/.bin/sequelize db:seed:all",
     "seed-undo": "node_modules/.bin/sequelize db:seed:undo:all",
-    "travis": "cross-env NODE_ENV=travis node_modules/.bin/sequelize db:migrate && cross-env NODE_ENV=travis jest --coverage --ci --maxWorkers=1 --forceExit && ./node_modules/.bin/codecov && git checkout package-lock.json"
+    "travis": "cross-env NODE_ENV=travis node_modules/.bin/sequelize db:migrate && cross-env NODE_ENV=travis jest --coverage --ci --maxWorkers=1 --forceExit && ./node_modules/.bin/codecov && git checkout package-lock.json",
+    "resetDB": "npm run migrate-undo && npm run migrate && npm run migrate-test-undo && npm run migrate-test"
   },
   "repository": {
     "type": "git",

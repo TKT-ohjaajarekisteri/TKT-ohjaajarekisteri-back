@@ -67,7 +67,7 @@ describe('tests for the courses controller', () => {
       })
     })
 
-    test('Course can be hidden by GET /api/courses/:id/hide', async () => {
+    test('Course can be hidden by PUT /api/courses/:id/hide', async () => {
       const response = await api
         .put(`/api/courses/${courses[index].course_id}/hide`)
         .set('Authorization', `bearer ${token}`)
@@ -75,6 +75,16 @@ describe('tests for the courses controller', () => {
         .expect('Content-Type', /application\/json/)
 
       expect(response.body.hidden).toBeTruthy()
+    })
+
+    test('Course can be unhidden by PUT /api/courses/:id/hide', async () => {
+      const response = await api
+        .put(`/api/courses/${courses[index].course_id}/hide`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.hidden).toBeFalsy()
     })
 
     describe('When database has courses, students and an association', () => {

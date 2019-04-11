@@ -98,6 +98,10 @@ var migrationCommands = [{
         'type': Sequelize.INTEGER,
         'field': 'groups'
       },
+      'hidden': {
+        'type': Sequelize.BOOLEAN,
+        'defaultValue': false
+      },
       'createdAt': {
         'type': Sequelize.DATE,
         'field': 'createdAt',

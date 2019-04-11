@@ -28,6 +28,10 @@ module.exports = (sequelize, Sequelize) => {
     },
     groups: {
       type: Sequelize.INTEGER
+    },
+    hidden: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     }
   })
 

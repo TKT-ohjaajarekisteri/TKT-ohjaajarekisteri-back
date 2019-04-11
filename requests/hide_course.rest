@@ -1,0 +1,2 @@
+PUT http://localhost:8001/api/courses/15/hide
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNTUyNTY1NTQ1fQ.ZhRHDED9Rr8RB2sM-b2jRl4DXT26tYj4k7CbwPuUtV4

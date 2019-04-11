@@ -154,8 +154,20 @@ coursesRouter.delete('/:id', async (request, response) => {
   } catch (exception) {
     console.log(exception)
     response.status(400).json({ error: 'bad request' })
-  }
 })
 */
+//Hides a course if it is not hidden and makes it visible if it is hidden.
+coursesRouter.put('/:id/hide', checkAdmin, async (req, res) => {
+  try {
+    let course = await db.Course.findOne({ where: { course_id: req.params.id } })
+
+    course = await course.update({ hidden: !course.hidden })
+    res.status(200).json(course)
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(400).json({ error: 'bad req' })
+  }
+})
 
 module.exports = coursesRouter

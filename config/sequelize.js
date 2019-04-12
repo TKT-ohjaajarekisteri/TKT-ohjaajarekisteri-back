@@ -6,7 +6,6 @@ module.exports = {
   production: {
     url: process.env.DATABASE_URL,
     dialect: 'postgresql',
-    operatorsAliases: false,
     pool: {
       max: 5,
       min: 0,
@@ -18,7 +17,6 @@ module.exports = {
     url: process.env.DEV_DATABASE_URL,
     port: process.env.DEV_PORT,
     dialect: 'postgresql',
-    operatorsAliases: false,
     pool: {
       max: 5,
       min: 0,
@@ -31,7 +29,6 @@ module.exports = {
     port: process.env.TEST_PORT,
     logging: false,
     dialect: 'postgresql',
-    operatorsAliases: false,
     pool: {
       max: 5,
       min: 0,
@@ -47,7 +44,6 @@ module.exports = {
     'dialectOptions': {
       'ssl': true
     },
-    operatorsAliases: false,
     pool: {
       max: 5,
       min: 0,

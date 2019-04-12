@@ -117,7 +117,7 @@ const loginAdmin = async (req, res) => {
 
     const foundUser = await db.User.findOne({ where: { role_id: foundAdmin.admin_id, role: 'admin' } })
     // jwt sign for admin
-    const token = jwt.sign({ id: foundUser.user_id, role: foundUser.role }, config.secret)
+    const token = jwt.sign({ id: foundUser.user_id, role: foundUser.role }, config.secret, { expiresIn: '10h' })
     return res.status(200).json({
       token,
       user: {
@@ -139,7 +139,7 @@ const loginStudent = async (req, res, authenticatedUser) => {
     if (foundStudent) {
       // user already in database, no need to add
       const foundUser = await db.User.findOne({ where: { role_id: foundStudent.student_id, role: 'student' } })
-      const token = jwt.sign({ id: foundUser.user_id, role: foundUser.role }, config.secret)
+      const token = jwt.sign({ id: foundUser.user_id, role: foundUser.role }, config.secret, { expiresIn: '10h' })
       return res.status(200).json({
         token,
         user: {
@@ -162,7 +162,7 @@ const loginStudent = async (req, res, authenticatedUser) => {
           role: 'student',
           role_id: savedStudent.student_id
         })
-      const token = jwt.sign({ id: savedUser.user_id, role: savedUser.role }, config.secret)
+      const token = jwt.sign({ id: savedUser.user_id, role: savedUser.role }, config.secret, { expiresIn: '10h' })
       return res.status(200).json({
         token,
         user: {

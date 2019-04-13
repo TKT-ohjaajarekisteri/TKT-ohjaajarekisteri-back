@@ -5,6 +5,7 @@ const db = require('../models/index')
 const jwt = require('jsonwebtoken')
 const config = require('../config/config')
 let token = null
+let studentToken = null
 let courses = null
 let students = null
 const index = 0
@@ -36,6 +37,15 @@ describe('tests for the courses controller', () => {
       await db.Course.destroy({
         where: {}
       })
+
+      await db.Student.destroy({
+        where: {}
+      })  
+  
+      const student = await db.Student.create(initialStudents[0])
+      const studentUser = await db.User.create({ role: 'student', role_id: student.student_id })
+      studentToken = jwt.sign({ id: studentUser.user_id, role: studentUser.role }, config.secret)
+
       courses = await Promise.all(initialCourses.map(n => db.Course.create(n)))
     })
 
@@ -77,6 +87,19 @@ describe('tests for the courses controller', () => {
       expect(response.body.hidden).toBeTruthy()
     })
 
+    test('Hidden courses are not returned for students by GET /api/courses/', async () => {
+      const coursesInDatabase = await coursesInDb()
+
+      const response = await api
+        .get('/api/courses/')
+        .set('Authorization', `bearer ${studentToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.length).toBe(coursesInDatabase.length - 1)
+      expect(response).not.toContain(courses[index].course_id)
+   })
+    
     test('Course can be unhidden by PUT /api/courses/:id/hide', async () => {
       const response = await api
         .put(`/api/courses/${courses[index].course_id}/hide`)

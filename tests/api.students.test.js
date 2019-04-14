@@ -49,6 +49,24 @@ describe('tests for the students controller', () => {
       expect(response.text).toContain(students[index].student_number)
     })
 
+    test('Student for admin is returned as json by GET /api/students/:student_id/info', async () => {
+      const response = await api
+        .get(`/api/students/${students[index].student_id}/info`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+      expect(response.text).toBeDefined()
+      expect(response.text).toContain(students[index].student_number)
+    })
+
+    test('Student for admin not returned if no admin token by GET /api/students/:student_id/info', async () => {
+      const response = await api
+        .get(`/api/students/${students[index].student_id}/info`)
+        .set('Authorization', `bearer ${studentToken}`)
+        .expect(401)
+      expect(response.text).toContain('not admin')
+    })
+
     test('Students are returned as json by GET /api/students', async () => {
       const studentsInDatabase = await studentsInDb()
 

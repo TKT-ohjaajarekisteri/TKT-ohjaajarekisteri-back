@@ -98,7 +98,7 @@ describe('tests for the courses controller', () => {
 
       expect(response.body.length).toBe(coursesInDatabase.length - 1)
       expect(response).not.toContain(courses[index].course_id)
-   })
+    })
     
     test('Course can be unhidden by PUT /api/courses/:id/hide', async () => {
       const response = await api

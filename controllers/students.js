@@ -15,7 +15,7 @@ studentsRouter.get('/', checkAdmin, async (req, res) => {
 })
 
 //Get request that returns a student based on id
-studentsRouter.get('/:id/info', checkUser, async (req, res) => {
+studentsRouter.get('/:id', checkUser, async (req, res) => {
   try {
     const user = await db.User
       .findByPk(req.params.id)
@@ -29,7 +29,7 @@ studentsRouter.get('/:id/info', checkUser, async (req, res) => {
 })
 
 //Get request that returns a student based on id for admin
-studentsRouter.get('/:id', checkAdmin, async (req, res) => {
+studentsRouter.get('/:id/admin', checkAdmin, async (req, res) => {
   try {
     const student = await db.Student
       .findByPk(req.params.id)

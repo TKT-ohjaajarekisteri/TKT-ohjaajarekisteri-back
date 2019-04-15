@@ -129,7 +129,7 @@ describe('tests for the courses controller', () => {
           .expect('Content-Type', /application\/json/)
 
         expect(response.text).toBeDefined()
-        expect(response.text).toContain(students[index].student_number)
+        expect(response.text).toContain(students[index+2].student_number)
       })
 
       test('Applying students can be accepted as assistants with POST /api/courses/:course_id/students', async () => {

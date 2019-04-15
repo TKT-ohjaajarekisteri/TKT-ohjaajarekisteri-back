@@ -151,7 +151,7 @@ var migrationCommands = [{
         'defaultValue': false
       },
       'experience': {
-        'type': Sequelize.STRING(255),
+        'type': Sequelize.STRING(1000),
         'allowNull': true        
       },
       'phone': {

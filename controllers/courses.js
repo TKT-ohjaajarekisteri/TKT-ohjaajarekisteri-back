@@ -14,8 +14,15 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
   try {
     let courses = null
     const token = authenticateToken(req)
+    //Courses and their applicants for admin
     if(token.role === 'admin') {
-      courses = await db.Course.findAll({})
+      courses = await db.Course.findAll({
+        include: [{
+          model: db.Student,
+          as: 'students'
+        }]
+      })
+    //Courses that are not hidden for others
     } else {
       courses = await db.Course.findAll({ where: { hidden: false } })
     }
@@ -42,11 +49,11 @@ coursesRouter.get('/all', checkLogin, async (req, res) => {
   res.status(200).json(courses)
 })
 
+//Get request that returns all courses on the database with its applicants
 coursesRouter.get('/summary', checkAdmin, async (req, res) => {
   try {
     const courses = await db.Course.findAll({
-      include: [{// Notice `include` takes an ARRAY 
-        // because you can include multiple models
+      include: [{
         model: db.Student,
         as: 'students'
       }]
@@ -96,7 +103,6 @@ coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
     const course = await db.Course
       .findByPk(req.params.id)
     let students = await course.getStudents()
-
     students.forEach(student => {
       const foundStudent = req.body.find(a => a.student_id === student.student_id)
       student.Application = {
@@ -107,7 +113,7 @@ coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
       return student
     })
     await course.setStudents(students)
-    students = await course.getStudents()
+    students = await course.getStudents({})
 
     const returnedStudents = students.map(stud => {
       return {
@@ -123,11 +129,24 @@ coursesRouter.post('/:id/students/', checkAdmin, async (req, res) => {
         groups: stud.Application.groups
       }
     })
-
     res.status(200).json(returnedStudents)
   } catch (error) {
     console.log(error.message)
     res.status(400).json({ error: 'malformatted request' })
+  }
+})
+
+//Hides a course if it is not hidden and makes it visible if it is hidden.
+coursesRouter.put('/:id/hide', checkAdmin, async (req, res) => {
+  try {
+    let course = await db.Course.findOne({ where: { course_id: req.params.id } })
+
+    course = await course.update({ hidden: !course.hidden })
+    res.status(200).json(course)
+
+  } catch (error) {
+    console.log(error.message)
+    res.status(400).json({ error: 'bad req' })
   }
 })
 
@@ -162,19 +181,5 @@ coursesRouter.delete('/:id', async (request, response) => {
     response.status(400).json({ error: 'bad request' })
 })
 */
-
-//Hides a course if it is not hidden and makes it visible if it is hidden.
-coursesRouter.put('/:id/hide', checkAdmin, async (req, res) => {
-  try {
-    let course = await db.Course.findOne({ where: { course_id: req.params.id } })
-
-    course = await course.update({ hidden: !course.hidden })
-    res.status(200).json(course)
-
-  } catch (error) {
-    console.log(error.message)
-    res.status(400).json({ error: 'bad req' })
-  }
-})
 
 module.exports = coursesRouter

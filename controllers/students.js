@@ -159,8 +159,8 @@ studentsRouter.put('/:id', checkUser, async (req, res) => {
 //Hides a course if it is not hidden and makes it visible if it is hidden.
 studentsRouter.put('/:id/:course_id/hide', checkUser, async (req, res) => {
   try {
-    let user = await db.User.findOne({ where: { user_id: req.params.id } })
-    let student = await db.Student.findOne({ where: { student_id: user.role_id } })
+    const user = await db.User.findOne({ where: { user_id: req.params.id } })
+    const student = await db.Student.findOne({ where: { student_id: user.role_id } })
     let application = await db.Application.findOne({ where: { course_id: req.params.course_id, student_id: student.student_id } })
 
     application = await application.update({ hidden: !application.hidden })
@@ -172,7 +172,8 @@ studentsRouter.put('/:id/:course_id/hide', checkUser, async (req, res) => {
 })
 
 //Only for development
-studentsRouter.put('/:id/deleteCD', async (req, res) => {
+
+/* studentsRouter.put('/:id/deleteCD', async (req, res) => {
   try {
     let student = await db.Student.findOne({ where: { student_id: req.params.id } })
 
@@ -185,18 +186,18 @@ studentsRouter.put('/:id/deleteCD', async (req, res) => {
   }
 })
 
-// UNSAFE!!! Only for development
-// studentsRouter.delete('/dev/:student_number', async (req, res) => {
-//   try {
-//     const student = await db.Student.findOne({ where: { student_number: req.params.student_number } })
-//     await db.User.destroy({ where: { role_id: student.student_id } })
-//     await db.Student.destroy({ where: { student_id: student.student_id } })
-//     res.status(204).end()
+UNSAFE!!! Only for development
+studentsRouter.delete('/dev/:student_number', async (req, res) => {
+  try {
+    const student = await db.Student.findOne({ where: { student_number: req.params.student_number } })
+    await db.User.destroy({ where: { role_id: student.student_id } })
+    await db.Student.destroy({ where: { student_id: student.student_id } })
+    res.status(204).end()
 
-//   } catch (exception) {
-//     console.log(exception)
-//     res.status(400).json({ error: 'bad req' })
-//   }
-// })
+  } catch (exception) {
+    console.log(exception)
+    res.status(400).json({ error: 'bad req' })
+  }
+}) */
 
 module.exports = studentsRouter

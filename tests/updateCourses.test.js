@@ -8,18 +8,17 @@ const { initialStudents } = require('./test_helper')
 
 describe('tests for updating courses', () => {
   jest.setTimeout(15000)
-  beforeAll(async () => {
-    await db.Course.destroy({
-      where: {}
-    })  
-  })
 
   describe('When database has study program urls', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       await db.StudyProgramUrl.destroy({
         where: {}
       })
 
+      await db.Course.destroy({
+        where: {}
+      })  
+      
       const candidate = await db.StudyProgramUrl.create({ type: 'candidate', url: 'https://studies.helsinki.fi/organizations/500-K005/courses_list.json?periods=1&periods=2&periods=3&periods=4&periods=5&types=teaching' })
       const master = await db.StudyProgramUrl.create({ type: 'master', url: 'https://studies.helsinki.fi/organizations/500-M009/courses_list.json?periods=1&periods=2&periods=3&periods=4&periods=5&types=teaching' })
       const dataScience = await db.StudyProgramUrl.create({ type: 'data', url: 'https://studies.helsinki.fi/organizations/500-M010/courses_list.json?periods=1&periods=2&periods=3&periods=4&periods=5&types=teaching' })
@@ -50,6 +49,7 @@ describe('tests for updating courses', () => {
     })
 
     test('No new courses are added, when updated twice in a row', async () => { 
+      await updateCourses()
       const updatedCourses = await updateCourses()
       expect(updatedCourses.length).toEqual(0)
     })
@@ -57,7 +57,7 @@ describe('tests for updating courses', () => {
   })
 
   describe('When database has old courses with same names as the ones to be added', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       await db.Course.destroy({
         where: {}
       })

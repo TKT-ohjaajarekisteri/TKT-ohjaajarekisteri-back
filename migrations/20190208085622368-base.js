@@ -22,7 +22,7 @@ var info = {
   'created': '2019-02-08T08:56:22.368Z',
   'comment': ''
 }
-
+//Commands that are run upon migration
 var migrationCommands = [{
   fn: 'createTable',
   params: [

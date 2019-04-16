@@ -26,7 +26,7 @@ describe('tests for the studyProgramUrl controller', () => {
   })
 
   describe('When database has studyProgramUrls', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       await db.StudyProgramUrl.destroy({
         where: {}
       })  

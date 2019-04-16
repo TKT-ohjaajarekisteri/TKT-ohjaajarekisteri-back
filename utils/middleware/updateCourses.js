@@ -34,7 +34,9 @@ const updateCourses = async () => {
       }]
   })
 
-  console.log('Updating courses...')
+  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
+    console.log('Updating courses...')
+  }
   await addCoursesToDatabase(candidataCourses, addedCourses, currentCourses, coursesAtStart)
   await addCoursesToDatabase(masterCourses, addedCourses, currentCourses, coursesAtStart)
   await addCoursesToDatabase(dataScienceCourses, addedCourses, currentCourses, coursesAtStart)
@@ -45,8 +47,10 @@ const updateCourses = async () => {
   ])
 
   await db.Course.bulkCreate(addedCourses)
-  if(addedCourses.length > 0) console.log('Courses have been updated')
-  else console.log('Database already up to date')
+  if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
+    if(addedCourses.length > 0) console.log('Courses have been updated')
+    else console.log('Database already up to date')
+  }
   return addedCourses
 }
 

@@ -10,9 +10,9 @@ const logging = require('./config/config').logging
 const updateCourses = require('./utils/middleware/updateCourses').updateCourses
 
 // Run middleware given except for a specific path
-const unless = (path, middleware) => {
+const unless = (paths, middleware) => {
   return (req, res, next) => {
-    if (path === req.path) {
+    if (paths.includes(req.path)) {
       return next()
     } else if (logging) {
       return middleware(req, res, next)
@@ -24,7 +24,7 @@ const unless = (path, middleware) => {
 // Middleware
 app.use(cors())
 app.use(bodyParser.json())
-app.use(unless('/api/login', logger))
+app.use(unless(['/api/login', '/api/admins'], logger))
 app.use(express.static('build'))
 
 // Routers
@@ -45,10 +45,10 @@ app.use(`${apiUrl}/studyProgramUrls`, studyProgramUrlsRouter)
 
 //Updates courses on database every day at one second before midnight
 if (process.env.NODE_ENV !== 'test') {
-  cron.schedule('59 23 * * *', async function() {
+  cron.schedule('59 23 * * *', async function () {
     try {
       await updateCourses()
-    } catch(exception) {
+    } catch (exception) {
       console.log(exception.message)
     }
   })

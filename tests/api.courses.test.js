@@ -193,7 +193,7 @@ describe('tests for the courses controller', () => {
       })
 
       test('Empty applicant list is returned via COURSE request', async () => {
-        const test_student = initialStudents[index]
+        const test_student = students[index]
 
         const response = await api
           .get('/api/courses')
@@ -201,7 +201,7 @@ describe('tests for the courses controller', () => {
           .expect(200)
           .expect('Content-Type', /application\/json/)
 
-        expect(response.text).not.toContain(test_student.email)
+        expect(response.text).not.toContain(test_student.student_id)
       })
     })
 
@@ -240,7 +240,7 @@ describe('tests for the courses controller', () => {
 
       test('non-empty applicant list is returned via COURSE request', async () => {
         await students[index].addCourse(courses[index])
-        const test_student = initialStudents[index]
+        const test_student = students[index]
 
         const response = await api
           .get('/api/courses')
@@ -248,7 +248,7 @@ describe('tests for the courses controller', () => {
           .expect(200)
           .expect('Content-Type', /application\/json/)
 
-        expect(response.text).toContain(test_student.email)
+        expect(response.text).toContain(test_student.student_id)
       })
     })
   })

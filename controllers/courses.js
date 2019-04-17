@@ -14,13 +14,25 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
   try {
     let courses = null
     const token = authenticateToken(req)
-    if(token.role === 'admin') {
+    if (token.role === 'admin') {
       courses = await db.Course.findAll({
         include: [{// Notice `include` takes an ARRAY 
           // because you can include multiple models
           model: db.Student,
           as: 'students'
         }]
+      })
+      let parsedCourses = JSON.parse(JSON.stringify(courses))
+      courses = parsedCourses.map(course => {
+        course.students = course.students.map(student => {
+          return {
+            student_id: student.student_id,
+            Application: {
+              accepted: student.Application.accepted
+            }
+          }
+        })
+        return course
       })
     } else {
       courses = await db.Course.findAll({ where: { hidden: false } })

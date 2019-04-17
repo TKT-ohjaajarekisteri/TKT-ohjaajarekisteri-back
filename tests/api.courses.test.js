@@ -193,8 +193,6 @@ describe('tests for the courses controller', () => {
       })
 
       test('Empty applicant list is returned via COURSE request', async () => {
-        const test_student = students[index]
-
         const response = await api
           .get('/api/courses')
           .set('Authorization', `bearer ${token}`)

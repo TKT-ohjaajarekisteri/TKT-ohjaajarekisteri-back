@@ -201,12 +201,12 @@ describe('tests for the courses controller', () => {
           .expect(200)
           .expect('Content-Type', /application\/json/)
 
-        expect(response.text).not.toContain(test_student.student_id)
+        expect(JSON.parse(response.text)[index].students.length).toEqual(0)
       })
     })
 
     describe('When database has courses, students and an association is added', () => {
-      beforeAll(async () => {
+      beforeEach(async () => {
         await db.Student.destroy({
           where: {}
         })
@@ -238,7 +238,7 @@ describe('tests for the courses controller', () => {
         expect(response.text).toContain(test_student.email)
       })
 
-      test('non-empty applicant list is returned via COURSE request', async () => {
+      test('Applicant list is returned via COURSE request', async () => {
         await students[index].addCourse(courses[index])
         const test_student = students[index]
 
@@ -248,7 +248,7 @@ describe('tests for the courses controller', () => {
           .expect(200)
           .expect('Content-Type', /application\/json/)
 
-        expect(response.text).toContain(test_student.student_id)
+        expect(JSON.parse(response.text)[index].students[index].student_id).toEqual(test_student.student_id)
       })
     })
   })

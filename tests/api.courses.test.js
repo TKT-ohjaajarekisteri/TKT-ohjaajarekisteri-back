@@ -17,16 +17,12 @@ describe('tests for the courses controller', () => {
     await db.Course.destroy({
       where: {}
     })
-
     await db.User.destroy({
       where: {}
     })
-
     await db.Admin.destroy({
       where: {}
     })
-
-
     const admin = await db.Admin.create({ username: 'testAdmin', passwordHash: passwordHasher('password') })
     const adminUser = await db.User.create({ role: 'admin', role_id: admin.admin_id })
     token = jwt.sign({ id: adminUser.user_id, role: adminUser.role }, config.secret)
@@ -37,11 +33,10 @@ describe('tests for the courses controller', () => {
       await db.Course.destroy({
         where: {}
       })
-
       await db.Student.destroy({
         where: {}
-      })  
-  
+      })
+
       const student = await db.Student.create(initialStudents[0])
       const studentUser = await db.User.create({ role: 'student', role_id: student.student_id })
       studentToken = jwt.sign({ id: studentUser.user_id, role: studentUser.role }, config.secret)
@@ -99,7 +94,7 @@ describe('tests for the courses controller', () => {
       expect(response.body.length).toBe(coursesInDatabase.length - 1)
       expect(response).not.toContain(courses[index].course_id)
     })
-    
+
     test('Course can be unhidden by PUT /api/courses/:id/hide', async () => {
       const response = await api
         .put(`/api/courses/${courses[index].course_id}/hide`)
@@ -129,7 +124,7 @@ describe('tests for the courses controller', () => {
           .expect('Content-Type', /application\/json/)
 
         expect(response.text).toBeDefined()
-        expect(response.text).toContain(students[index+2].student_number)
+        expect(response.text).toContain(students[index + 2].student_number)
       })
 
       test('Applying students can be accepted as assistants with POST /api/courses/:course_id/students', async () => {
@@ -196,9 +191,22 @@ describe('tests for the courses controller', () => {
 
         expect(response.body.length).toBe(coursesInDatabase.length - 1)
       })
+
+      test('Empty applicant list is returned via COURSE request', async () => {
+        const test_student = students[index]
+
+        const response = await api
+          .get('/api/courses')
+          .set('Authorization', `bearer ${token}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        expect(JSON.parse(response.text)[index].students.length).toEqual(0)
+      })
     })
+
     describe('When database has courses, students and an association is added', () => {
-      beforeAll(async () => {
+      beforeEach(async () => {
         await db.Student.destroy({
           where: {}
         })
@@ -206,6 +214,7 @@ describe('tests for the courses controller', () => {
         students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
         await students[index].addCourse(courses[index])
       })
+
       test('applicant list is returned via summary request', async () => {
         const response = await api
           .get('/api/courses/summary')
@@ -216,7 +225,7 @@ describe('tests for the courses controller', () => {
         expect(response.text).toContain('students')
       })
 
-      test('non-empty applicant list is returned via summary request', async () => {
+      test('non-empty applicant list is returned via SUMMARY request', async () => {
         await students[index].addCourse(courses[index])
         const test_student = initialStudents[index]
 
@@ -227,6 +236,19 @@ describe('tests for the courses controller', () => {
           .expect('Content-Type', /application\/json/)
 
         expect(response.text).toContain(test_student.email)
+      })
+
+      test('Applicant list is returned via COURSE request', async () => {
+        await students[index].addCourse(courses[index])
+        const test_student = students[index]
+
+        const response = await api
+          .get('/api/courses')
+          .set('Authorization', `bearer ${token}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        expect(JSON.parse(response.text)[index].students[index].student_id).toEqual(test_student.student_id)
       })
     })
   })

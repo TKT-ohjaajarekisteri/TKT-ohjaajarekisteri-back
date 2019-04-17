@@ -15,7 +15,13 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
     let courses = null
     const token = authenticateToken(req)
     if(token.role === 'admin') {
-      courses = await db.Course.findAll({})
+      courses = await db.Course.findAll({
+        include: [{// Notice `include` takes an ARRAY 
+          // because you can include multiple models
+          model: db.Student,
+          as: 'students'
+        }]
+      })
     } else {
       courses = await db.Course.findAll({ where: { hidden: false } })
     }

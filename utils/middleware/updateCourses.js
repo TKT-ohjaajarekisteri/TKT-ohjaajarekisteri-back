@@ -1,8 +1,9 @@
 const axios = require('axios')
 const db = require('../../models/index')
 const sort = require('fast-sort')
-const getISOWeek = require('date-fns/get_iso_week')
 const https = require('https')
+const moment = require('moment')
+const periodDates = require('../../config/periods.json')
 
 //Updates all courses
 const updateCourses = async () => {
@@ -84,26 +85,41 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses, cours
 
 //Returns an array of periods the course is on
 const getPeriods = (course) => {
-  let startPeriod = getPeriodFromDate(new Date(course.start_date.substring(0, course.start_date.length - 3)))
-  const endPeriod = getPeriodFromDate(new Date(course.end_date.substring(0, course.end_date.length - 3)))
+  const startDate = new Date(course.start_date)
+  const endDate = new Date(course.end_date)
   const periods = []
-  periods.push(startPeriod)
-  while(startPeriod !== endPeriod) {
-    if(startPeriod === 5) startPeriod = 1
-    else startPeriod++
-    periods.push(startPeriod)
-  }
+  const daysBetween = getDatesBetween(startDate, endDate)
+  //Goes through all the periods and checks if a day of the course is on that period. 
+  //If true, it is added to the array and the loop progresses to the next period in the json.
+  periodDates.data.forEach( date => {
+    const periodStart = new Date(date.start_date).getTime()
+    const periodEnd = new Date(date.end_date).getTime()
+
+    for(let i = 0; i < daysBetween.length; i++) {
+      const dayMilliseconds = daysBetween[i].getTime()
+      //Checks if the day is between the two dates. getTime() returns the date as milliseconds from Jan 1, 1970 
+      if(dayMilliseconds <= periodEnd && dayMilliseconds >= periodStart) {
+        let period = date.abbreviation[0].text
+        if(period === 'Kesä') period = '5'
+        periods.push(parseInt(period))
+        break
+      }
+    }
+
+  })
   return periods
 }
 
-//Gets the period the date is on based on weeks
-const getPeriodFromDate = (date) => {
-  const week = getISOWeek(date)
-  if(week > 42) return 2
-  if(week > 35) return 1
-  if(week > 18) return 5
-  if(week > 9) return 4
-  return 3
+//Returns all the dates between two dates
+function getDatesBetween(startDate, stopDate) {
+  const dateArray = []
+  let currentDate = moment(startDate)
+  stopDate = moment(stopDate)
+  while (currentDate <= stopDate) {
+    dateArray.push( new Date( moment(currentDate).format() ) )
+    currentDate = moment(currentDate).add(1, 'days')
+  }
+  return dateArray
 }
 
 //Checks if the course exists in database or has been added recently

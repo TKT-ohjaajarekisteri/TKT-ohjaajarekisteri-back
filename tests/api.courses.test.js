@@ -114,8 +114,18 @@ describe('tests for the courses controller', () => {
 
       expect(response.body.hidden).toBeFalsy()
     })
-  })
 
+    test('Empty applicant list is returned via COURSE request', async () => {
+      const response = await api
+        .get('/api/courses')
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      expect(JSON.parse(response.text)[index].students.length).toEqual(0)
+    })
+  })
+  
   describe('When database has courses, students and an association', () => {
     beforeEach(async () => {
       await db.Course.destroy({
@@ -192,109 +202,79 @@ describe('tests for the courses controller', () => {
     })
   })
 
-  describe('When database has courses', () => {
+  describe('When database has courses, students and an association is added', () => {
     beforeEach(async () => {
+      await db.Student.destroy({
+        where: {}
+      })
       await db.Course.destroy({
         where: {}
       })
+
+      students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
       courses = await Promise.all(initialPastCourses.map(n => db.Course.create(n)))
+      await students[index].addCourse(courses[index])
     })
 
-    test('Empty applicant list is returned via COURSE request', async () => {
+    test('applicant list is returned via summary request', async () => {
+      const response = await api
+        .get('/api/courses/summary')
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.text).toContain('students')
+    })
+
+    test('Past courses are not returned as json by GET /api/courses', async () => {
+      const coursesInDatabase = await coursesInDb()
+
       const response = await api
         .get('/api/courses')
         .set('Authorization', `bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
-
-      expect(JSON.parse(response.text)[index].students.length).toEqual(0)
-    })
-
-    describe('When database has courses, students and an association is added', () => {
-      beforeEach(async () => {
-        await db.Student.destroy({
-          where: {}
-        })
-        await db.Course.destroy({
-          where: {}
-        })
-
-        students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
-        courses = await Promise.all(initialPastCourses.map(n => db.Course.create(n)))
-        await students[index].addCourse(courses[index])
-      })
-
-      test('applicant list is returned via summary request', async () => {
-        const response = await api
-          .get('/api/courses/summary')
-          .set('Authorization', `bearer ${token}`)
-          .expect(200)
-          .expect('Content-Type', /application\/json/)
-
-        expect(response.text).toContain('students')
-      })
-
-      test('Past courses are not returned as json by GET /api/courses', async () => {
-        const coursesInDatabase = await coursesInDb()
-
-        const response = await api
-          .get('/api/courses')
-          .set('Authorization', `bearer ${token}`)
-          .expect(200)
-          .expect('Content-Type', /application\/json/)
         
-        expect(response.body.length).toBe(coursesInDatabase.length - 1)
-      })
+      expect(response.body.length).toBe(coursesInDatabase.length - 1)
     })
 
-    describe('When database has courses, students and an association is added', () => {
-      beforeEach(async () => {
-        await db.Student.destroy({
-          where: {}
-        })
-        await db.Course.destroy({
-          where: {}
-        })
-        courses = await Promise.all(initialPastCourses.map(n => db.Course.create(n)))
-        students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
-        await students[index].addCourse(courses[index])
-      })
+    test('Applicant list is returned via SUMMARY request', async () => {
+      await students[index].addCourse(courses[index])
+      const test_student = initialStudents[index]
 
-      test('applicant list is returned via summary request', async () => {
-        const response = await api
-          .get('/api/courses/summary')
-          .set('Authorization', `bearer ${token}`)
-          .expect(200)
-          .expect('Content-Type', /application\/json/)
+      const response = await api
+        .get('/api/courses/summary')
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
 
-        expect(response.text).toContain('students')
-      })
+      expect(response.text).toContain(test_student.email)
+    })
 
-      test('Applicant list is returned via SUMMARY request', async () => {
-        await students[index].addCourse(courses[index])
-        const test_student = initialStudents[index]
+    test('Applicant list is returned via COURSE request for admin', async () => {
+      await students[index].addCourse(courses[index])
+      const test_student = students[index]
 
-        const response = await api
-          .get('/api/courses/summary')
-          .set('Authorization', `bearer ${token}`)
-          .expect(200)
-          .expect('Content-Type', /application\/json/)
-
-        expect(response.text).toContain(test_student.email)
-      })
-
-      test('Applicant list is returned via COURSE request', async () => {
-        await students[index].addCourse(courses[index])
-        const test_student = students[index]
-
-        const response = await api
-          .get('/api/courses')
-          .set('Authorization', `bearer ${token}`)
-          .expect(200)
-          .expect('Content-Type', /application\/json/)
+      const response = await api
+        .get('/api/courses')
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
         
-        expect(JSON.parse(response.text)[index].students[index].student_id).toEqual(test_student.student_id)
-      })
+      expect(response.text).toContain(test_student.student_id)
     })
+
+    test('Applicant list is not returned via COURSE request for students', async () => {
+      await students[index].addCourse(courses[index])
+      const test_student = students[index]
+
+      const response = await api
+        .get('/api/courses')
+        .set('Authorization', `bearer ${studentToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+        
+      expect(response.text).not.toContain(test_student.student_id)
+    })    
   })
 })

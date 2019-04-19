@@ -15,25 +15,14 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
     let courses = null
     const token = authenticateToken(req)
     //Courses and their applicants for admin
-    if (token.role === 'admin') {
+    if(token.role === 'admin') {
       courses = await db.Course.findAll({
-        include: [{// Notice `include` takes an ARRAY 
-          // because you can include multiple models
+        include: [{
           model: db.Student,
-          as: 'students'
+          as: 'students',
+          attributes: ['student_id'],
+          through: { attributes: ['accepted'] }
         }]
-      })
-      let parsedCourses = JSON.parse(JSON.stringify(courses))
-      courses = parsedCourses.map(course => {
-        course.students = course.students.map(student => {
-          return {
-            student_id: student.student_id,
-            Application: {
-              accepted: student.Application.accepted
-            }
-          }
-        })
-        return course
       })
     } else {
       //Courses that are not hidden for others

@@ -23,7 +23,7 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
     const year = today.getFullYear()
     const week = getISOWeek(today)
 
-    var filteredCourses = courses.filter(c => {
+    const filteredCourses = courses.filter(c => {
       return (periods[c.period] > week && c.year === year) || c.year > year
     })
 

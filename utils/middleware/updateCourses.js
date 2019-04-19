@@ -1,17 +1,25 @@
 const axios = require('axios')
 const db = require('../../models/index')
 const sort = require('fast-sort')
+const getISOWeek = require('date-fns/get_iso_week')
+const https = require('https')
 
 //Updates all courses
 const updateCourses = async () => {
+
+  const instance = axios.create({
+    httpsAgent: new https.Agent({  
+      rejectUnauthorized: false
+    })
+  })
 
   const candidateCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'candidate' } })
   const masterCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'master' } })
   const dataScienceCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'data' } })
 
-  const candidateDataJson = await axios.get(candidateCoursesUrl.url)
-  const masterDataJson = await axios.get(masterCoursesUrl.url) 
-  const dataScienceDataJson = await axios.get(dataScienceCoursesUrl.url)
+  const candidateDataJson = await instance.get(candidateCoursesUrl.url)
+  const masterDataJson = await instance.get(masterCoursesUrl.url) 
+  const dataScienceDataJson = await instance.get(dataScienceCoursesUrl.url)
 
   const candidataCourses = Object.assign(candidateDataJson.data)
   const masterCourses = Object.assign(masterDataJson.data)
@@ -53,15 +61,17 @@ const updateCourses = async () => {
 //Adds the courses from an array to the database
 const addCoursesToDatabase = async (courses, addedCourses, currentCourses, coursesAtStart) => {
   for(let i = 0; i < courses.length; i++) {    
-    for(let j = 0; j < courses[i].periods.length; j++) {
+    const periods = getPeriods(courses[i])
+    for(let j = 0; j < periods.length; j++) {
       const course = {
         learningopportunity_id: courses[i].learningopportunity_id,
         course_name: courses[i].realisation_name[0].text,
-        period: courses[i].periods[j],
+        period: periods[j],
         year: parseInt(courses[i].start_date.substring(0,4))
       }
       const courseIdentifier = course.learningopportunity_id.substring(0,3)
-      if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
+      const typeCode = parseInt(courses[i].realisation_type_code)
+      if((courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') && typeCode !== 8) {
         if(!courseExists(currentCourses, course)) {
           currentCourses.push(course) 
           course.groups = await getMostRecentGroupSize(course.course_name, coursesAtStart)
@@ -70,6 +80,30 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses, cours
       }
     }
   }
+}
+
+//Returns an array of periods the course is on
+const getPeriods = (course) => {
+  let startPeriod = getPeriodFromDate(new Date(course.start_date.substring(0, course.start_date.length - 3)))
+  const endPeriod = getPeriodFromDate(new Date(course.end_date.substring(0, course.end_date.length - 3)))
+  const periods = []
+  periods.push(startPeriod)
+  while(startPeriod !== endPeriod) {
+    if(startPeriod === 5) startPeriod = 1
+    else startPeriod++
+    periods.push(startPeriod)
+  }
+  return periods
+}
+
+//Gets the period the date is on based on weeks
+const getPeriodFromDate = (date) => {
+  const week = getISOWeek(date)
+  if(week > 42) return 2
+  if(week > 35) return 1
+  if(week > 18) return 5
+  if(week > 9) return 4
+  return 3
 }
 
 //Checks if the course exists in database or has been added recently
@@ -99,7 +133,7 @@ const getMostRecentGroupSize = async (newCourseName, coursesAtStart) => {
   //Get the most recent course from courses in database
   const previousCourse = coursesAtStart.find(oldCourse => 
     oldCourse.course_name === newCourseName && oldCourse.period === previousPeriod && oldCourse.year === previousYear)
-  if(!previousCourse.students) return null
+  if(previousCourse.students.length === 0) return null
 
   //Get the groups of all applications as an array of groups
   const groups = []

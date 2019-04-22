@@ -145,6 +145,17 @@ describe('tests for the students controller', () => {
           expect(response.text).toContain(courses[index].learningopportunity_id)
         })
 
+        test('Courses that a student has applied to are listed for admin with GET /api/students/:student_id/info/courses', async () => {
+          const response = await api
+            .get(`/api/students/${students[index].student_id}/info/courses`)
+            .set('Authorization', `bearer ${token}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+          expect(response.text).toBeDefined()
+          expect(response.text).toContain(courses[index].learningopportunity_id)
+        })
+
         test('Application can be hidden by PUT /api/students/:id/:course_id/hide', async () => {
           const response = await api
             .put(`/api/students/${users[index].user_id}/${courses[index].course_id}/hide`)

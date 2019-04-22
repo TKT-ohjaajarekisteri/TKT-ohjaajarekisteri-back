@@ -40,7 +40,6 @@ studentsRouter.get('/:id/info', checkAdmin, async (req, res) => {
   }
 })
 
-
 //Get request that returns all of the courses a student is on
 studentsRouter.get('/:id/courses', checkUser, async (req, res) => {
   try {
@@ -49,11 +48,21 @@ studentsRouter.get('/:id/courses', checkUser, async (req, res) => {
     const student = await db.Student
       .findByPk(user.role_id)
     const courses = await student.getCourses()
-    //console.log('controllers: studentsin studentcourses courses', courses)
     res.status(200).json(courses)
   } catch (exception) {
     res.status(400).json({ error: 'Could not get the course list from db' })
-    //console.log('student controllers studentcourse exception', exception.message)
+  }
+})
+
+//Get request that returns all of the courses a student is on for admin
+studentsRouter.get('/:id/info/courses', checkAdmin, async (req, res) => {
+  try {
+    const student = await db.Student
+      .findByPk(req.params.id)
+    const courses = await student.getCourses()
+    res.status(200).json(courses)
+  } catch (exception) {
+    res.status(400).json({ error: 'Could not get the course list from db' })
   }
 })
 

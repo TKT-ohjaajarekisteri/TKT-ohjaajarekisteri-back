@@ -33,9 +33,8 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
     const week = getISOWeek(today)
 
     const filteredCourses = courses.filter(c => {
-      return (periods[c.period] > week && c.year === year) || c.year > year
+      return (periods[c.periods[0]] > week && c.year === year) || c.year > year
     })
-
     res.status(200).json(filteredCourses)
   } catch (exception) {
     console.log(exception.message)

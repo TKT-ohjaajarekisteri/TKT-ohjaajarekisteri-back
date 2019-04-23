@@ -145,14 +145,15 @@ describe('tests for the students controller', () => {
       students = await Promise.all(initialStudents.map(n => db.Student.create(n)))
       users = await Promise.all(students.map(student => db.User.create({ role: 'student', role_id: student.student_id })))
       studentToken = jwt.sign({ id: users[index].user_id, role: users[index].role }, config.secret)
-  
+
       courses = await Promise.all(initialCourses.map(n => db.Course.create( n )))
 
-      let student = await db.Student.findOne({ where: {
-        student_id: students[index].student_id
-      }
-      })
-      await student.addCourse(courses[index])
+      let student = await db.Student.findOne({ 
+        where: {
+          student_id: students[index].student_id
+        }
+        })
+        await student.addCourse(courses[index])
     })
 
     test('Courses that a student has applied to are listed with GET /api/students/:user_id/courses', async () => {
@@ -166,14 +167,24 @@ describe('tests for the students controller', () => {
       expect(response.text).toContain(courses[index].learningopportunity_id)
     })
 
+    test('Courses that a student has applied to are listed for admin with GET /api/students/:student_id/info/courses', async () => {
+      const response = await api
+        .get(`/api/students/${students[index].student_id}/info/courses`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.text).toBeDefined()
+      expect(response.text).toContain(courses[index].learningopportunity_id)
+    })
+
     test('Application can be hidden by PUT /api/students/:id/:course_id/hide', async () => {
       const response = await api
         .put(`/api/students/${users[index].user_id}/${courses[index].course_id}/hide`)
         .set('Authorization', `bearer ${studentToken}`)
         .expect(200)
-        .expect('Content-Type', /application\/json/)
-    
-      expect(response.body.hidden).toBeTruthy()
+        .expect('Content-Type', /application\/json/)   
+    expect(response.body.hidden).toBeTruthy()
     })
 
     test('Application can be unhidden by PUT /api/students/:id/:course_id/hide', async () => {

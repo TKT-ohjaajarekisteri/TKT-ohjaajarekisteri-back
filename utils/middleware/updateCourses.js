@@ -14,19 +14,14 @@ const updateCourses = async () => {
     })
   })
 
-  const candidateCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'candidate' } })
-  const masterCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'master' } })
-  const dataScienceCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'data' } })
+  const studyProgramUrls = await db.StudyProgramUrl.findAll({})
 
-  const candidateDataJson = await instance.get(candidateCoursesUrl.url)
-  const masterDataJson = await instance.get(masterCoursesUrl.url) 
-  const dataScienceDataJson = await instance.get(dataScienceCoursesUrl.url)
-
-  const candidataCourses = Object.assign(candidateDataJson.data)
-  const masterCourses = Object.assign(masterDataJson.data)
-  const dataScienceCourses = Object.assign(dataScienceDataJson.data)
-
-  const addedCourses = []
+  let json = await instance.get(studyProgramUrls[0].url)
+  const jsonData = json.data
+  for (let i = 1; i < studyProgramUrls; i++) {
+    json = await instance.get(studyProgramUrls[i].url)
+    jsonData.concat(json.data)
+  }
 
   const currentCourses = await db.Course.findAll({ 
     raw:true,
@@ -34,7 +29,6 @@ const updateCourses = async () => {
       exclude: ['course_id', 'createdAt', 'updatedAt', 'groups', 'hidden']
     }
   })
-
   const coursesAtStart = await db.Course.findAll({ 
     include: 
       [{
@@ -46,10 +40,7 @@ const updateCourses = async () => {
   if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
     console.log('Updating courses...')
   }
-  await addCoursesToDatabase(candidataCourses, addedCourses, currentCourses, coursesAtStart)
-  await addCoursesToDatabase(masterCourses, addedCourses, currentCourses, coursesAtStart)
-  await addCoursesToDatabase(dataScienceCourses, addedCourses, currentCourses, coursesAtStart)
-
+  const addedCourses = await addCoursesToDatabase(jsonData, currentCourses, coursesAtStart)
   sort(addedCourses).asc([
     'learningopportunity_id' // Sort by ID
   ])
@@ -63,7 +54,8 @@ const updateCourses = async () => {
 }
 
 //Adds the courses from an array to the database
-const addCoursesToDatabase = async (courses, addedCourses, currentCourses, coursesAtStart) => {
+const addCoursesToDatabase = async (courses, currentCourses, coursesAtStart) => {
+  const addedCourses = []
   for(let i = 0; i < courses.length; i++) {
     const course = {
       learningopportunity_id: courses[i].learningopportunity_id,
@@ -77,12 +69,13 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses, cours
     const typeCode = parseInt(courses[i].realisation_type_code)
     if((courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') && typeCode !== 8) {
       if(!courseExists(currentCourses, course)) {
-        currentCourses.push(course) 
+        currentCourses.push(course)
         course.groups = await getMostRecentGroupSize(course.course_name, coursesAtStart)
         addedCourses.push(course)      
       }
     }
   }
+  return addedCourses
 }
 
 //Returns an array of periods the course is on
@@ -128,12 +121,13 @@ function getDatesBetween(startDate, stopDate) {
 
 //Checks if the course exists in database or has been added recently
 const courseExists = (currentCourses, course) => {
-  for(let k = 0; k < currentCourses.length; k++) { 
-    if(JSON.stringify(currentCourses[k]) === JSON.stringify(course)) {
-      return true
+  let exists = false
+  currentCourses.forEach(currentCourse => { 
+    if(Object.entries(course).toString() === Object.entries(currentCourse).toString()) {
+      exists = true
     }
-  }
-  return false
+  })
+  return exists
 }
 
 //Returns the group size of all applicants groups combined for the previous implementation of the course 

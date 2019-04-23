@@ -60,6 +60,7 @@ const authenticateFake = (username, password) => {
   }
 }
 
+//Checks if username and password exits on Opetushallinto servers
 const authenticate = async (username, password) => {
   if (config.fakeLogin) {
     // Used for automatic unit tests
@@ -101,7 +102,7 @@ loginRouter.post('/', async (req, res) => {
   }
 })
 
-
+//Method for logging in an admin
 const loginAdmin = async (req, res) => {
   try {
     // find admin and user info
@@ -131,7 +132,7 @@ const loginAdmin = async (req, res) => {
   }
 }
 
-
+//Method for logging in a student
 const loginStudent = async (req, res, authenticatedUser) => {
   try {
     // find student and user info

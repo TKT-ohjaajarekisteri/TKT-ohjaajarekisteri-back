@@ -1,6 +1,7 @@
 const config = require('../../config/config')
 const jwt = require('jsonwebtoken')
 
+//Gets the encoded token of the logged user
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -9,6 +10,7 @@ const getTokenFrom = (request) => {
   return null
 }
 
+//Checks that the token is valid and not expired. Returns tokens contents
 const authenticateToken = (req) => {
   const token = getTokenFrom(req)
   const decodedToken = jwt.verify(token, config.secret)
@@ -19,6 +21,7 @@ const authenticateToken = (req) => {
   return decodedToken
 }
 
+//Checks that the logged in user is accessing methods meant for him/her
 const checkUser = (req, res, next) => {
   try {
     const token = authenticateToken(req)
@@ -41,6 +44,7 @@ const checkUser = (req, res, next) => {
   }
 }
 
+//Checks that the user is logged in
 const checkLogin = (req, res, next) => {
   try {
     const token = authenticateToken(req)
@@ -59,6 +63,7 @@ const checkLogin = (req, res, next) => {
   }
 }
 
+//Checks if the logged in user is an admin
 const checkAdmin = (req, res, next) => {
   try {
     const token = authenticateToken(req)

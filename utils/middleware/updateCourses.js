@@ -1,17 +1,26 @@
 const axios = require('axios')
 const db = require('../../models/index')
 const sort = require('fast-sort')
+const https = require('https')
+const moment = require('moment')
+const periodDates = require('../../config/periods.json')
 
 //Updates all courses
 const updateCourses = async () => {
+
+  const instance = axios.create({
+    httpsAgent: new https.Agent({  
+      rejectUnauthorized: false
+    })
+  })
 
   const candidateCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'candidate' } })
   const masterCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'master' } })
   const dataScienceCoursesUrl = await db.StudyProgramUrl.findOne({ where: { type: 'data' } })
 
-  const candidateDataJson = await axios.get(candidateCoursesUrl.url)
-  const masterDataJson = await axios.get(masterCoursesUrl.url) 
-  const dataScienceDataJson = await axios.get(dataScienceCoursesUrl.url)
+  const candidateDataJson = await instance.get(candidateCoursesUrl.url)
+  const masterDataJson = await instance.get(masterCoursesUrl.url) 
+  const dataScienceDataJson = await instance.get(dataScienceCoursesUrl.url)
 
   const candidataCourses = Object.assign(candidateDataJson.data)
   const masterCourses = Object.assign(masterDataJson.data)
@@ -57,15 +66,17 @@ const updateCourses = async () => {
 //Adds the courses from an array to the database
 const addCoursesToDatabase = async (courses, addedCourses, currentCourses, coursesAtStart) => {
   for(let i = 0; i < courses.length; i++) {    
-    for(let j = 0; j < courses[i].periods.length; j++) {
+    const periods = getPeriods(courses[i])
+    for(let j = 0; j < periods.length; j++) {
       const course = {
         learningopportunity_id: courses[i].learningopportunity_id,
         course_name: courses[i].realisation_name[0].text,
-        period: courses[i].periods[j],
+        period: periods[j],
         year: parseInt(courses[i].start_date.substring(0,4))
       }
       const courseIdentifier = course.learningopportunity_id.substring(0,3)
-      if(courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') {
+      const typeCode = parseInt(courses[i].realisation_type_code)
+      if((courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') && typeCode !== 8) {
         if(!courseExists(currentCourses, course)) {
           currentCourses.push(course) 
           course.groups = await getMostRecentGroupSize(course.course_name, coursesAtStart)
@@ -74,6 +85,45 @@ const addCoursesToDatabase = async (courses, addedCourses, currentCourses, cours
       }
     }
   }
+}
+
+//Returns an array of periods the course is on
+const getPeriods = (course) => {
+  const startDate = new Date(course.start_date)
+  const endDate = new Date(course.end_date)
+  const periods = []
+  const daysBetween = getDatesBetween(startDate, endDate)
+  //Goes through all the periods and checks if a day of the course is on that period. 
+  //If true, it is added to the array and the loop progresses to the next period in the json.
+  periodDates.data.forEach( date => {
+    const periodStart = new Date(date.start_date).getTime()
+    const periodEnd = new Date(date.end_date).getTime()
+
+    for(let i = 0; i < daysBetween.length; i++) {
+      const dayMilliseconds = daysBetween[i].getTime()
+      //Checks if the day is between the two dates. getTime() returns the date as milliseconds from Jan 1, 1970 
+      if(dayMilliseconds <= periodEnd && dayMilliseconds >= periodStart) {
+        let period = date.abbreviation[0].text
+        if(period === 'Kesä') period = '5'
+        periods.push(parseInt(period))
+        break
+      }
+    }
+
+  })
+  return periods
+}
+
+//Returns all the dates between two dates
+function getDatesBetween(startDate, stopDate) {
+  const dateArray = []
+  let currentDate = moment(startDate)
+  stopDate = moment(stopDate)
+  while (currentDate <= stopDate) {
+    dateArray.push( new Date( moment(currentDate).format() ) )
+    currentDate = moment(currentDate).add(1, 'days')
+  }
+  return dateArray
 }
 
 //Checks if the course exists in database or has been added recently
@@ -103,7 +153,7 @@ const getMostRecentGroupSize = async (newCourseName, coursesAtStart) => {
   //Get the most recent course from courses in database
   const previousCourse = coursesAtStart.find(oldCourse => 
     oldCourse.course_name === newCourseName && oldCourse.period === previousPeriod && oldCourse.year === previousYear)
-  if(!previousCourse.students) return null
+  if(previousCourse.students.length === 0) return null
 
   //Get the groups of all applications as an array of groups
   const groups = []

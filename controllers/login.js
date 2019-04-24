@@ -24,7 +24,6 @@ const authenticateOpetushallinto = async (username, password) => {
       }
     )
     return res
-
   } catch (error) {
     throw error
   }
@@ -84,13 +83,14 @@ loginRouter.post('/', async (req, res) => {
     try {
       authResponse = await authenticate(req.body.username, req.body.password)
     } catch (error) {
-      //error from auth server
-      console.log(error.message)
+      // error from auth server
+      console.log(error)
       return res.status(500).json({ error: 'authentication error' })
     }
     const authenticatedUser = authResponse.data
     if (!authenticatedUser.hasOwnProperty('student_number')) {
-      // authenticatedUser was not found. Check if the login is for admin
+      // authenticatedUser was not found (incorrect credentials)
+      // Check if the login is for admin
       await loginAdmin(req, res)
     } else {
       // authenticatedUser was found. Get student data or add student to database
@@ -111,8 +111,8 @@ const loginAdmin = async (req, res) => {
     const passwordCorrect = foundAdmin === null ?
       false : await bcrypt.compare(req.body.password, foundAdmin.passwordHash)
 
-    if ( !(foundAdmin && passwordCorrect) ) {
-      // incorrect credentials
+    if (!(foundAdmin && passwordCorrect)) {
+      // incorrect credentials for admin or incorrect credentials response from auth server
       return res.status(401).json({ error: 'incorrect credentials' })
     }
 

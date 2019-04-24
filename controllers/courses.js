@@ -1,13 +1,7 @@
 const coursesRouter = require('express').Router()
 const db = require('../models/index')
 const { checkAdmin, checkLogin, authenticateToken } = require('../utils/middleware/checkRoute')
-// const updateCourses = require('../utils/middleware/updateCourses').updateCourses
-const getISOWeek = require('date-fns/get_iso_week')
-
-// JS object for ending weeks of periods 1-5. Marks the week when course is no longer listed
-// format:  period number : week of the year.
-const periods = { 1: 42, 2: 50, 3: 9, 4: 18, 5: 35 }
-
+const { parseDate } = require('../utils/middleware/dateUtility')
 
 //Get request that returns all courses on current period 
 coursesRouter.get('/', checkLogin, async (req, res) => {
@@ -29,11 +23,20 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
       courses = await db.Course.findAll({ where: { hidden: false } })
     }
     const today = new Date()
-    const year = today.getFullYear()
-    const week = getISOWeek(today)
-
-    const filteredCourses = courses.filter(c => {
-      return (periods[c.period] > week && c.year === year) || c.year > year
+    console.log(courses)
+    //Array of all courses that have not ended
+    const onGoingCourses = courses.filter(c => {
+      const courseEndDate = parseDate(c.endingDate)
+      return (today.getTime()<=courseEndDate.getTime())
+    })
+    console.log(onGoingCourses)
+    //Array of all courses which are less than half way done
+    const filteredCourses = onGoingCourses.filter(c => {
+      const courseStartDate = parseDate(c.startingDate)
+      const courseEndDate = parseDate(c.endingDate)
+      const duration = courseEndDate.getTime() - courseStartDate.getTime()
+      const timeLeft = courseEndDate.getTime() - today.getTime() 
+      return (timeLeft > (duration/2))
     })
 
     res.status(200).json(filteredCourses)

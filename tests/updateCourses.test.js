@@ -32,16 +32,9 @@ describe('tests for updating courses', () => {
 
     test('Courses are updated correctly', async () => {
       const updatedCourses = await updateCourses()
-
-      sort(updatedCourses).asc([
-        'learningopportunity_id' // Sort by ID
-      ])
-      sort(courses).asc([
-        'learningopportunity_id' // Sort by ID
-      ])
-
-      expect(JSON.stringify(courses[0].learningopportunity_id)).toEqual(JSON.stringify(updatedCourses[0].learningopportunity_id))
-      expect(JSON.stringify(courses[1].learningopportunity_id)).toEqual(JSON.stringify(updatedCourses[1].learningopportunity_id))
+      expect(JSON.stringify(courses)).toContain(JSON.stringify(updatedCourses[0].learningopportunity_id))
+      expect(JSON.stringify(courses)).toContain(JSON.stringify(updatedCourses[1].learningopportunity_id))
+      expect(JSON.stringify(courses)).toContain(JSON.stringify(updatedCourses[updatedCourses.length-1].learningopportunity_id))
 
     })
 

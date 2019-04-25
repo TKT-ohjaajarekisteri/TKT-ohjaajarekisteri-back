@@ -2,6 +2,7 @@ const db = require('../models/index')
 const bcrypt = require('bcrypt')
 const moment = require('moment')
 
+
 const initialStudents = [
   {
     student_number: '123456789',
@@ -45,60 +46,66 @@ const initialCourses = [
     course_name: 'Ohjelmistotuotanto 8',
     periods: [3],
     year: (parseInt(new Date().getFullYear()) + 1),
-    startingDate: '01.05.2019',
-    endingDate: '02.11.2019'
+    startingDate: moment(new Date().getTime() - 100000000).format('DD[.]MM[.]YYYY'),
+    endingDate: moment(new Date().getTime() + 2000000000).format('DD[.]MM[.]YYYY')
   },
   {
     learningopportunity_id: 'ohtu2017',
     course_name: 'Ohjelmistotuotanto 05',
     periods: [1],
     year: (parseInt(new Date().getFullYear()) + 1),
-    startingDate: '09.11.2019',
-    endingDate: '10.01.2019'
+    startingDate: moment(new Date().getTime() - 100000000).format('DD[.]MM[.]YYYY'),
+    endingDate: moment(new Date().getTime() + 2000000000).format('DD[.]MM[.]YYYY')
   },
   {
     learningopportunity_id: 'tira2018',
     course_name: 'Tietorakenteet ja algoritmit',
     periods: [2],
     year: (parseInt(new Date().getFullYear()) + 1),
-    startingDate: '11.11.2019',
-    endingDate: '12.11.2019'
+    startingDate: moment(new Date().getTime() - 100000000).format('DD[.]MM[.]YYYY'),
+    endingDate: moment(new Date().getTime() + 2000000000).format('DD[.]MM[.]YYYY')
   }
-
 ]
-
 const initialPastCourses = [
   {
     learningopportunity_id: 'ohtu2018',
     course_name: 'Ohjelmistotuotanto 8',
     periods: [3],
-    year: (parseInt(new Date().getFullYear()) + 1),
-    startingDate: '09.11.2019',
-    endingDate: '10.01.2019'
+    year: (parseInt(new Date().getFullYear())),
+    startingDate: moment(new Date().getTime() - 100000000).format('DD[.]MM[.]YYYY'),
+    endingDate: moment(new Date().getTime() + 2000000000).format('DD[.]MM[.]YYYY')
   },
   {
     learningopportunity_id: 'ohtu2017',
     course_name: 'Ohjelmistotuotanto 05',
     periods: [1],
-    year: (parseInt(new Date().getFullYear()) + 1),
-    startingDate: '09.11.2019',
-    endingDate: '10.01.2019'
+    year: (parseInt(new Date().getFullYear())),
+    startingDate: moment(new Date().getTime() - 100000000).format('DD[.]MM[.]YYYY'),
+    endingDate: moment(new Date().getTime() + 2000000000).format('DD[.]MM[.]YYYY')
   },
   {
     learningopportunity_id: 'tira2018',
     course_name: 'Tietorakenteet ja algoritmit',
     periods: [2],
-    year: (parseInt(new Date().getFullYear()) + 1),
-    startingDate: '09.11.2019',
-    endingDate: '10.01.2019'
+    year: (parseInt(new Date().getFullYear())),
+    startingDate: moment(new Date().getTime() - 100000000).format('DD[.]MM[.]YYYY'),
+    endingDate: moment(new Date().getTime() + 2000000000).format('DD[.]MM[.]YYYY')
   },
   {
     learningopportunity_id: 'jtkt018',
     course_name: 'Johdatus Tietojenkäsittelytieteisiin',
     periods: [4],
     year: (parseInt(new Date().getFullYear()) - 1),
-    startingDate: '09.11.2019',
-    endingDate: '10.01.2019'
+    startingDate: moment(new Date().getTime() - 300000000).format('DD[.]MM[.]YYYY'),
+    endingDate: moment(new Date().getTime() - 100000000).format('DD[.]MM[.]YYYY')
+  },
+  {
+    learningopportunity_id: 'jtkt019',
+    course_name: 'Johdatus tieteisiin',
+    periods: [5],
+    year: (parseInt(new Date().getFullYear())),
+    startingDate: moment(new Date().getTime() - 300000000).format('DD[.]MM[.]YYYY'),
+    endingDate: moment(new Date().getTime() + 600000000).format('DD[.]MM[.]YYYY')
   }
 
 ]

@@ -23,14 +23,11 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
       courses = await db.Course.findAll({ where: { hidden: false } })
     }
     const today = new Date()
-<<<<<<< HEAD
-    console.log(courses)
     //Array of all courses that have not ended
     const onGoingCourses = courses.filter(c => {
       const courseEndDate = parseDate(c.endingDate)
       return (today.getTime()<=courseEndDate.getTime())
     })
-    console.log(onGoingCourses)
     //Array of all courses which are less than half way done
     const filteredCourses = onGoingCourses.filter(c => {
       const courseStartDate = parseDate(c.startingDate)
@@ -38,13 +35,6 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
       const duration = courseEndDate.getTime() - courseStartDate.getTime()
       const timeLeft = courseEndDate.getTime() - today.getTime() 
       return (timeLeft > (duration/2))
-=======
-    const year = today.getFullYear()
-    const week = getISOWeek(today)
-
-    const filteredCourses = courses.filter(c => {
-      return (periods[c.periods[0]] > week && c.year === year) || c.year > year
->>>>>>> eda9ae19a23e8d7beb47a76b9f72ab592b77b412
     })
     res.status(200).json(filteredCourses)
   } catch (exception) {

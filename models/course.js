@@ -18,12 +18,20 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(255),
       allowNull: false
     },
-    period: {
-      type: Sequelize.INTEGER,
+    periods: {
+      type: Sequelize.ARRAY(Sequelize.INTEGER),
       allowNull: false
     },
     year: {
       type: Sequelize.INTEGER,
+      allowNull: false
+    },
+    startingDate: {
+      type: Sequelize.STRING(30),
+      allowNull: false
+    },
+    endingDate: {
+      type: Sequelize.STRING(30),
       allowNull: false
     },
     groups: {

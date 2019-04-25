@@ -32,19 +32,9 @@ describe('tests for updating courses', () => {
 
     test('Courses are updated correctly', async () => {
       const updatedCourses = await updateCourses()
-
-      sort(updatedCourses).asc([
-        'learningopportunity_id', // Sort by ID
-        'period', // courses with the same ID are sorted by period
-      ])
-      sort(courses).asc([
-        'learningopportunity_id', // Sort by ID
-        'period', // courses with the same ID are sorted by period
-      ])
-
-      expect(JSON.stringify(courses[0].learningopportunity_id)).toEqual(JSON.stringify(updatedCourses[0].learningopportunity_id))
-      expect(JSON.stringify(courses[1].learningopportunity_id)).toEqual(JSON.stringify(updatedCourses[1].learningopportunity_id))
-      expect(JSON.stringify(courses[1].period)).toEqual(JSON.stringify(updatedCourses[1].period))
+      expect(JSON.stringify(courses)).toContain(JSON.stringify(updatedCourses[0].learningopportunity_id))
+      expect(JSON.stringify(courses)).toContain(JSON.stringify(updatedCourses[1].learningopportunity_id))
+      expect(JSON.stringify(courses)).toContain(JSON.stringify(updatedCourses[updatedCourses.length-1].learningopportunity_id))
 
     })
 
@@ -75,13 +65,17 @@ describe('tests for updating courses', () => {
           learningopportunity_id: 'TKT2352353',
           course_name: courses[0].course_name,
           year: courses[0].year - 1,
-          period: courses[0].period
+          periods: courses[0].periods,
+          startingDate: '20.07.2018',
+          endingDate: '07.11.2018'
         },
         {
           learningopportunity_id: 'TKT2352353',
           course_name: courses[0].course_name,
           year: courses[0].year - 2,
-          period: courses[0].period
+          periods: courses[0].periods,
+          startingDate: '03.04.2018',
+          endingDate: '03.05.2018'
         }
       ]
 

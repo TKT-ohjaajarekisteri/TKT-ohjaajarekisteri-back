@@ -1,6 +1,5 @@
 const db = require('../models/index')
 const axios = require('axios')
-const sort = require('fast-sort')
 const updateCourses = require('../utils/middleware/updateCourses').updateCourses
 const makeCourseArray = require('./test_helper').makeCourseArray
 let courses = null

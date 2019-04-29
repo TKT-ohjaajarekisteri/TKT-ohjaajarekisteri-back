@@ -152,8 +152,8 @@ describe('tests for the students controller', () => {
         where: {
           student_id: students[index].student_id
         }
-        })
-        await student.addCourse(courses[index])
+      })
+      await student.addCourse(courses[index])
     })
 
     test('Courses that a student has applied to are listed with GET /api/students/:user_id/courses', async () => {
@@ -178,13 +178,27 @@ describe('tests for the students controller', () => {
       expect(response.text).toContain(courses[index].learningopportunity_id)
     })
 
+    test('Admin can delete students with DELETE /api/students/admin/:user_id/', async () => {
+      const studentsAtStart = await studentsInDb()
+
+      const response = await api
+        .delete(`/api/students/admin/${students[index].student_number}`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(204)
+
+      const studentsAfter = await studentsInDb()
+      expect(response.text).toBeDefined()
+      expect(studentsAfter).not.toContain(students[index])
+      expect(studentsAfter.length).toBe(studentsAtStart.length - 1)
+    })
+
     test('Application can be hidden by PUT /api/students/:id/:course_id/hide', async () => {
       const response = await api
         .put(`/api/students/${users[index].user_id}/${courses[index].course_id}/hide`)
         .set('Authorization', `bearer ${studentToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)   
-    expect(response.body.hidden).toBeTruthy()
+      expect(response.body.hidden).toBeTruthy()
     })
 
     test('Application can be unhidden by PUT /api/students/:id/:course_id/hide', async () => {
@@ -251,22 +265,6 @@ describe('tests for the students controller', () => {
       expect(updatedStudent).not.toContain(students[index].phone)
       expect(updatedStudent.phone).toBe('0402356543')
       expect(updatedStudent.experience).toBe('very good')
-    })
-      
-    test('Student can delete his/her own data with DELETE /api/students/:id', async () => {
-      const studentsAtStart = await studentsInDb()
-      
-      await api
-        .delete(`/api/students/${users[index].user_id}`)
-        .set('Authorization', `bearer ${studentToken}`)
-        .expect(204)
-      
-      const studentsAfterOperation = await studentsInDb()
-      
-      const contents = studentsAfterOperation.map(r => r.first_names)
-      
-      expect(contents).not.toContain(students[index].first_names)
-      expect(studentsAfterOperation.length).toBe(studentsAtStart.length - 1)
     })
   })
 })

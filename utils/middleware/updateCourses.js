@@ -156,7 +156,7 @@ const getMostRecentGroupSize = async (newCourseName, coursesAtStart) => {
     }
   })
   //Sum up all of the groups on the course
-  const sum = groups.reduce((partial_sum, a) => partial_sum + a)
+  const sum = groups.reduce((partial_sum, a) => partial_sum + a, 0)
   return sum
 }
 

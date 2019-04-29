@@ -28,14 +28,18 @@ coursesRouter.get('/', checkLogin, async (req, res) => {
       const courseEndDate = parseDate(c.endingDate)
       return (today.getTime()<=courseEndDate.getTime())
     })
-    //Array of all courses which are less than half way done
+    //One week in milliseconds
+    const weekInMs = 604800000
+
+    //Array of all courses which are have been on going for less than three weeks
     const filteredCourses = onGoingCourses.filter(c => {
       const courseStartDate = parseDate(c.startingDate)
       const courseEndDate = parseDate(c.endingDate)
       const duration = courseEndDate.getTime() - courseStartDate.getTime()
       const timeLeft = courseEndDate.getTime() - today.getTime() 
-      return (timeLeft > (duration/2))
+      return (timeLeft > (duration - (weekInMs * 3)))
     })
+
     res.status(200).json(filteredCourses)
   } catch (exception) {
     console.log(exception.message)

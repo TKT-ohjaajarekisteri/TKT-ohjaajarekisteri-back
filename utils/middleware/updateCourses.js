@@ -66,7 +66,7 @@ const addCoursesToDatabase = async (courses, currentCourses, coursesAtStart) => 
     }
     const courseIdentifier = course.learningopportunity_id.substring(0, 3)
     const typeCode = parseInt(courses[i].realisation_type_code)
-    if ((courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') && typeCode !== 8) {
+    if ((courseIdentifier === 'CSM' || courseIdentifier === 'TKT' || courseIdentifier === 'DAT') && (typeCode !== 8 && typeCode !== 29)) {
       if (!courseExists(currentCourses, course)) {
         currentCourses.push({ ...course })
         course.groups = await getMostRecentGroupSize(course.course_name, coursesAtStart)

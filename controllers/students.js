@@ -136,12 +136,12 @@ studentsRouter.delete('/:id/courses/:course_id', checkUser, async (req, res) => 
 })
 
 
-
-//Delete request that deletes a student from the database based on id
-studentsRouter.delete('/:id', checkUser, async (req, res) => {
+//Delete request for Admin that deletes a student from database with student number
+studentsRouter.delete('/admin/:student_number', checkAdmin, async (req, res) => {
   try {
-    const user = await db.User.findOne({ where: { user_id: req.params.id } })
-    await db.Student.destroy({ where: { student_id: user.role_id } })
+    const student = await db.Student.findOne({ where: { student_number: req.params.student_number } })
+    await db.User.destroy({ where: { role_id: student.student_id } })
+    await db.Student.destroy({ where: { student_id: student.student_id } })
     res.status(204).end()
 
   } catch (exception) {
@@ -180,6 +180,20 @@ studentsRouter.put('/:id/:course_id/hide', checkUser, async (req, res) => {
   }
 })
 
+/* //Delete request that deletes a student from the database based on id
+studentsRouter.delete('/:id', checkUser, async (req, res) => {
+  try {
+    const user = await db.User.findOne({ where: { user_id: req.params.id } })
+    await db.Student.destroy({ where: { student_id: user.role_id } })
+    await db.User.destroy({ where: { user_id: user.user_id } })
+    res.status(204).end()
+
+  } catch (exception) {
+    console.log(exception)
+    res.status(400).json({ error: 'bad req' })
+  }
+}) */
+
 //Only for development
 
 /* studentsRouter.put('/:id/deleteCD', async (req, res) => {
@@ -191,20 +205,6 @@ studentsRouter.put('/:id/:course_id/hide', checkUser, async (req, res) => {
 
   } catch (error) {
     console.log(error.message)
-    res.status(400).json({ error: 'bad req' })
-  }
-})
-
-UNSAFE!!! Only for development
-studentsRouter.delete('/dev/:student_number', async (req, res) => {
-  try {
-    const student = await db.Student.findOne({ where: { student_number: req.params.student_number } })
-    await db.User.destroy({ where: { role_id: student.student_id } })
-    await db.Student.destroy({ where: { student_id: student.student_id } })
-    res.status(204).end()
-
-  } catch (exception) {
-    console.log(exception)
     res.status(400).json({ error: 'bad req' })
   }
 }) */

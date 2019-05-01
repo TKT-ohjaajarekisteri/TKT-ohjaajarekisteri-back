@@ -140,7 +140,7 @@ studentsRouter.delete('/:id/courses/:course_id', checkUser, async (req, res) => 
 studentsRouter.delete('/admin/:student_number', checkAdmin, async (req, res) => {
   try {
     const student = await db.Student.findOne({ where: { student_number: req.params.student_number } })
-    await db.User.destroy({ where: { role_id: student.student_id } })
+    await db.User.destroy({ where: { role_id: student.student_id, role: 'student' } })
     await db.Student.destroy({ where: { student_id: student.student_id } })
     res.status(204).end()
 

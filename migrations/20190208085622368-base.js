@@ -177,6 +177,10 @@ var migrationCommands = [{
         },
         'allowNull': true
       },
+      'apprentice': {
+        'type': Sequelize.BOOLEAN,
+        'defaultValue': false
+      },
       'createdAt': {
         'type': Sequelize.DATE,
         'field': 'createdAt',

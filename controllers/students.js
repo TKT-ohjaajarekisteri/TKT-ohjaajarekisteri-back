@@ -157,7 +157,7 @@ studentsRouter.put('/:id', checkUser, async (req, res) => {
     let student = await db.Student.findOne({ where: { student_id: user.role_id } })
     const body = req.body
 
-    await student.update({ email: body.email, phone: body.phone, experience: body.experience, no_english: body.no_english })
+    await student.update({ email: body.email, phone: body.phone, experience: body.experience, no_english: body.no_english, apprentice: body.apprentice })
     res.status(200).end()
   } catch (error) {
     console.log(error.message)

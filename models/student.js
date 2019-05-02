@@ -41,6 +41,10 @@ module.exports = (sequelize, Sequelize) => {
       validate: {
         isEmail: true
       }
+    },
+    apprentice: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     }
   })
 
